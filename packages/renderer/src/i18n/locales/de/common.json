@@ -1,0 +1,16 @@
+{
+  "language": {
+    "ariaLabel": "Sprache wählen",
+    "options": {
+      "it": "Italiano",
+      "en": "English",
+      "de": "Deutsch",
+      "fr": "Français"
+    }
+  },
+  "theme": {
+    "switchToDark": "Zum dunklen Design wechseln",
+    "switchToLight": "Zum hellen Design wechseln",
+    "ariaLabel": "Design umschalten"
+  }
+}
