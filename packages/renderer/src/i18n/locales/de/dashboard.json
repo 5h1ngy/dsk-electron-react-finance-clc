@@ -1,4 +1,4 @@
-{
+﻿{
   "actionBar": {
     "create": "Neuer Benutzer",
     "refresh": "Aktualisieren"
@@ -58,5 +58,9 @@
     "Maintainer": "Betreuer",
     "Contributor": "Mitwirkender",
     "Viewer": "Betrachter"
+  },
+  "permissions": {
+    "title": "Unzureichende Berechtigungen",
+    "description": "Nur Administratoren können Benutzer verwalten."
   }
 }
