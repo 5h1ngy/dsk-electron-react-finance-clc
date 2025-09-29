@@ -1,11 +1,11 @@
-﻿{
+{
   "language": {
     "ariaLabel": "Select language",
     "options": {
       "it": "Italiano",
       "en": "English",
       "de": "Deutsch",
-      "fr": "Français"
+      "fr": "Fran�ais"
     }
   },
   "theme": {
@@ -17,9 +17,7 @@
     "title": "DSK Project Manager",
     "welcome": "Welcome, {{name}}",
     "logout": "Sign out",
-    "navigation": {
-      "dashboard": "Dashboard"
-    },
+    "navigation": {"dashboard": "Dashboard", "projects": "Projects"},
     "collapseSidebar": "Collapse navigation",
     "expandSidebar": "Expand navigation",
     "theme": {
@@ -39,3 +37,4 @@
     "Viewer": "Viewer"
   }
 }
+

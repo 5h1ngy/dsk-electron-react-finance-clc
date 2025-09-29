@@ -1,0 +1,171 @@
+{
+    "title":  "Projets",
+    "viewSwitcher":  {
+                         "table":  "Vue tableau",
+                         "cards":  "Vue cartes"
+                     },
+    "actions":  {
+                    "refresh":  "Actualiser",
+                    "refreshHint":  "Recharger la liste des projets",
+                    "create":  "Nouveau projet",
+                    "createHint":  "Créer un nouveau projet"
+                },
+    "filters":  {
+                    "searchPlaceholder":  "Rechercher par nom, clé ou tag",
+                    "tagsPlaceholder":  "Filtrer par tags",
+                    "roleOptions":  {
+                                        "all":  "Tous les rôles",
+                                        "admin":  "Administrateur",
+                                        "edit":  "Éditeur",
+                                        "view":  "Lecteur"
+                                    },
+                    "ownedOnly":  "Créés par moi"
+                },
+    "permissions":  {
+                        "createDenied":  "Seuls les administrateurs ou mainteneurs peuvent créer des projets.",
+                        "createDeniedTooltip":  "Vous n\u0027avez pas les droits pour créer des projets.",
+                        "updateDenied":  "Seuls les administrateurs ou mainteneurs peuvent modifier les projets.",
+                        "manageMembersDenied":  "Seuls les administrateurs ou mainteneurs peuvent gérer les membres du projet.",
+                        "tasksCreateDenied":  "Vous n\u0027avez pas les droits pour créer des tâches dans ce projet.",
+                        "tasksUpdateDenied":  "Vous n\u0027avez pas les droits pour modifier les tâches dans ce projet."
+                    },
+    "errors":  {
+                   "generic":  "Échec de l\u0027opération"
+               },
+    "create":  {
+                   "success":  "Projet créé"
+               },
+    "update":  {
+                   "success":  "Projet mis à jour"
+               },
+    "members":  {
+                    "addSuccess":  "Membre ajouté",
+                    "removeSuccess":  "Membre supprimé"
+                },
+    "list":  {
+                 "loading":  "Chargement des projets...",
+                 "empty":  "Aucun projet trouvé",
+                 "noTags":  "Aucun tag",
+                 "memberCount_one":  "{{count}} membre",
+                 "memberCount_other":  "{{count}} membres",
+                 "createdOn":  "Créé le {{date}}",
+                 "columns":  {
+                                 "key":  "Key",
+                                 "name":  "Nom",
+                                 "tags":  "Tags",
+                                 "role":  "Rôle",
+                                 "members":  "Membres",
+                                 "createdAt":  "Créé"
+                             },
+                 "role":  {
+                              "admin":  "Administrateur",
+                              "edit":  "Éditeur",
+                              "view":  "Lecteur"
+                          }
+             },
+    "cards":  {
+                  "noDescription":  "Aucune description disponible"
+              },
+    "details":  {
+                    "title":  "Détails du projet",
+                    "loading":  "Chargement...",
+                    "refresh":  "Actualiser",
+                    "tasksTitle":  "Tâches du projet",
+                    "kanbanTitle":  "Tableau Kanban",
+                    "tasksLoading":  "Chargement des tâches...",
+                    "tasksEmpty":  "Aucune tâche disponible",
+                    "noAssignee":  "Non assignée",
+                    "noDueDate":  "Pas d\u0027échéance",
+                    "status":  {
+                                   "todo":  "À faire",
+                                   "in_progress":  "En cours",
+                                   "blocked":  "Bloquée",
+                                   "done":  "Terminée"
+                               },
+                    "priority":  {
+                                     "low":  "Priorité basse",
+                                     "medium":  "Priorité moyenne",
+                                     "high":  "Priorité haute",
+                                     "critical":  "Priorité critique"
+                                 },
+                    "summary":  {
+                                    "title":  "Vue d\u0027ensemble",
+                                    "empty":  "Sélectionnez un projet pour afficher les détails",
+                                    "createdOn":  "Créé",
+                                    "createdBy":  "{{date}} par {{user}}",
+                                    "description":  "Description",
+                                    "noDescription":  "Aucune description disponible",
+                                    "tags":  "Tags",
+                                    "noTags":  "Aucun tag",
+                                    "members":  "Membres",
+                                    "noMembers":  "Aucun membre assigné"
+                                },
+                    "tasksColumns":  {
+                                         "key":  "Key",
+                                         "title":  "Titre",
+                                         "status":  "Statut",
+                                         "priority":  "Priorité",
+                                         "assignee":  "Assigné à",
+                                         "dueDate":  "Échéance"
+                                     },
+                    "drawer":  {
+                                   "title":  "Détails de la tâche",
+                                   "description":  "Description",
+                                   "assignment":  "Affectation",
+                                   "owner":  "Propriétaire : {{owner}}",
+                                   "assignee":  "Assigné à : {{assignee}}",
+                                   "timing":  "Chronologie",
+                                   "createdAt":  "Créée le {{date}}",
+                                   "dueDate":  "Échéance : {{date}}",
+                                   "empty":  "Sélectionnez une tâche pour afficher les détails"
+                               },
+                    "missingId":  "Identifiant du projet manquant",
+                    "notFound":  "Projet introuvable",
+                    "backToList":  "Retour aux projets"
+                },
+    "board":  {
+                  "empty":  "Sélectionnez un projet pour ouvrir le tableau Kanban",
+                  "permissions":  {
+                                      "title":  "Permissions limitées",
+                                      "description":  "Vous n\u0027avez pas les permissions nécessaires pour modifier les tâches de ce projet."
+                                  },
+                  "columns":  {
+                                  "todo":  "À faire",
+                                  "inProgress":  "En cours",
+                                  "blocked":  "Bloquée",
+                                  "done":  "Terminée"
+                              },
+                  "composer":  {
+                                   "title":  "Créer une nouvelle tâche",
+                                   "titlePlaceholder":  "Titre de la tâche",
+                                   "descriptionPlaceholder":  "Description (optionnelle)",
+                                   "submit":  "Ajouter la tâche"
+                               }
+              },
+    "notifications":  {
+                          "taskCreated":  "Tâche créée",
+                          "taskUpdated":  "Tâche mise à jour"
+                      },
+    "form":  {
+                 "createTitle":  "Nouveau projet",
+                 "fields":  {
+                                "key":  {
+                                            "placeholder":  "ex. PROJ",
+                                            "label":  "Key"
+                                        },
+                                "name":  {
+                                             "placeholder":  "Nom du projet",
+                                             "label":  "Nom"
+                                         },
+                                "description":  {
+                                                    "placeholder":  "Description (optionnelle)",
+                                                    "label":  "Description"
+                                                },
+                                "tags":  {
+                                             "placeholder":  "Ajouter des tags (Entrée pour valider)",
+                                             "label":  "Tags"
+                                         }
+                            },
+                 "createAction":  "Créer"
+             }
+}
