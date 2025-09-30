@@ -1,17 +1,30 @@
 {
-    "title":  "Projekte",
+"title":  "Projekte",
     "viewSwitcher":  {
                          "table":  "Tabellenansicht",
                          "cards":  "Kartenansicht"
                      },
     "actions":  {
                     "refresh":  "Aktualisieren",
+                    "tabs":  {
+                                "overview":  "Uebersicht",
+                                "tasks":  "Aufgaben",
+                                "board":  "Kanban"
+                            },
+                    "overview":  {
+                                     "metrics":  {
+                                                     "title":  "Arbeitsstatus",
+                                                     "total":  "Gesamtaufgaben",
+                                                     "active":  "In Arbeit",
+                                                     "done":  "Abgeschlossen"
+                                                 }
+                                 },
                     "refreshHint":  "Projektliste neu laden",
                     "create":  "Neues Projekt",
                     "createHint":  "Ein neues Projekt anlegen"
                 },
     "filters":  {
-                    "searchPlaceholder":  "Nach Name, Schl�ssel oder Tag suchen",
+                    "searchPlaceholder":  "Nach Name, Schlï¿½ssel oder Tag suchen",
                     "tagsPlaceholder":  "Nach Tags filtern",
                     "roleOptions":  {
                                         "all":  "Alle Rollen",
@@ -22,10 +35,10 @@
                     "ownedOnly":  "Von mir erstellt"
                 },
     "permissions":  {
-                        "createDenied":  "Nur Administratoren oder Maintainer k�nnen Projekte erstellen.",
+                        "createDenied":  "Nur Administratoren oder Maintainer kï¿½nnen Projekte erstellen.",
                         "createDeniedTooltip":  "Keine Berechtigung zum Erstellen von Projekten.",
-                        "updateDenied":  "Nur Administratoren oder Maintainer k�nnen Projekte bearbeiten.",
-                        "manageMembersDenied":  "Nur Administratoren oder Maintainer k�nnen Projektmitglieder verwalten.",
+                        "updateDenied":  "Nur Administratoren oder Maintainer kï¿½nnen Projekte bearbeiten.",
+                        "manageMembersDenied":  "Nur Administratoren oder Maintainer kï¿½nnen Projektmitglieder verwalten.",
                         "tasksCreateDenied":  "Keine Berechtigung, Aufgaben in diesem Projekt zu erstellen.",
                         "tasksUpdateDenied":  "Keine Berechtigung, Aufgaben in diesem Projekt zu bearbeiten."
                     },
@@ -39,7 +52,7 @@
                    "success":  "Projekt aktualisiert"
                },
     "members":  {
-                    "addSuccess":  "Mitglied hinzugef�gt",
+                    "addSuccess":  "Mitglied hinzugefï¿½gt",
                     "removeSuccess":  "Mitglied entfernt"
                 },
     "list":  {
@@ -75,7 +88,7 @@
                     "tasksLoading":  "Aufgaben werden geladen...",
                     "tasksEmpty":  "Keine Aufgaben vorhanden",
                     "noAssignee":  "Nicht zugewiesen",
-                    "noDueDate":  "Kein F�lligkeitsdatum",
+                    "noDueDate":  "Kein Fï¿½lligkeitsdatum",
                     "status":  {
                                    "todo":  "Offen",
                                    "in_progress":  "In Arbeit",
@@ -83,18 +96,18 @@
                                    "done":  "Abgeschlossen"
                                },
                     "priority":  {
-                                     "low":  "Niedrige Priorit�t",
-                                     "medium":  "Mittlere Priorit�t",
-                                     "high":  "Hohe Priorit�t",
-                                     "critical":  "Kritische Priorit�t"
+                                     "low":  "Niedrige Prioritï¿½t",
+                                     "medium":  "Mittlere Prioritï¿½t",
+                                     "high":  "Hohe Prioritï¿½t",
+                                     "critical":  "Kritische Prioritï¿½t"
                                  },
                     "summary":  {
-                                    "title":  "Projekt�bersicht",
-                                    "empty":  "W�hlen Sie ein Projekt aus, um Details zu sehen",
+                                    "title":  "Projektï¿½bersicht",
+                                    "empty":  "Wï¿½hlen Sie ein Projekt aus, um Details zu sehen",
                                     "createdOn":  "Erstellt",
                                     "createdBy":  "{{date}} von {{user}}",
                                     "description":  "Beschreibung",
-                                    "noDescription":  "Keine Beschreibung verf�gbar",
+                                    "noDescription":  "Keine Beschreibung verfï¿½gbar",
                                     "tags":  "Tags",
                                     "noTags":  "Keine Tags",
                                     "members":  "Mitglieder",
@@ -104,30 +117,30 @@
                                          "key":  "Key",
                                          "title":  "Titel",
                                          "status":  "Status",
-                                         "priority":  "Priorit�t",
-                                         "assignee":  "Zust�ndig",
-                                         "dueDate":  "F�llig am"
+                                         "priority":  "Prioritï¿½t",
+                                         "assignee":  "Zustï¿½ndig",
+                                         "dueDate":  "Fï¿½llig am"
                                      },
                     "drawer":  {
                                    "title":  "Aufgabendetails",
                                    "description":  "Beschreibung",
                                    "assignment":  "Zuweisung",
-                                   "owner":  "Eigent�mer: {{owner}}",
-                                   "assignee":  "Zust�ndig: {{assignee}}",
+                                   "owner":  "Eigentï¿½mer: {{owner}}",
+                                   "assignee":  "Zustï¿½ndig: {{assignee}}",
                                    "timing":  "Zeitplan",
                                    "createdAt":  "Erstellt am {{date}}",
-                                   "dueDate":  "F�llig am {{date}}",
-                                   "empty":  "W�hlen Sie eine Aufgabe aus, um Details zu sehen"
+                                   "dueDate":  "Fï¿½llig am {{date}}",
+                                   "empty":  "Wï¿½hlen Sie eine Aufgabe aus, um Details zu sehen"
                                },
                     "missingId":  "Projekt-ID fehlt",
                     "notFound":  "Projekt nicht gefunden",
-                    "backToList":  "Zur�ck zu den Projekten"
+                    "backToList":  "Zurï¿½ck zu den Projekten"
                 },
     "board":  {
-                  "empty":  "W�hlen Sie ein Projekt, um das Kanban-Board zu �ffnen",
+                  "empty":  "Wï¿½hlen Sie ein Projekt, um das Kanban-Board zu ï¿½ffnen",
                   "permissions":  {
-                                      "title":  "Eingeschr�nkte Berechtigungen",
-                                      "description":  "Sie verf�gen nicht �ber die n�tigen Berechtigungen, um Aufgaben dieses Projekts zu bearbeiten."
+                                      "title":  "Eingeschrï¿½nkte Berechtigungen",
+                                      "description":  "Sie verfï¿½gen nicht ï¿½ber die nï¿½tigen Berechtigungen, um Aufgaben dieses Projekts zu bearbeiten."
                                   },
                   "columns":  {
                                   "todo":  "Offen",
@@ -139,7 +152,7 @@
                                    "title":  "Neue Aufgabe erstellen",
                                    "titlePlaceholder":  "Titel der Aufgabe",
                                    "descriptionPlaceholder":  "Beschreibung (optional)",
-                                   "submit":  "Aufgabe hinzuf�gen"
+                                   "submit":  "Aufgabe hinzufï¿½gen"
                                }
               },
     "notifications":  {
@@ -162,10 +175,11 @@
                                                     "label":  "Beschreibung"
                                                 },
                                 "tags":  {
-                                             "placeholder":  "Tags hinzuf�gen (Enter zum Best�tigen)",
+                                             "placeholder":  "Tags hinzufï¿½gen (Enter zum Bestï¿½tigen)",
                                              "label":  "Tags"
                                          }
                             },
                  "createAction":  "Erstellen"
              }
 }
+
