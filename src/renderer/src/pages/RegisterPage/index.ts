@@ -1,5 +1,5 @@
-import * as route from "./Register.route"
-import Home from "./Register"
+import * as route from "./route"
+import Home from "./Home"
 
 export default Home
 export { route }

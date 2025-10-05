@@ -1,5 +1,5 @@
-import * as route from "./Login.route"
-import Login from "./Login"
+import * as route from "./route"
+import Home from "./Home"
 
-export default Login
+export default Home
 export { route }

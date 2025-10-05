@@ -1,25 +1,14 @@
 import { connect, ConnectedProps } from "react-redux";
-import { bindActionCreators } from "redux";
+import { bindActionCreators, Dispatch } from "redux";
 
-<<<<<<< HEAD
-import { RootState, RootDispatch } from '../store';
-import { rootActions } from '../store';
-=======
-import { RootState, Dispatch } from '../store';
-import { actions } from '../store';
->>>>>>> 29ef91f (refactor(auth): ♻️ restructure authentication logic and components)
+import { State, actions } from '@/store';
 
-const mapStateToProps = (state: RootState) => ({
-    ...state.auth,
+const mapStateToProps = (state: State) => ({
+    ...state.portfolioSlice,
 })
 
-<<<<<<< HEAD
-const mapDispatchToProps = (dispatch: RootDispatch) => ({
-    ...bindActionCreators(rootActions.authActions, dispatch),
-=======
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    ...bindActionCreators(actions.authActions, dispatch),
->>>>>>> 29ef91f (refactor(auth): ♻️ restructure authentication logic and components)
+    ...bindActionCreators(actions.portfolioActions, dispatch),
 })
 
 const bind = connect(mapStateToProps, mapDispatchToProps, (stateProps, dispatchProps, ownProps) => ({

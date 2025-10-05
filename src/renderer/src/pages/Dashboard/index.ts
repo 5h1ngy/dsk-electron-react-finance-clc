@@ -1,3 +1,5 @@
-import * as route from "./Dashboard.route"
+import * as route from "./route"
+import Home from "./Home"
 
-export default route
+export default Home
+export { route }
