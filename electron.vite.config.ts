@@ -1,51 +1,53 @@
 import { resolve } from 'path'
-import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
+import { defineConfig, externalizeDepsPlugin, swcPlugin } from 'electron-vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   main: {
-    resolve: {
-      alias: {
-        '@main': resolve(__dirname, 'packages/main/src'),
-        '@preload': resolve(__dirname, 'packages/preload/src')
-      }
-    },
+    plugins: [
+      externalizeDepsPlugin(),
+      swcPlugin()
+    ],
     build: {
-      rollupOptions: {
-        input: resolve(__dirname, 'packages/main/src/index.ts')
-      }
-    },
-    plugins: [externalizeDepsPlugin()]
+      sourcemap: true,
+      minify: false,
+      watch: {}
+    }
   },
   preload: {
-    resolve: {
-      alias: {
-        '@preload': resolve(__dirname, 'packages/preload/src'),
-        '@main': resolve(__dirname, 'packages/main/src')
-      }
-    },
+    plugins: [
+      externalizeDepsPlugin(),
+      swcPlugin()
+    ],
     build: {
-      rollupOptions: {
-        input: {
-          index: resolve(__dirname, 'packages/preload/src/index.ts')
-        }
-      }
-    },
-    plugins: [externalizeDepsPlugin()]
+      sourcemap: true,
+      minify: false,
+      watch: {}
+    }
   },
   renderer: {
-    root: resolve(__dirname, 'packages/renderer'),
     resolve: {
       alias: {
-        '@renderer': resolve(__dirname, 'packages/renderer/src'),
-        '@preload': resolve(__dirname, 'packages/preload/src'),
-        '@main': resolve(__dirname, 'packages/main/src')
+        '@renderer': resolve('src/renderer/src')
       }
     },
-    plugins: [react()],
+    plugins: [
+      react()
+    ],
+    server: {
+      hmr: {
+        overlay: true
+      }
+    },
     build: {
+      assetsDir: '.',
       rollupOptions: {
-        input: resolve(__dirname, 'packages/renderer/index.html')
+        output: {
+          format: 'es',
+          entryFileNames: '[name].js',
+          chunkFileNames: '[name].js',
+          assetFileNames: '[name].[ext]'
+        }
       }
     }
   }
