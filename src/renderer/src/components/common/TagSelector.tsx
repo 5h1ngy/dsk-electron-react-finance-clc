@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
+<<<<<<< HEAD
 import { Tag } from '../../store/projects/projectsSlice';
+=======
+import { Tag } from '../../store/projectsSlice/projectsSlice';
+>>>>>>> cd65bdc (refactor(store): ♻️ remove auth/notes slices and add tasks/ui/users state)
 import { TagOutlined, PlusOutlined, CloseOutlined } from '@ant-design/icons';
 
 interface TagSelectorProps {

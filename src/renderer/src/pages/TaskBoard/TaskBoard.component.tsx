@@ -3,6 +3,23 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+<<<<<<< HEAD:src/renderer/src/pages/TaskBoard/TaskBoard.component.tsx
+=======
+import { RootState, AppDispatch } from '../../store';
+import { 
+  fetchTasks, 
+  updateTask, 
+  TaskStatus, 
+  selectTasksByStatus,
+  setTaskFilter,
+  clearTaskFilters,
+  reorderTasks
+} from '../../store/tasksSlice/tasksSlice';
+import { 
+  fetchProjects, 
+  setCurrentProject 
+} from '../../store/projectsSlice/projectsSlice';
+>>>>>>> cd65bdc (refactor(store): ♻️ remove auth/notes slices and add tasks/ui/users state):src/renderer/src/pages/tasks/TaskBoardPage.tsx
 
 import {
   PlusOutlined,

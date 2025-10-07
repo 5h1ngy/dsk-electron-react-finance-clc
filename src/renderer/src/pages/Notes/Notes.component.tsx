@@ -10,9 +10,24 @@ import {
   DeleteOutlined,
   EditOutlined
 } from '@ant-design/icons';
+<<<<<<< HEAD:src/renderer/src/pages/Notes/Notes.component.tsx
 
 import { RootState, RootDispatch, rootActions } from '@renderer/store';
 
+=======
+import { RootState, AppDispatch } from '../../store';
+import { 
+  fetchFolders, 
+  fetchNotes,
+  createFolder,
+  createNote,
+  updateFolder,
+  updateNote,
+  deleteFolder,
+  deleteNote,
+  setCurrentNote
+} from '../../store/notesSlice';
+>>>>>>> cd65bdc (refactor(store): ♻️ remove auth/notes slices and add tasks/ui/users state):src/renderer/src/pages/notes/NotesPage.tsx
 import PageHeader from '../../components/common/PageHeader';
 import Loader from '../../components/common/Loader';
 import EmptyState from '../../components/common/EmptyState';

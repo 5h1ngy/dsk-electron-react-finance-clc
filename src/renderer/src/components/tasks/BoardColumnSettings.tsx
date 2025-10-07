@@ -11,7 +11,11 @@ import {
 } from '@ant-design/icons';
 import { Modal } from 'antd';
 import { RootState } from '../../store';
+<<<<<<< HEAD
 import { updateTaskColumns } from '../../store/tasks/tasksSlice';
+=======
+import { updateTaskColumns } from '../../store/tasksSlice/tasksSlice';
+>>>>>>> cd65bdc (refactor(store): ♻️ remove auth/notes slices and add tasks/ui/users state)
 import { Button, Input } from '../ui';
 
 interface BoardColumnSettingsProps {

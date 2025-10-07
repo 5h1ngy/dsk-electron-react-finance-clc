@@ -17,6 +17,7 @@ import {
 } from '@ant-design/icons';
 
 import { format } from 'date-fns';
+<<<<<<< HEAD:src/renderer/src/pages/Projects/Projects.component.tsx
 import { RootState, RootDispatch, rootActions } from '@renderer/store';
 import ProjectModal from '@renderer/components/projects/ProjectModal';
 import PageHeader from '@renderer/components/common/PageHeader';
@@ -47,6 +48,14 @@ import {
   TaskStatValue,
   ErrorContainer
 } from './Projects.style';
+=======
+import { RootState, AppDispatch } from '../../store';
+import { fetchProjects, deleteProject } from '../../store/projectsSlice/projectsSlice';
+import { fetchTasks } from '../../store/tasksSlice/tasksSlice';
+import ProjectModal from '../../components/projects/ProjectModal';
+import PageHeader from '../../components/common/PageHeader';
+import Loader from '../../components/common/Loader';
+>>>>>>> cd65bdc (refactor(store): ♻️ remove auth/notes slices and add tasks/ui/users state):src/renderer/src/pages/projects/ProjectDetailsPage.tsx
 
 const { TabPane } = Tabs;
 

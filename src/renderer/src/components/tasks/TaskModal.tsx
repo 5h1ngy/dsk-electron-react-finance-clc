@@ -29,8 +29,13 @@ import {
   updateTask,
   deleteTask,
   fetchTasks
+<<<<<<< HEAD
 } from '../../store/tasks/tasksSlice';
 import { fetchUsers } from '../../store/users/usersSlice';
+=======
+} from '../../store/tasksSlice/tasksSlice';
+import { fetchUsers } from '../../store/usersSlice/usersSlice';
+>>>>>>> cd65bdc (refactor(store): ♻️ remove auth/notes slices and add tasks/ui/users state)
 
 interface TaskModalProps {
   isOpen: boolean;

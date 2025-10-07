@@ -22,6 +22,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Pie, Bar, Line } from 'react-chartjs-2';
+<<<<<<< HEAD:src/renderer/src/pages/Statistics/Statistics.component.tsx
 
 import { RootState, RootDispatch, rootActions } from '@renderer/store';
 import { TaskPriority, TaskStatus } from '@renderer/store/tasks/types';
@@ -37,6 +38,12 @@ import {
   StatsCardsContainer,
   StatCard,
 } from './Statistics.style';
+=======
+import { RootState, AppDispatch } from '../../store';
+import { fetchProjects } from '../../store/projectsSlice/projectsSlice';
+import { fetchTasks, TaskStatus, TaskPriority } from '../../store/tasksSlice/tasksSlice';
+import PageHeader from '../../components/common/PageHeader';
+>>>>>>> cd65bdc (refactor(store): ♻️ remove auth/notes slices and add tasks/ui/users state):src/renderer/src/pages/statistics/StatisticsPage.tsx
 
 // Register ChartJS components
 ChartJS.register(

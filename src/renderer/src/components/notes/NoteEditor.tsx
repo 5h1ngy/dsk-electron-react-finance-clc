@@ -12,7 +12,11 @@ import {
   EditOutlined
 } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
+<<<<<<< HEAD
 import { updateNote } from '../../store/notes';
+=======
+import { updateNote } from '../../store/notesSlice';
+>>>>>>> cd65bdc (refactor(store): ♻️ remove auth/notes slices and add tasks/ui/users state)
 import { formatDistanceToNow } from 'date-fns';
 
 interface NoteEditorProps {

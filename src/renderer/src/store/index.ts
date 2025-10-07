@@ -3,6 +3,7 @@ import { configureStore } from '@reduxjs/toolkit';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { reducer as authReducer, actions as authActions } from './auth';
 import { reducer as projectsReducer, actions as projectsActions, selectors as projectSelectors } from './projects';
 import { reducer as tasksReducer, actions as tasksActions } from './tasks';
@@ -31,6 +32,14 @@ import usersReducer from './usersSlice';
 >>>>>>> 29ef91f (refactor(auth): ♻️ restructure authentication logic and components)
 =======
 >>>>>>> ce98b7f (refactor(store): ♻️ rewrite Redux thunks for ui/users/projects/tasks)
+=======
+import authReducer from './authSlice';
+import projectsReducer from './projectsSlice/projectsSlice';
+import tasksReducer from './tasksSlice/tasksSlice';
+import notesReducer from './notesSlice';
+import uiReducer from './uiSlice/uiSlice';
+import usersReducer from './usersSlice/usersSlice';
+>>>>>>> cd65bdc (refactor(store): ♻️ remove auth/notes slices and add tasks/ui/users state)
 
 const store = configureStore({
   reducer: {

@@ -3,7 +3,11 @@ import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import ThemeControls from '../ui/ThemeControls';
+<<<<<<< HEAD:src/renderer/src/components/layouts/MainLayout.style.tsx
 import { actions } from '../../store';
+=======
+import { logout } from '../../store/authSlice';
+>>>>>>> cd65bdc (refactor(store): ♻️ remove auth/notes slices and add tasks/ui/users state):src/renderer/src/components/layout/MainLayout.tsx
 import { RootState } from '../../store';
 
 interface MainLayoutProps {
