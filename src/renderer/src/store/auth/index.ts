@@ -14,5 +14,9 @@ const authSlice = createSlice({
 });
 
 export const actions = { ...asyncThunks, ...authSlice.actions }
+<<<<<<< HEAD:src/renderer/src/store/auth/index.ts
 
 export const reducer = authSlice.reducer;
+=======
+export default authSlice.reducer;
+>>>>>>> 29ef91f (refactor(auth): ♻️ restructure authentication logic and components):src/renderer/src/store/authSlice/index.ts

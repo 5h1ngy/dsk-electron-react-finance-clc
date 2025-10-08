@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { reducer as authReducer, actions as authActions } from './auth';
 import { reducer as projectsReducer, actions as projectsActions, selectors as projectSelectors } from './projects';
 import { reducer as tasksReducer, actions as tasksActions } from './tasks';
@@ -15,6 +16,14 @@ import notesReducer, { actions as notesActions } from './notesSlice';
 import uiReducer, { actions as uiActions } from './uiSlice';
 import usersReducer, { actions as usersActions } from './usersSlice';
 >>>>>>> 4a512eb (refactor(store): ♻️ restructure the Redux store for project management)
+=======
+import authReducer, { actions as authActions } from './authSlice';
+import projectsReducer from './projectsSlice';
+import tasksReducer from './tasksSlice';
+import notesReducer from './notesSlice';
+import uiReducer from './uiSlice';
+import usersReducer from './usersSlice';
+>>>>>>> 29ef91f (refactor(auth): ♻️ restructure authentication logic and components)
 
 const store = configureStore({
   reducer: {
@@ -27,6 +36,7 @@ const store = configureStore({
   }
 });
 
+<<<<<<< HEAD
 export const rootActions = {
   authActions,
   projectsActions,
@@ -43,6 +53,10 @@ export const rootSelectors = {
 =======
   projectSelectors
 >>>>>>> 4a512eb (refactor(store): ♻️ restructure the Redux store for project management)
+=======
+export const actions = {
+  authActions,
+>>>>>>> 29ef91f (refactor(auth): ♻️ restructure authentication logic and components)
 }
 
 export type RootState = ReturnType<typeof store.getState>;

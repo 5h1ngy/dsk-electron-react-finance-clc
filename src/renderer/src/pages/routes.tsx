@@ -25,6 +25,7 @@ export const routes: RouteObject[] = [
             // { path: "register", ...Register, },
         ]
     },
+<<<<<<< HEAD
     // {
     //     path: "/",
     //     element: <ProtectedRoute children={<MainLayout children={<Outlet />} />} />,
@@ -40,4 +41,21 @@ export const routes: RouteObject[] = [
     //         // { path: "*", ...NotFound, },
     //     ]
     // }
+=======
+    {
+        path: "/",
+        element: <ProtectedRoute children={<MainLayout children={<Outlet />} />} />,
+        children: [
+            { index: true, element: <Navigate to="/home" replace /> },
+            // { path: "dashboard", ...Dashboard, },
+            // { path: "projects/:projectId", ...ProjectDetails, },
+            // { path: "projects/:projectId/tasks", ...TaskBoard, },
+            // { path: "notes", ...Notes, },
+            // { path: "notes/:folderId", ...Notes, },
+            // { path: "statistics", ...Statistics, },
+            // { path: "settings", ...Settings, },
+            // { path: "*", ...NotFound, },
+        ]
+    }
+>>>>>>> 29ef91f (refactor(auth): ♻️ restructure authentication logic and components)
 ];
