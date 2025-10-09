@@ -1,14 +1,16 @@
+import React, { ReactNode, useState } from 'react';
 import styled from 'styled-components';
-<<<<<<< HEAD:src/renderer/src/components/layout/MainLayout.tsx
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import ThemeControls from '../ui/ThemeControls';
-import { logout } from '../../store/slices/authSlice';
+import { actions } from '../../store';
 import { RootState } from '../../store';
-=======
->>>>>>> 4a512eb (refactor(store): ♻️ restructure the Redux store for project management):src/renderer/src/components/layouts/MainLayout.style.tsx
 
-export const LayoutContainer = styled.div`
+interface MainLayoutProps {
+  children: ReactNode;
+}
+
+const LayoutContainer = styled.div`
   display: flex;
   width: 100%;
   height: 100vh;
@@ -17,7 +19,7 @@ export const LayoutContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.xl};
 `;
 
-export const Sidebar = styled.div`
+const Sidebar = styled.div`
   width: 250px;
   background-color: ${({ theme }) => theme.colors.background.secondary};
   border-right: 1px solid ${({ theme }) => theme.colors.border.light};
@@ -27,7 +29,7 @@ export const Sidebar = styled.div`
   overflow-y: auto;
 `;
 
-export const SidebarHeader = styled.div`
+const SidebarHeader = styled.div`
   padding: ${({ theme }) => `${theme.spacing.md} ${theme.spacing.md}`};
   border-bottom: 1px solid ${({ theme }) => theme.colors.border.light};
   display: flex;
@@ -35,17 +37,17 @@ export const SidebarHeader = styled.div`
   justify-content: space-between;
 `;
 
-export const Logo = styled.div`
+const Logo = styled.div`
   font-size: ${({ theme }) => theme.typography.fontSizes.lg};
   font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
   color: ${({ theme }) => theme.colors.primary.main};
 `;
 
-export const NavSection = styled.div`
+const NavSection = styled.div`
   padding: ${({ theme }) => theme.spacing.md};
 `;
 
-export const NavSectionTitle = styled.div`
+const NavSectionTitle = styled.div`
   font-size: ${({ theme }) => theme.typography.fontSizes.xs};
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -54,7 +56,7 @@ export const NavSectionTitle = styled.div`
   padding-left: ${({ theme }) => theme.spacing.xs};
 `;
 
-export const NavItem = styled.div<{ $isActive: boolean }>`
+const NavItem = styled.div<{ $isActive: boolean }>`
   display: flex;
   align-items: center;
   padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.md}`};
@@ -75,7 +77,7 @@ export const NavItem = styled.div<{ $isActive: boolean }>`
   }
 `;
 
-export const NavItemIcon = styled.span`
+const NavItemIcon = styled.span`
   margin-right: ${({ theme }) => theme.spacing.sm};
   display: flex;
   align-items: center;
@@ -84,18 +86,18 @@ export const NavItemIcon = styled.span`
   height: 20px;
 `;
 
-export const SidebarFooter = styled.div`
+const SidebarFooter = styled.div`
   margin-top: auto;
   padding: ${({ theme }) => theme.spacing.md};
   border-top: 1px solid ${({ theme }) => theme.colors.border.light};
 `;
 
-export const UserSection = styled.div`
+const UserSection = styled.div`
   display: flex;
   align-items: center;
 `;
 
-export const Avatar = styled.div`
+const Avatar = styled.div`
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -108,24 +110,24 @@ export const Avatar = styled.div`
   margin-right: ${({ theme }) => theme.spacing.sm};
 `;
 
-export const UserInfo = styled.div`
+const UserInfo = styled.div`
   flex: 1;
   min-width: 0;
 `;
 
-export const Username = styled.div`
+const Username = styled.div`
   font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
 
-export const UserRole = styled.div`
+const UserRole = styled.div`
   font-size: ${({ theme }) => theme.typography.fontSizes.xs};
   color: ${({ theme }) => theme.colors.text.tertiary};
 `;
 
-export const LogoutButton = styled.button`
+const LogoutButton = styled.button`
   background: none;
   border: none;
   color: ${({ theme }) => theme.colors.text.tertiary};
@@ -140,7 +142,7 @@ export const LogoutButton = styled.button`
   }
 `;
 
-export const MainContent = styled.div`
+const MainContent = styled.div`
   flex: 1;
   overflow: auto;
   padding: ${({ theme }) => theme.spacing.xl};
@@ -149,7 +151,7 @@ export const MainContent = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius.lg};
 `;
 
-export const Header = styled.header`
+const Header = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -157,17 +159,16 @@ export const Header = styled.header`
   border-bottom: 1px solid ${({ theme }) => theme.colors.border.light};
 `;
 
-export const PageTitle = styled.h1`
+const PageTitle = styled.h1`
   font-size: ${({ theme }) => theme.typography.fontSizes.xl};
   font-weight: ${({ theme }) => theme.typography.fontWeights.semibold};
   color: ${({ theme }) => theme.colors.text.primary};
   margin: 0;
 `;
 
-export const HeaderControls = styled.div`
+const HeaderControls = styled.div`
   display: flex;
   align-items: center;
-<<<<<<< HEAD:src/renderer/src/components/layout/MainLayout.tsx
 `;
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
@@ -193,7 +194,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   };
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(actions.authActions.logout());
     navigate('/login');
   };
 
@@ -281,6 +282,3 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 };
 
 export default MainLayout;
-=======
-`;
->>>>>>> 4a512eb (refactor(store): ♻️ restructure the Redux store for project management):src/renderer/src/components/layouts/MainLayout.style.tsx
