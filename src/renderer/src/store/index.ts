@@ -1,12 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './slices/authSlice';
-import projectsReducer from './slices/projectsSlice';
-import tasksReducer from './slices/tasksSlice';
-import notesReducer from './slices/notesSlice';
-import uiReducer from './slices/uiSlice';
-import usersReducer from './slices/usersSlice';
 
-export const store = configureStore({
+import { reducer as authReducer, actions as authActions } from './auth';
+import { reducer as projectsReducer, actions as projectsActions, selectors as projectSelectors } from './projects';
+import { reducer as tasksReducer, actions as tasksActions } from './tasks';
+import { reducer as notesReducer, actions as notesActions, selectors as notesSelectors } from './notes';
+import { reducer as uiReducer, actions as uiActions } from './ui';
+import { reducer as usersReducer, actions as usersActions } from './users';
+
+const store = configureStore({
   reducer: {
     auth: authReducer,
     projects: projectsReducer,
@@ -14,12 +15,24 @@ export const store = configureStore({
     notes: notesReducer,
     ui: uiReducer,
     users: usersReducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false,
-    }),
+  }
 });
 
+export const rootActions = {
+  authActions,
+  projectsActions,
+  tasksActions,
+  notesActions,
+  uiActions,
+  usersActions,
+}
+
+export const rootSelectors = {
+  projectSelectors,
+  notesSelectors,
+}
+
 export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type RootDispatch = typeof store.dispatch;
+
+export default store;

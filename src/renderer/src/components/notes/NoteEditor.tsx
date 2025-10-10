@@ -12,7 +12,7 @@ import {
   EditOutlined
 } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
-import { updateNote } from '../../store/slices/notesSlice';
+import { updateNote } from '../../store/notes';
 import { formatDistanceToNow } from 'date-fns';
 
 interface NoteEditorProps {

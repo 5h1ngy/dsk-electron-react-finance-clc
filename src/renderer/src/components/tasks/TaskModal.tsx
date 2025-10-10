@@ -29,8 +29,8 @@ import {
   updateTask,
   deleteTask,
   fetchTasks
-} from '../../store/slices/tasksSlice';
-import { fetchUsers } from '../../store/slices/usersSlice';
+} from '../../store/tasks/tasksSlice';
+import { fetchUsers } from '../../store/users/usersSlice';
 
 interface TaskModalProps {
   isOpen: boolean;
