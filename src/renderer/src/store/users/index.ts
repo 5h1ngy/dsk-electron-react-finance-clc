@@ -13,4 +13,8 @@ const usersSlice = createSlice({
 
 export const actions = { ...asyncThunks, ...usersSlice.actions }
 
+<<<<<<< HEAD:src/renderer/src/store/users/index.ts
 export const reducer = usersSlice.reducer;
+=======
+export default usersSlice.reducer;
+>>>>>>> 4a512eb (refactor(store): ♻️ restructure the Redux store for project management):src/renderer/src/store/usersSlice/index.ts

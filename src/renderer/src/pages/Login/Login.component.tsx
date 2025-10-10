@@ -3,8 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+<<<<<<< HEAD:src/renderer/src/pages/Login/Login.component.tsx
 import { RootState, RootDispatch, rootActions } from '@renderer/store';
 import Button from '@renderer/components/ui/Button';
+=======
+import { RootState, RootDispatch, rootActions } from '../../store';
+import { Button } from '../../components/ui';
+>>>>>>> 4a512eb (refactor(store): ♻️ restructure the Redux store for project management):src/renderer/src/pages/LoginPage/Login.tsx
 
 import { LoginFormInputs, loginSchema } from './Login.form';
 
@@ -79,10 +84,10 @@ const LoginPage = () => {
         </Button>
       </Form>
 
-      <SignupLink>
+      {/* <SignupLink>
         Non hai un account?{' '}
         <StyledLink to="/register">Registrati</StyledLink>
-      </SignupLink>
+      </SignupLink> */}
     </LoginContainer>
   );
 };

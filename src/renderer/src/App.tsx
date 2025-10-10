@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect, createElement } from 'react';
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { HashRouter } from 'react-router-dom';
@@ -22,6 +23,24 @@ import { AppContainer } from '@renderer/App.style';
 const App: React.FC<Bind> = (props: Bind) => {
   const publicAuthLayout = createElement(withPublicRoute(AuthLayout, { redirect: "/dashboard" }))
   const privateAuthLayout = createElement(withProtectedRoute(MainLayout, { redirect: '/login', children: <Outlet /> }))
+=======
+import { useEffect } from 'react';
+import { Navigate, Route, RouterProvider, Routes, createBrowserRouter } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { HashRouter } from 'react-router-dom';
+
+import { RootDispatch } from '@renderer/store';
+import { restoreUser } from '@renderer/store/authSlice/asyncThunks';
+import { ThemeProvider } from '@renderer/styles/ThemeProvider';
+import { routes } from '@renderer/pages/routes';
+import { AppContainer } from './App.style';
+import PublicRoute from './hocs/PublicRoute';
+import AuthLayout from './components/layouts/AuthLayout';
+import LoginPage, { route } from './pages/LoginPage';
+
+const App: React.FC = () => {
+  const dispatch = useDispatch<RootDispatch>();
+>>>>>>> 4a512eb (refactor(store): ♻️ restructure the Redux store for project management)
 
   useEffect(() => {
     props.actions.authActions.restoreUser()
@@ -31,6 +50,7 @@ const App: React.FC<Bind> = (props: Bind) => {
     <ThemeProvider>
       <AppContainer>
         <HashRouter>
+<<<<<<< HEAD
           <Routes>
             <Route path="/" element={publicAuthLayout}>
               <Route index element={<Navigate to="/login" replace />} />
@@ -46,6 +66,13 @@ const App: React.FC<Bind> = (props: Bind) => {
               <Route path="statistics" {...statisticsRoute} />
               <Route path="settings" {...settingsRoute} />
               <Route path="*" {...notFoundRoute} />
+=======
+          {/* <RouterProvider router={createBrowserRouter(routes)} /> */}
+          <Routes>
+            <Route path="/" element={<PublicRoute children={<AuthLayout />} />}>
+              <Route index element={<Navigate to="/login" replace />} />
+              <Route path="login" loader={route.loader} action={route.action} element={route.element} />
+>>>>>>> 4a512eb (refactor(store): ♻️ restructure the Redux store for project management)
             </Route>
           </Routes>
         </HashRouter>

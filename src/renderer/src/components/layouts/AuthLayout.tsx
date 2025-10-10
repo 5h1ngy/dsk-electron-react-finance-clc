@@ -1,6 +1,10 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+<<<<<<< HEAD
 import ThemeSwitcher from '@renderer/components/ui/ThemeSwitcher';
+=======
+import { ThemeSwitcher } from '../ui';
+>>>>>>> 4a512eb (refactor(store): ♻️ restructure the Redux store for project management)
 
 import {
   AuthContainer,
@@ -25,13 +29,21 @@ const AuthLayout: React.FC = () => {
           </BannerDescription>
         </BannerContent>
       </AuthBanner>
+<<<<<<< HEAD
 
+=======
+      
+>>>>>>> 4a512eb (refactor(store): ♻️ restructure the Redux store for project management)
       <FormSection>
         <Logo>PM App</Logo>
         <ThemeToggle>
           <ThemeSwitcher />
         </ThemeToggle>
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> 4a512eb (refactor(store): ♻️ restructure the Redux store for project management)
         <FormContainer>
           <Outlet />
         </FormContainer>
