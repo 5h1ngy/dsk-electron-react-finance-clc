@@ -1,10 +1,10 @@
-﻿import { JSX, useCallback, useMemo, useState } from 'react'
+import { JSX, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Space, Tag, message } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 
-import type { UserDTO } from '@main/services/auth.service'
-import type { RoleName } from '@main/services/auth.constants'
+import type { UserDTO } from '@main/services/auth'
+import type { RoleName } from '@main/services/auth/constants'
 
 import { useAppSelector } from '@renderer/store/hooks'
 import { selectCurrentUser } from '@renderer/store/slices/auth'
