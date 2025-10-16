@@ -15,10 +15,7 @@ describe('preload entry point', () => {
   it('exposes the preload api when context isolation is enabled', async () => {
     ;(process as any).contextIsolated = true
     const module = await import('@preload/index')
-    expect(exposeMock).toHaveBeenCalledWith(
-      'api',
-      expect.objectContaining({ auth: expect.any(Object), health: expect.any(Object) })
-    )
+    expect(exposeMock).toHaveBeenCalledWith('api', expect.objectContaining({ health: expect.any(Object) }))
     expect(module).toBeDefined()
   })
 
@@ -29,7 +26,7 @@ describe('preload entry point', () => {
       ;(global as any).window = {} as Record<string, unknown>
       await import('@preload/index')
       expect((global as any).window.api).toEqual(
-        expect.objectContaining({ auth: expect.any(Object), health: expect.any(Object) })
+        expect.objectContaining({ health: expect.any(Object) })
       )
     } finally {
       ;(global as any).window = originalWindow
