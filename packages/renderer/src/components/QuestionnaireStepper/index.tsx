@@ -120,7 +120,11 @@ const QuestionnaireStepper = () => {
       title="Questionario dinamico"
       extra={
         <Space size="large">
-          <Statistic title="Completamento" value={`${progress.completed}%`} />
+          <div style={{ minWidth: 160, textAlign: 'right' }}>
+            <Typography.Text type="secondary">
+              Completamento <Typography.Text strong>{progress.completed}%</Typography.Text>
+            </Typography.Text>
+          </div>
           <Button onClick={handleReset} type="link">
             Azzera risposte
           </Button>
