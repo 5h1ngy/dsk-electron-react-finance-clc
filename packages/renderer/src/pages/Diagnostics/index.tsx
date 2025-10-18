@@ -2,12 +2,17 @@ import { Card, Col, Descriptions, Row, Typography } from 'antd'
 
 import { useHealthStatus } from '@renderer/hooks/useHealthStatus'
 import { useAppSelector } from '@renderer/store/hooks'
-import { selectFinanceImport, selectRequestImport } from '@renderer/store/slices/workspace'
+import {
+  selectFinanceImport,
+  selectReportExport,
+  selectRequestImport
+} from '@renderer/store/slices/workspace'
 
 const DiagnosticsPage = () => {
   const { snapshot, loading, error, refresh } = useHealthStatus()
   const requestImport = useAppSelector(selectRequestImport)
   const financeImport = useAppSelector(selectFinanceImport)
+  const reportExport = useAppSelector(selectReportExport)
 
   return (
     <Row gutter={[16, 16]}>
@@ -48,6 +53,11 @@ const DiagnosticsPage = () => {
               {financeImport
                 ? `${financeImport.fileName} (${financeImport.instruments} strumenti)`
                 : 'Nessun file caricato'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Report PDF">
+              {reportExport
+                ? `${reportExport.fileName} (${new Date(reportExport.exportedAt).toLocaleString()})`
+                : 'Nessun export effettuato'}
             </Descriptions.Item>
           </Descriptions>
         </Card>

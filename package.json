@@ -28,6 +28,7 @@
     "@reduxjs/toolkit": "^2.3.0",
     "antd": "^5.27.5",
     "dotenv": "^16.4.5",
+    "pdf-lib": "^1.17.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-redux": "^9.2.0",

@@ -1,11 +1,17 @@
-# Offline Risk Suite - Wave 0
+# Offline Risk Suite - Wave 1
 
 > Electron + React offline workbench focused on ingesting questionari JSON/Excel, calcolare il profilo di rischio e preparare i flussi successivi (linee/strumenti, PDF, firma).
 
-## Cosa include Wave 0
+## Novità Wave 1
+
+- **Export PDF**: generazione PDF via `pdf-lib` nel renderer e salvataggio sicuro tramite nuovo IPC `report:export` (dialog di Electron). Pulsante “Esporta PDF” nella card profilo + storico export in Diagnostics.
+- **Visualizzazioni**: card “Avanzamento sezioni” con progress di completamento, score card ampliata con stato export e note.
+- **Diagnostics potenziata**: mostra anche l’ultimo report prodotto oltre ai file di import.
+
+## Baseline Wave 0
 
 - **Main process** invariato: caricamento `.env`, logger strutturato, hardening sicurezza, IPC `system:health`.
-- **Preload bridge** minimale e tipizzato (`window.api.health`), pronto a estensioni future.
+- **Preload bridge** minimale e tipizzato (`window.api.health` + `window.api.report`), pronto a ulteriori estensioni.
 - **Renderer Ant Design-first**
   - Layout con header + routing (Workbench, Diagnostics) e health tag live.
   - Store Redux Toolkit con slice `questionnaire` + `workspace`.
@@ -32,12 +38,12 @@ npm test           # Jest (health IPC + preload smoke)
 
 ```
 packages/
-  main/      # env + logger + security + health IPC
-  preload/   # espone window.api.health
+  main/      # env + logger + security + IPC (health + report export)
+  preload/   # espone window.api.{health,report}
   renderer/
     data/                 # schema JSON compile-time (v1)
-    domain/{questionnaire,scoring,importers}
-    components/           # Stepper, Score card, Upload, ecc.
+    domain/{questionnaire,scoring,importers,report}
+    components/           # Stepper, Score/Report card, Upload, ecc.
     pages/{Workbench,Diagnostics}
     store/                # slices questionnaire + workspace
 resources/   # assets electron-builder
@@ -46,7 +52,7 @@ resources/   # assets electron-builder
 
 ## Prossime wave
 
-1. **Wave 1** – Export PDF (senza firma), grafici aggiuntivi, anteprima portafoglio.
-2. **Wave 2** – Ingest universo prodotti completo + motore mappatura regole.
-3. **Wave 3** – Firma digitale + hash.
-4. **Wave 4** – Motore idoneita/adeguatezza avanzato, explainability dettagliata.
+1. **Wave 2** – Ingest universo prodotti completo + motore mappatura regole.
+2. **Wave 3** – Firma digitale + hash.
+3. **Wave 4** – Motore idoneita/adeguatezza avanzato, explainability dettagliata.
+

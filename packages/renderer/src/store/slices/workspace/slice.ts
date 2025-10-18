@@ -1,6 +1,11 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-import type { FinanceImportMeta, RequestImportMeta, WorkspaceState } from '@renderer/store/slices/workspace/types'
+import type {
+  FinanceImportMeta,
+  ReportExportMeta,
+  RequestImportMeta,
+  WorkspaceState
+} from '@renderer/store/slices/workspace/types'
 
 const initialState: WorkspaceState = {}
 
@@ -13,9 +18,12 @@ const workspaceSlice = createSlice({
     },
     setFinanceImport: (state, action: PayloadAction<FinanceImportMeta | undefined>) => {
       state.financeImport = action.payload
+    },
+    setReportExport: (state, action: PayloadAction<ReportExportMeta | undefined>) => {
+      state.reportExport = action.payload
     }
   }
 })
 
-export const { setRequestImport, setFinanceImport } = workspaceSlice.actions
+export const { setRequestImport, setFinanceImport, setReportExport } = workspaceSlice.actions
 export const workspaceReducer = workspaceSlice.reducer

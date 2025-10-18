@@ -13,3 +13,8 @@ export const selectFinanceImport = createSelector(
   selectWorkspaceState,
   (state) => state.financeImport
 )
+
+export const selectReportExport = createSelector(
+  selectWorkspaceState,
+  (state) => state.reportExport
+)

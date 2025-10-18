@@ -3,6 +3,7 @@ import { app, BrowserWindow } from 'electron'
 import { logger } from '@main/config/logger'
 import { registerSecurityHooks } from '@main/services/security'
 import { registerHealthIpc } from '@main/ipc/health'
+import { registerReportIpc } from '@main/ipc/report'
 import { mainWindowManager, MainWindowManager } from '@main/windowManager'
 
 interface MainProcessDependencies {
@@ -11,6 +12,7 @@ interface MainProcessDependencies {
   windowManager: MainWindowManager
   registerSecurityHooks: () => void
   registerHealthIpc: () => void
+  registerReportIpc: () => void
 }
 
 class MainProcessApplication {
@@ -64,6 +66,7 @@ class MainProcessApplication {
     this.deps.logger.info('Application ready. Applying security hardening.', 'Bootstrap')
     this.deps.registerSecurityHooks()
     this.deps.registerHealthIpc()
+    this.deps.registerReportIpc()
 
     this.mainWindow = await this.deps.windowManager.createMainWindow()
     this.deps.logger.success('Main window created', 'Window')
@@ -99,7 +102,8 @@ const application = new MainProcessApplication({
   logger,
   windowManager: mainWindowManager,
   registerSecurityHooks,
-  registerHealthIpc
+  registerHealthIpc,
+  registerReportIpc
 })
 
 application.bootstrap()

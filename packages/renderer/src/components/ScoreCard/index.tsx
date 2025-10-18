@@ -1,4 +1,5 @@
-import { Alert, Card, Divider, Empty, List, Progress, Statistic, Typography } from 'antd'
+import { FilePdfOutlined } from '@ant-design/icons'
+import { Alert, Button, Card, Divider, Empty, List, Progress, Space, Statistic, Typography } from 'antd'
 
 import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
 import {
@@ -6,11 +7,15 @@ import {
   selectQuestionnaireScore,
   selectScoreMeta
 } from '@renderer/store/slices/questionnaire'
+import { selectReportExport } from '@renderer/store/slices/workspace'
+import { useReportExporter } from '@renderer/hooks/useReportExporter'
 
 const ScoreCard = () => {
   const dispatch = useAppDispatch()
   const score = useAppSelector(selectQuestionnaireScore)
   const meta = useAppSelector(selectScoreMeta)
+  const lastExport = useAppSelector(selectReportExport)
+  const { exportReport } = useReportExporter()
 
   const handleRecompute = () => {
     dispatch(computeQuestionnaireScore())
@@ -32,7 +37,17 @@ const ScoreCard = () => {
   }
 
   return (
-    <Card title="Profilo rischio" extra={<Typography.Link onClick={handleRecompute}>Ricalcola</Typography.Link>}>
+    <Card
+      title="Profilo rischio"
+      extra={
+        <Space>
+          <Typography.Link onClick={handleRecompute}>Ricalcola</Typography.Link>
+          <Button type="primary" icon={<FilePdfOutlined />} onClick={exportReport}>
+            Esporta PDF
+          </Button>
+        </Space>
+      }
+    >
       <Progress type="dashboard" percent={score.score} strokeColor="#0ba5ec" />
       <Divider />
       <List size="small">
@@ -46,6 +61,13 @@ const ScoreCard = () => {
           <List.Item>
             <Typography.Text type="secondary">
               Aggiornato alle {new Date(meta.lastCalculatedAt).toLocaleTimeString()}
+            </Typography.Text>
+          </List.Item>
+        ) : null}
+        {lastExport ? (
+          <List.Item>
+            <Typography.Text type="secondary">
+              Ultimo export {new Date(lastExport.exportedAt).toLocaleTimeString()} ({lastExport.fileName})
             </Typography.Text>
           </List.Item>
         ) : null}

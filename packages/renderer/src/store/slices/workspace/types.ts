@@ -11,7 +11,13 @@ export interface FinanceImportMeta {
   categories: Array<{ name: string; count: number }>
 }
 
+export interface ReportExportMeta {
+  fileName: string
+  exportedAt: string
+}
+
 export interface WorkspaceState {
   requestImport?: RequestImportMeta
   financeImport?: FinanceImportMeta
+  reportExport?: ReportExportMeta
 }
