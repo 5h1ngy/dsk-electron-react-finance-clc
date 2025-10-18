@@ -9,16 +9,26 @@ import DemoUploadCard from '@renderer/components/DemoUploadCard'
 const WorkbenchPage = () => (
   <Space direction="vertical" size="large" style={{ width: '100%' }}>
     <Row gutter={[16, 16]}>
-      <Col xs={24} xl={14}>
-        <QuestionnaireStepper />
+      <Col xs={24} xxl={16}>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} xl={15}>
+            <QuestionnaireStepper />
+          </Col>
+          <Col xs={24} xl={9}>
+            <DemoUploadCard />
+          </Col>
+        </Row>
       </Col>
-      <Col xs={24} xl={10}>
-        <Space direction="vertical" size="large" style={{ width: '100%' }}>
-          <ScoreCard />
-          <SectionCompletionCard />
-          <SchemaSummaryCard />
-          <DemoUploadCard />
-        </Space>
+      <Col xs={24} xxl={8}>
+        <SectionCompletionCard />
+      </Col>
+    </Row>
+    <Row gutter={[16, 16]}>
+      <Col xs={24} xl={12}>
+        <ScoreCard />
+      </Col>
+      <Col xs={24} xl={12}>
+        <SchemaSummaryCard />
       </Col>
     </Row>
   </Space>
