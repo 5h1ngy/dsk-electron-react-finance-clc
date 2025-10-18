@@ -1,15 +1,20 @@
-# Offline Risk Suite - Scaffolding
+# Offline Risk Suite - Wave 0
 
-> Minimal, opinionated Electron + React shell ready to host the offline suite for client risk profiling and investment proposals. All business features have been removed so we can restart Wave 0 on a clean, lightweight base.
+> Electron + React offline workbench focused on ingesting questionari JSON/Excel, calcolare il profilo di rischio e preparare i flussi successivi (linee/strumenti, PDF, firma).
 
-## What stays
+## Cosa include Wave 0
 
-- **Main process essentials** - typed `.env` loader (`LOG_LEVEL`), structured logger with renderer console proxying, hardened BrowserWindow factory, CSP + network blocker, and a single health IPC endpoint.
-- **Preload bridge** - `window.api.health.check()` validates IPC payloads and keeps context isolation enabled.
-- **Renderer hello world** - React 19 + Ant Design 5 screen that pings the main process and shows uptime, proving IPC and styling work while leaving plenty of room for the new flow (Excel ingest, scoring, proposal, PDF export).
-- **Tooling** - electron-vite dev server/build, ESLint + Prettier, strict TypeScript configs, Jest (Node + jsdom) with example coverage over the health IPC registrar.
-
-Everything else (Sequelize, auth/projects/tasks, Redux store, routing, i18n, PDF mocks, seeding, etc.) has been removed.
+- **Main process** invariato: caricamento `.env`, logger strutturato, hardening sicurezza, IPC `system:health`.
+- **Preload bridge** minimale e tipizzato (`window.api.health`), pronto a estensioni future.
+- **Renderer Ant Design-first**
+  - Layout con header + routing (Workbench, Diagnostics) e health tag live.
+  - Store Redux Toolkit con slice `questionnaire` + `workspace`.
+  - Questionario dinamico generato da JSON pre-build (`packages/renderer/data/requests_schema.json`) validato via Zod.
+  - Motore di scoring deterministico (0-100) con classi rischio/volatilita e rationales placeholder.
+  - Import manuale (drag&drop `Upload.Dragger`) per questionario `.xlsx` e universo prodotti.
+  - Card riassuntive (schema, punteggio, import) basate esclusivamente su componenti Ant Design (nessun CSS custom).
+- **Domain scaffolding**: moduli `questionnaire`, `scoring`, `importers` pronti per essere estesi con motori idoneita/mappatura.
+- **Tooling**: electron-vite dev/build, ESLint 9, Prettier 3, TS strict, Jest (node+jsdom) con nuovi test su loader/scoring.
 
 ## Quick start
 
@@ -27,17 +32,21 @@ npm test           # Jest (health IPC + preload smoke)
 
 ```
 packages/
-  main/      # env + logger + security + window manager + health IPC
-  preload/   # exposes window.api.health
-  renderer/  # React hello world diagnostics card
-resources/   # icons/assets for packaging
-test/__mocks__
+  main/      # env + logger + security + health IPC
+  preload/   # espone window.api.health
+  renderer/
+    data/                 # schema JSON compile-time (v1)
+    domain/{questionnaire,scoring,importers}
+    components/           # Stepper, Score card, Upload, ecc.
+    pages/{Workbench,Diagnostics}
+    store/                # slices questionnaire + workspace
+resources/   # assets electron-builder
+.demo/       # file esempio da caricare via drag and drop (Excel)
 ```
 
-## Next steps (Wave 0 prep)
+## Prossime wave
 
-1. Model the offline data flows (questionari JSON, Excel/PDF ingest) in the main process without reintroducing persistence.
-2. Expand preload types + renderer store/layout to host the KYC stepper and scoring widgets.
-3. Wire PDF export + deterministic hashing once the domain logic is ready.
-
-Until then, this scaffold keeps logging, env loading, IPC, and UI theming operational with the smallest possible footprint.
+1. **Wave 1** – Export PDF (senza firma), grafici aggiuntivi, anteprima portafoglio.
+2. **Wave 2** – Ingest universo prodotti completo + motore mappatura regole.
+3. **Wave 3** – Firma digitale + hash.
+4. **Wave 4** – Motore idoneita/adeguatezza avanzato, explainability dettagliata.

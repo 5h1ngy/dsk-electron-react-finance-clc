@@ -20,10 +20,7 @@
           "id": "exp_know_2",
           "label": "Hai esperienza con strumenti complessi (derivati, alternative)?",
           "type": "single_choice",
-          "options": [
-            "No",
-            "Sì"
-          ],
+          "options": ["No", "Si"],
           "required": true,
           "weight": 1.0
         },
@@ -88,11 +85,7 @@
           "id": "goal_1",
           "label": "Obiettivo prevalente",
           "type": "single_choice",
-          "options": [
-            "Conservazione capitale",
-            "Reddito periodico",
-            "Crescita del capitale"
-          ],
+          "options": ["Conservazione capitale", "Reddito periodico", "Crescita del capitale"],
           "required": true,
           "weight": 0.7
         }
@@ -115,11 +108,7 @@
           "id": "risk_tol_2",
           "label": "Reazione a una perdita del 10%",
           "type": "single_choice",
-          "options": [
-            "Venderei tutto",
-            "Ridurrei l'esposizione",
-            "Mantengo o aumento"
-          ],
+          "options": ["Venderei tutto", "Ridurrei l'esposizione", "Mantengo o aumento"],
           "required": true,
           "weight": 1.0
         }
@@ -133,12 +122,7 @@
           "id": "esg_1",
           "label": "Preferisci strumenti con criteri ESG?",
           "type": "single_choice",
-          "options": [
-            "No",
-            "Indifferente",
-            "Sì (moderata)",
-            "Sì (forte)"
-          ],
+          "options": ["No", "Indifferente", "Si (moderata)", "Si (forte)"],
           "required": false,
           "weight": 0.3
         }

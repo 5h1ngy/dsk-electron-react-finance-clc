@@ -12,11 +12,6 @@ if (!container) {
   throw new Error('Root container not found')
 }
 
-document.body.style.margin = '0'
-document.body.style.minHeight = '100vh'
-document.body.style.fontFamily =
-  "'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif"
-
 createRoot(container).render(
   <StrictMode>
     <App />
