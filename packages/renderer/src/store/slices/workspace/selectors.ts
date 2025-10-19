@@ -14,6 +14,11 @@ export const selectFinanceImport = createSelector(
   (state) => state.financeImport
 )
 
+export const selectPdfImport = createSelector(
+  selectWorkspaceState,
+  (state) => state.pdfImport
+)
+
 export const selectReportExport = createSelector(
   selectWorkspaceState,
   (state) => state.reportExport

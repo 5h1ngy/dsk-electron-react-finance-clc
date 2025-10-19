@@ -1,5 +1,5 @@
 import { FilePdfOutlined } from '@ant-design/icons'
-import { Alert, Button, Card, Divider, Empty, List, Progress, Space, Statistic, Typography } from 'antd'
+import { Alert, Button, Card, Divider, Empty, List, Progress, Space, Statistic, Tooltip, Typography } from 'antd'
 
 import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
 import {
@@ -36,15 +36,30 @@ const ScoreCard = () => {
     )
   }
 
+  const exportDisabled = score.missingAnswers.length > 0
+
   return (
     <Card
       title="Profilo rischio"
       extra={
         <Space>
           <Typography.Link onClick={handleRecompute}>Ricalcola</Typography.Link>
-          <Button type="primary" icon={<FilePdfOutlined />} onClick={exportReport}>
-            Esporta PDF
-          </Button>
+          <Tooltip
+            title={
+              exportDisabled
+                ? 'Completa tutte le risposte obbligatorie prima di esportare il PDF'
+                : undefined
+            }
+          >
+            <Button
+              type="primary"
+              icon={<FilePdfOutlined />}
+              onClick={exportReport}
+              disabled={exportDisabled}
+            >
+              Esporta PDF
+            </Button>
+          </Tooltip>
         </Space>
       }
     >

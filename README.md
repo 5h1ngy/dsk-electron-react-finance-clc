@@ -1,12 +1,12 @@
-# Offline Risk Suite - Wave 1
+# Offline Risk Suite - Wave 1.1
 
-> Electron + React offline workbench focused on ingesting questionari JSON/Excel, calcolare il profilo di rischio e preparare i flussi successivi (linee/strumenti, PDF, firma).
+> Electron + React offline workbench focused on ingesting questionari JSON/Excel/PDF, calcolare il profilo di rischio e preparare i flussi successivi (linee/strumenti, PDF, firma).
 
-## Novit√† Wave 1
+## Novit‡ Wave 1.1
 
-- **Export PDF**: generazione PDF via `pdf-lib` nel renderer e salvataggio sicuro tramite nuovo IPC `report:export` (dialog di Electron). Pulsante ‚ÄúEsporta PDF‚Äù nella card profilo + storico export in Diagnostics.
-- **Visualizzazioni**: card ‚ÄúAvanzamento sezioni‚Äù con progress di completamento, score card ampliata con stato export e note.
-- **Diagnostics potenziata**: mostra anche l‚Äôultimo report prodotto oltre ai file di import.
+- **Import PDF questionario**: upload `.pdf` con parsing testuale (formato `id: valore`) tramite `pdfjs-dist`, precompilazione dello stepper e tracking metadati dellíultimo import (anche in Diagnostics).
+- **Hardening UX**: alert quando mancano campi obbligatori nella sezione corrente, pulsante "Esporta PDF" disabilitato finchÈ ci sono risposte incomplete, storico import/export sempre visibile.
+- **Test & domain**: nuovo parser PDF coperto da test (`domain/importers/pdfQuestionnaire.test.ts`) e worker configurato per Vite.
 
 ## Baseline Wave 0
 
@@ -16,11 +16,11 @@
   - Layout con header + routing (Workbench, Diagnostics) e health tag live.
   - Store Redux Toolkit con slice `questionnaire` + `workspace`.
   - Questionario dinamico generato da JSON pre-build (`packages/renderer/data/requests_schema.json`) validato via Zod.
-  - Motore di scoring deterministico (0-100) con classi rischio/volatilita e rationales placeholder.
-  - Import manuale (drag&drop `Upload.Dragger`) per questionario `.xlsx` e universo prodotti.
-  - Card riassuntive (schema, punteggio, import) basate esclusivamente su componenti Ant Design (nessun CSS custom).
-- **Domain scaffolding**: moduli `questionnaire`, `scoring`, `importers` pronti per essere estesi con motori idoneita/mappatura.
-- **Tooling**: electron-vite dev/build, ESLint 9, Prettier 3, TS strict, Jest (node+jsdom) con nuovi test su loader/scoring.
+  - Motore di scoring deterministico (0-100) con classi rischio/volatilit‡ e rationales placeholder.
+  - Import manuale (drag&drop `Upload.Dragger`) per questionario `.xlsx`, universo prodotti e PDF questionario.
+  - Card riassuntive (schema, punteggio, import) basate esclusivamente su componenti Ant Design.
+- **Domain scaffolding**: moduli `questionnaire`, `scoring`, `importers`, `report` pronti per líestensione (mappatura, idoneit‡, ecc.).
+- **Tooling**: electron-vite dev/build, ESLint 9, Prettier 3, TS strict, Jest (node+jsdom) con test su loader/scoring/report/importer PDF.
 
 ## Quick start
 
@@ -31,7 +31,7 @@ npm run dev        # starts electron-vite (main + preload + renderer)
 npm run lint       # ESLint 9
 npm run format     # Prettier 3
 npm run typecheck  # TS node+web projects
-npm test           # Jest (health IPC + preload smoke)
+npm test           # Jest (health IPC + preload + renderer)
 ```
 
 ## Repository map
@@ -47,12 +47,11 @@ packages/
     pages/{Workbench,Diagnostics}
     store/                # slices questionnaire + workspace
 resources/   # assets electron-builder
-.demo/       # file esempio da caricare via drag and drop (Excel)
+.demo/       # file esempio da caricare via drag and drop (Excel/PDF)
 ```
 
 ## Prossime wave
 
-1. **Wave 2** ‚Äì Ingest universo prodotti completo + motore mappatura regole.
-2. **Wave 3** ‚Äì Firma digitale + hash.
-3. **Wave 4** ‚Äì Motore idoneita/adeguatezza avanzato, explainability dettagliata.
-
+1. **Wave 2** ñ Ingest universo prodotti completo + motore mappatura regole.
+2. **Wave 3** ñ Firma digitale + hash.
+3. **Wave 4** ñ Motore idoneit‡/adeguatezza avanzato, explainability dettagliata.

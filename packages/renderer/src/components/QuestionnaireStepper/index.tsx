@@ -61,6 +61,7 @@ const QuestionnaireStepper = () => {
   const responses = useAppSelector(selectResponses)
   const progress = useAppSelector(selectAnsweredProgress)
   const [currentStep, setCurrentStep] = useState(0)
+  const watchedValues = Form.useWatch([], form)
 
   useEffect(() => {
     if (status === 'idle') {
@@ -111,6 +112,22 @@ const QuestionnaireStepper = () => {
 
   const section = useMemo(() => schema?.sections[currentStep], [schema, currentStep])
 
+  const missingRequired = useMemo(() => {
+    if (!section) {
+      return []
+    }
+    return section.questions.filter((question) => {
+      if (!question.required) {
+        return false
+      }
+      const value =
+        (watchedValues && watchedValues[question.id] !== undefined
+          ? watchedValues[question.id]
+          : responses[question.id]) ?? undefined
+      return value === undefined || value === null || value === ''
+    })
+  }, [section, watchedValues, responses])
+
   if (status === 'loading' || !schema) {
     return <Card loading title="Questionario dinamico" />
   }
@@ -148,6 +165,14 @@ const QuestionnaireStepper = () => {
           layout="vertical"
           style={{ marginTop: 24 }}
         >
+          {missingRequired.length > 0 ? (
+            <Alert
+              type="warning"
+              message="Compila tutti i campi obbligatori nella sezione corrente"
+              showIcon
+              style={{ marginBottom: 16 }}
+            />
+          ) : null}
           {section.questions.map((question) => (
             <Form.Item
               key={question.id}

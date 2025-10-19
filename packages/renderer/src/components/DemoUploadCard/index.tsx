@@ -1,9 +1,10 @@
-import { InboxOutlined } from '@ant-design/icons'
+import { FilePdfOutlined, InboxOutlined } from '@ant-design/icons'
 import { Card, List, message, Typography, Upload } from 'antd'
 import type { UploadProps } from 'antd'
 
 import { parseFinanceWorkbook } from '@renderer/domain/importers/financeWorkbook'
 import { parseQuestionnaireWorkbook } from '@renderer/domain/importers/requestWorkbook'
+import { parseQuestionnairePdf } from '@renderer/domain/importers/pdfQuestionnaire'
 import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
 import {
   applyBulkResponses,
@@ -11,8 +12,10 @@ import {
 } from '@renderer/store/slices/questionnaire'
 import {
   selectFinanceImport,
+  selectPdfImport,
   selectRequestImport,
   setFinanceImport,
+  setPdfImport,
   setRequestImport
 } from '@renderer/store/slices/workspace'
 
@@ -23,6 +26,7 @@ const DemoUploadCard = () => {
   const schema = useAppSelector(selectQuestionnaireSchema)
   const requestImport = useAppSelector(selectRequestImport)
   const financeImport = useAppSelector(selectFinanceImport)
+  const pdfImport = useAppSelector(selectPdfImport)
 
   const handleQuestionnaireUpload: UploadProps['beforeUpload'] = async (file) => {
     try {
@@ -67,6 +71,33 @@ const DemoUploadCard = () => {
     return Upload.LIST_IGNORE
   }
 
+  const handlePdfUpload: UploadProps['beforeUpload'] = async (file) => {
+    if (!schema) {
+      message.warning('Schema questionario non disponibile')
+      return Upload.LIST_IGNORE
+    }
+    try {
+      const result = await parseQuestionnairePdf(file, schema)
+      if (Object.keys(result.responses).length === 0) {
+        throw new Error('Impossibile trovare valori utili nel PDF')
+      }
+      dispatch(applyBulkResponses(result.responses))
+      dispatch(
+        setPdfImport({
+          fileName: file.name,
+          importedAt: new Date().toISOString(),
+          pages: result.pages
+        })
+      )
+      message.success('PDF importato e questionario precompilato')
+    } catch (error) {
+      message.error(
+        error instanceof Error ? error.message : 'Impossibile importare il PDF del questionario'
+      )
+    }
+    return Upload.LIST_IGNORE
+  }
+
   return (
     <Card title="Import manuale (demo)" style={{ height: '100%' }}>
       <Typography.Paragraph type="secondary">
@@ -93,6 +124,19 @@ const DemoUploadCard = () => {
         <p className="ant-upload-text">Universo prodotti (.xlsx)</p>
         <p className="ant-upload-hint">Conteggiamo strumenti e categorie per la proposta</p>
       </Dragger>
+      <Dragger
+        multiple={false}
+        beforeUpload={handlePdfUpload}
+        accept=".pdf"
+        showUploadList={false}
+        style={{ marginTop: 16, borderStyle: 'dashed' }}
+      >
+        <p className="ant-upload-drag-icon">
+          <FilePdfOutlined />
+        </p>
+        <p className="ant-upload-text">Questionario cliente (.pdf)</p>
+        <p className="ant-upload-hint">Estrarremo i valori testo formattati come id: valore</p>
+      </Dragger>
       <List
         size="small"
         header={<Typography.Text strong>Ultimi import</Typography.Text>}
@@ -100,6 +144,9 @@ const DemoUploadCard = () => {
           requestImport
             ? `Questionario: ${requestImport.fileName} (${requestImport.responses} risposte)`
             : 'Nessun questionario importato',
+          pdfImport
+            ? `PDF: ${pdfImport.fileName}`
+            : 'Nessun questionario PDF importato',
           financeImport
             ? `Prodotti: ${financeImport.fileName} (${financeImport.instruments} strumenti)`
             : 'Nessun universo prodotti importato'

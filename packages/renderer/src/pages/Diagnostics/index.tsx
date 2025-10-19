@@ -4,6 +4,7 @@ import { useHealthStatus } from '@renderer/hooks/useHealthStatus'
 import { useAppSelector } from '@renderer/store/hooks'
 import {
   selectFinanceImport,
+  selectPdfImport,
   selectReportExport,
   selectRequestImport
 } from '@renderer/store/slices/workspace'
@@ -13,6 +14,7 @@ const DiagnosticsPage = () => {
   const requestImport = useAppSelector(selectRequestImport)
   const financeImport = useAppSelector(selectFinanceImport)
   const reportExport = useAppSelector(selectReportExport)
+  const pdfImport = useAppSelector(selectPdfImport)
 
   return (
     <Row gutter={[16, 16]}>
@@ -53,6 +55,11 @@ const DiagnosticsPage = () => {
               {financeImport
                 ? `${financeImport.fileName} (${financeImport.instruments} strumenti)`
                 : 'Nessun file caricato'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Questionario PDF">
+              {pdfImport
+                ? `${pdfImport.fileName} (${pdfImport.pages} pagine)`
+                : 'Nessun PDF importato'}
             </Descriptions.Item>
             <Descriptions.Item label="Report PDF">
               {reportExport

@@ -11,6 +11,12 @@ export interface FinanceImportMeta {
   categories: Array<{ name: string; count: number }>
 }
 
+export interface PdfImportMeta {
+  fileName: string
+  importedAt: string
+  pages: number
+}
+
 export interface ReportExportMeta {
   fileName: string
   exportedAt: string
@@ -19,5 +25,6 @@ export interface ReportExportMeta {
 export interface WorkspaceState {
   requestImport?: RequestImportMeta
   financeImport?: FinanceImportMeta
+  pdfImport?: PdfImportMeta
   reportExport?: ReportExportMeta
 }
