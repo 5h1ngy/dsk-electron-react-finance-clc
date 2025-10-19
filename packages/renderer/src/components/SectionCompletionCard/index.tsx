@@ -26,16 +26,16 @@ const SectionCompletionCard = () => {
   })
 
   return (
-    <Card title='Avanzamento sezioni' size='small' style={{ height: '100%', marginLeft: 8 }}>
+    <Card title="Avanzamento sezioni" size="small" style={{ height: '100%' }}>
       <List
         dataSource={items}
         renderItem={(item) => (
-          <List.Item
-            actions={[<Typography.Text key='percent'>{item.percent}%</Typography.Text>]}
-          >
+          <List.Item>
             <List.Item.Meta
               title={item.title}
-              description={<Progress percent={item.percent} size='small' />}
+              description={
+                <Progress percent={item.percent} size="small" showInfo tooltip={{ formatter: () => `${item.percent}%` }} />
+              }
             />
           </List.Item>
         )}
