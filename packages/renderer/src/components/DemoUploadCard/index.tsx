@@ -68,7 +68,7 @@ const DemoUploadCard = () => {
   }
 
   return (
-    <Card title="Import manuale (demo)">
+    <Card title="Import manuale (demo)" style={{ height: '100%' }}>
       <Typography.Paragraph type="secondary">
         Trascina qui i file forniti (.demo) per precompilare il questionario oppure per caricare
         l&apos;universo prodotti.

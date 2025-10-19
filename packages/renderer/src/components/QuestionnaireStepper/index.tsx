@@ -118,6 +118,7 @@ const QuestionnaireStepper = () => {
   return (
     <Card
       title="Questionario dinamico"
+      style={{ height: '100%' }}
       extra={
         <Space size="large">
           <div style={{ minWidth: 160, textAlign: 'right' }}>

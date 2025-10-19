@@ -26,7 +26,7 @@ const SectionCompletionCard = () => {
   })
 
   return (
-    <Card title='Avanzamento sezioni' size='small'>
+    <Card title='Avanzamento sezioni' size='small' style={{ height: '100%', marginLeft: 8 }}>
       <List
         dataSource={items}
         renderItem={(item) => (

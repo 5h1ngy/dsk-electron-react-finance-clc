@@ -34,7 +34,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
           background: '#041529'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 32, flex: 1, minWidth: 0 }}>
           <Typography.Title level={4} style={{ color: '#fff', margin: 0 }}>
             Offline Risk Suite
           </Typography.Title>
@@ -44,7 +44,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
             selectedKeys={[location.pathname]}
             items={menuItems}
             onClick={({ key }) => navigate(String(key))}
-            style={{ borderBottom: 'none', background: 'transparent', minWidth: 240 }}
+            style={{ borderBottom: 'none', background: 'transparent', flex: 1, minWidth: 0 }}
             overflowedIndicator={null}
           />
         </div>
@@ -58,7 +58,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
           />
         </Space>
       </Header>
-      <Content style={{ padding: 24 }}>
+      <Content style={{ padding: 24, overflow: 'auto' }}>
         {children}
       </Content>
     </Layout>
