@@ -1,16 +1,8 @@
-import { useEffect, useMemo, useState, useCallback } from 'react'
-import {
-  Alert,
-  Button,
-  Card,
-  Form,
-  InputNumber,
-  Radio,
-  Space,
-  Statistic,
-  Steps,
-  Typography
-} from 'antd'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Alert, Button, Card, InputNumber, Radio, Space, Statistic, Steps, Typography } from 'antd'
 
 import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
 import {
@@ -24,37 +16,35 @@ import {
   selectResponses
 } from '@renderer/store/slices/questionnaire'
 
-import type { QuestionDefinition, QuestionnaireResponses } from '@renderer/domain/questionnaire'
+import type { QuestionnaireResponses } from '@renderer/domain/questionnaire'
 
-const QuestionField = ({ question }: { question: QuestionDefinition }) => {
-  if (question.type === 'single_choice' && question.options) {
-    return (
-      <Radio.Group optionType="button" buttonStyle="solid">
-        {question.options.map((option) => (
-          <Radio.Button key={option} value={option}>
-            {option}
-          </Radio.Button>
-        ))}
-      </Radio.Group>
-    )
+const isValuePresent = (value: unknown): boolean =>
+  value !== undefined && value !== null && value !== ''
+
+const buildQuestionSchema = (question: ReturnType<typeof useMemo> extends never ? never : any) => {
+  let schema: z.ZodTypeAny
+  if (question.type === 'single_choice') {
+    const allowed = question.options ?? []
+    schema = z
+      .string({ required_error: 'Campo obbligatorio' })
+      .refine((value) => allowed.includes(value), { message: 'Valore non valido' })
+  } else {
+    schema = z
+      .number({
+        required_error: 'Campo obbligatorio',
+        invalid_type_error: 'Inserisci un numero valido'
+      })
+      .refine(
+        (value) =>
+          (question.min === undefined || value >= question.min) &&
+          (question.max === undefined || value <= question.max),
+        { message: 'Valore fuori range' }
+      )
   }
-
-  return (
-    <InputNumber
-      style={{ width: '100%' }}
-      min={question.min}
-      max={question.max}
-      addonAfter={question.unit}
-      step={question.type === 'percentage' ? 1 : 0.5}
-    />
-  )
+  return question.required ? schema : schema.optional()
 }
 
-const isValueEmpty = (value: unknown): boolean =>
-  value === undefined || value === null || value === ''
-
 const QuestionnaireStepper = () => {
-  const [form] = Form.useForm()
   const dispatch = useAppDispatch()
   const schema = useAppSelector(selectQuestionnaireSchema)
   const status = useAppSelector(selectQuestionnaireStatus)
@@ -69,93 +59,55 @@ const QuestionnaireStepper = () => {
     }
   }, [dispatch, status])
 
+  const section = schema?.sections[currentStep]
+
+  const sectionSchema = useMemo(() => {
+    if (!section) {
+      return null
+    }
+    const shape: Record<string, z.ZodTypeAny> = {}
+    section.questions.forEach((question) => {
+      shape[question.id] = buildQuestionSchema(question)
+    })
+    return z.object(shape)
+  }, [section])
+
+  const defaultValues = useMemo(() => {
+    const values: QuestionnaireResponses = {}
+    section?.questions.forEach((question) => {
+      if (responses[question.id] !== undefined) {
+        values[question.id] = responses[question.id]
+      }
+    })
+    return values
+  }, [responses, section])
+
+  const {
+    control,
+    reset,
+    handleSubmit,
+    formState: { errors },
+    getValues
+  } = useForm<QuestionnaireResponses>({
+    resolver: sectionSchema ? zodResolver(sectionSchema) : undefined,
+    defaultValues
+  })
+
   useEffect(() => {
-    if (!schema) {
-      return
-    }
-    const currentSection = schema.sections[currentStep]
-    if (!currentSection) {
-      return
-    }
-    const sectionValues = currentSection.questions.reduce<Record<string, unknown>>(
-      (acc, question) => {
-        acc[question.id] = responses[question.id]
-        return acc
-      },
-      {}
-    )
-    form.setFieldsValue(sectionValues)
-  }, [schema, currentStep, responses, form])
-
-  const handleStepChange = (nextStep: number) => {
-    if (!schema) {
-      return
-    }
-    if (!canNavigateTo(nextStep)) {
-      return
-    }
-    setValidationErrors([])
-    const section = schema.sections[nextStep]
-    const values = section.questions.reduce<QuestionnaireResponses>((acc, question) => {
-      const current = form.getFieldValue(question.id)
-      if (!isValueEmpty(current)) {
-        acc[question.id] = current
-      }
-      return acc
-    }, {})
-    if (Object.keys(values).length > 0) {
-      dispatch(applyBulkResponses(values))
-    }
-    setCurrentStep(nextStep)
-  }
-
-  const handleSubmitSection = async () => {
-    // eslint-disable-next-line no-debugger
-    debugger
-    if (!schema) {
-      return
-    }
-    const section = schema.sections[currentStep]
-    const fieldNames = section.questions.map((question) => question.id)
-    try {
-      const values = (await form.validateFields(fieldNames)) as QuestionnaireResponses
-      dispatch(applyBulkResponses(values))
-      setValidationErrors([])
-      if (currentStep < schema.sections.length - 1) {
-        setCurrentStep((prev) => prev + 1)
-      } else {
-        dispatch(computeQuestionnaireScore())
-      }
-    } catch (error: any) {
-      const fields = (error?.errorFields as Array<{ name: Array<string | number> }> | undefined) ?? []
-      setValidationErrors(fields.map((field) => String(field.name?.[0])))
-    }
-  }
-
-  const handleBack = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0))
-  }
-
-  const handleReset = () => {
-    dispatch(resetQuestionnaire())
-    form.resetFields()
-    setCurrentStep(0)
-    setValidationErrors([])
-  }
-
-  const section = useMemo(() => schema?.sections[currentStep], [schema, currentStep])
+    reset(defaultValues)
+  }, [defaultValues, reset])
 
   const isSectionComplete = useCallback(
-    (sectionIndex: number) => {
+    (index: number) => {
       if (!schema) {
         return false
       }
-      const section = schema.sections[sectionIndex]
-      return section.questions.every(
-        (question) => !question.required || !isValueEmpty(responses[question.id])
+      const targetSection = schema.sections[index]
+      return targetSection.questions.every(
+        (question) => !question.required || isValuePresent(responses[question.id])
       )
     },
-    [schema, responses]
+    [responses, schema]
   )
 
   const firstIncompleteIndex = useMemo(() => {
@@ -166,18 +118,58 @@ const QuestionnaireStepper = () => {
     return idx === -1 ? schema.sections.length - 1 : idx
   }, [schema, isSectionComplete])
 
-  const canNavigateTo = useCallback(
-    (targetIndex: number) => targetIndex <= firstIncompleteIndex,
-    [firstIncompleteIndex]
-  )
-
   useEffect(() => {
     if (currentStep > firstIncompleteIndex) {
       setCurrentStep(firstIncompleteIndex)
     }
   }, [currentStep, firstIncompleteIndex])
 
-  if (status === 'loading' || !schema) {
+  const canNavigateTo = useCallback(
+    (targetIndex: number) => targetIndex <= firstIncompleteIndex,
+    [firstIncompleteIndex]
+  )
+
+  const onSubmit = (values: QuestionnaireResponses) => {
+    dispatch(applyBulkResponses(values))
+    setValidationErrors([])
+    if (!schema) {
+      return
+    }
+    if (currentStep < schema.sections.length - 1) {
+      setCurrentStep((prev) => prev + 1)
+    } else {
+      dispatch(computeQuestionnaireScore())
+    }
+  }
+
+  const onInvalid = (formErrors: typeof errors) => {
+    setValidationErrors(Object.keys(formErrors))
+  }
+
+  const handleNext = () => {
+    void handleSubmit(onSubmit, onInvalid)()
+  }
+
+  const handleBack = () => {
+    setValidationErrors([])
+    setCurrentStep((prev) => Math.max(prev - 1, 0))
+  }
+
+  const handleStepChange = (nextStep: number) => {
+    if (canNavigateTo(nextStep)) {
+      setValidationErrors([])
+      setCurrentStep(nextStep)
+    }
+  }
+
+  const handleReset = () => {
+    dispatch(resetQuestionnaire())
+    reset({})
+    setValidationErrors([])
+    setCurrentStep(0)
+  }
+
+  if (status === 'loading' || !schema || !section) {
     return <Card loading title="Questionario dinamico" />
   }
 
@@ -208,55 +200,72 @@ const QuestionnaireStepper = () => {
           disabled: !canNavigateTo(index)
         }))}
       />
-      {section ? (
-        <Form
-          key={section.id}
-          form={form}
-          layout="vertical"
-          style={{ marginTop: 24 }}
-          onValuesChange={() => setSectionTouched(true)}
-        >
-          {validationErrors.length > 0 ? (
-            <Alert
-              type="warning"
-              message="Compila tutti i campi obbligatori nella sezione corrente"
-              showIcon
-              style={{ marginBottom: 16 }}
-            />
-          ) : null}
-          {section.questions.map((question) => (
-            <Form.Item
+      {validationErrors.length > 0 ? (
+        <Alert
+          type="warning"
+          message="Compila tutti i campi obbligatori nella sezione corrente"
+          showIcon
+          style={{ marginTop: 16 }}
+        />
+      ) : null}
+      <Space direction="vertical" size="large" style={{ width: '100%', marginTop: 24 }}>
+        {section.questions.map((question) => (
+          <div key={question.id}>
+            <Space align="baseline">
+              <Typography.Text strong>{question.label}</Typography.Text>
+              {question.required ? <Typography.Text type="danger">*</Typography.Text> : null}
+            </Space>
+            <Controller
               key={question.id}
               name={question.id}
-              label={
-                <Space>
-                  {question.label}
-                  {question.required ? <Typography.Text type="danger">*</Typography.Text> : null}
-                </Space>
+              control={control}
+              render={({ field }) =>
+                question.type === 'single_choice' ? (
+                  <Radio.Group
+                    {...field}
+                    optionType="button"
+                    buttonStyle="solid"
+                    style={{ marginTop: 8 }}
+                  >
+                    {(question.options ?? []).map((option) => (
+                      <Radio.Button key={option} value={option}>
+                        {option}
+                      </Radio.Button>
+                    ))}
+                  </Radio.Group>
+                ) : (
+                  <InputNumber
+                    {...field}
+                    value={field.value ?? undefined}
+                    onChange={(value) => field.onChange(value === null ? undefined : value)}
+                    style={{ width: '100%', marginTop: 8 }}
+                    min={question.min}
+                    max={question.max}
+                    addonAfter={question.unit}
+                    step={question.type === 'percentage' ? 1 : 0.5}
+                  />
+                )
               }
-              rules={
-                question.required ? [{ required: true, message: 'Campo obbligatorio' }] : undefined
-              }
-            >
-              <QuestionField question={question} />
-            </Form.Item>
-          ))}
-          <Alert
-            type="info"
-            message="Puoi importare il questionario da Excel oppure compilarlo manualmente."
-            style={{ marginBottom: 16 }}
-            showIcon
-          />
-          <Space>
-            <Button onClick={handleBack} disabled={currentStep === 0}>
-              Indietro
-            </Button>
-            <Button type="primary" onClick={() => void handleSubmitSection()}>
-              {currentStep === schema.sections.length - 1 ? 'Calcola profilo' : 'Avanti'}
-            </Button>
-          </Space>
-        </Form>
-      ) : null}
+            />
+            {errors[question.id]?.message ? (
+              <Typography.Text type="danger">{String(errors[question.id]?.message)}</Typography.Text>
+            ) : null}
+          </div>
+        ))}
+        <Alert
+          type="info"
+          message="Puoi importare il questionario da Excel, PDF oppure compilarlo manualmente."
+          showIcon
+        />
+        <Space>
+          <Button onClick={handleBack} disabled={currentStep === 0}>
+            Indietro
+          </Button>
+          <Button type="primary" onClick={handleNext}>
+            {currentStep === schema.sections.length - 1 ? 'Calcola profilo' : 'Avanti'}
+          </Button>
+        </Space>
+      </Space>
     </Card>
   )
 }
