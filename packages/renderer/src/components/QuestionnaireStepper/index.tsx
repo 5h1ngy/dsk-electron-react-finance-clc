@@ -61,9 +61,7 @@ const QuestionnaireStepper = () => {
   const responses = useAppSelector(selectResponses)
   const progress = useAppSelector(selectAnsweredProgress)
   const [currentStep, setCurrentStep] = useState(0)
-  const [sectionTouched, setSectionTouched] = useState(false)
-  const [validationRequested, setValidationRequested] = useState(false)
-  const watchedValues = Form.useWatch([], form) ?? {}
+  const [validationErrors, setValidationErrors] = useState<string[]>([])
 
   useEffect(() => {
     if (status === 'idle') {
@@ -89,31 +87,48 @@ const QuestionnaireStepper = () => {
     form.setFieldsValue(sectionValues)
   }, [schema, currentStep, responses, form])
 
-  useEffect(() => {
-    setSectionTouched(false)
-    setValidationRequested(false)
-  }, [currentStep])
-
   const handleStepChange = (nextStep: number) => {
     if (!schema) {
       return
     }
-    const nextAllowed = canNavigateTo(nextStep)
-    if (!nextAllowed) {
+    if (!canNavigateTo(nextStep)) {
       return
     }
-    const values = form.getFieldsValue() as QuestionnaireResponses
-    dispatch(applyBulkResponses(values))
+    setValidationErrors([])
+    const section = schema.sections[nextStep]
+    const values = section.questions.reduce<QuestionnaireResponses>((acc, question) => {
+      const current = form.getFieldValue(question.id)
+      if (!isValueEmpty(current)) {
+        acc[question.id] = current
+      }
+      return acc
+    }, {})
+    if (Object.keys(values).length > 0) {
+      dispatch(applyBulkResponses(values))
+    }
     setCurrentStep(nextStep)
   }
 
   const handleSubmitSection = async () => {
-    const values = (await form.validateFields()) as QuestionnaireResponses
-    dispatch(applyBulkResponses(values))
-    if (schema && currentStep < schema.sections.length - 1) {
-      setCurrentStep((prev) => prev + 1)
-    } else {
-      dispatch(computeQuestionnaireScore())
+    // eslint-disable-next-line no-debugger
+    debugger
+    if (!schema) {
+      return
+    }
+    const section = schema.sections[currentStep]
+    const fieldNames = section.questions.map((question) => question.id)
+    try {
+      const values = (await form.validateFields(fieldNames)) as QuestionnaireResponses
+      dispatch(applyBulkResponses(values))
+      setValidationErrors([])
+      if (currentStep < schema.sections.length - 1) {
+        setCurrentStep((prev) => prev + 1)
+      } else {
+        dispatch(computeQuestionnaireScore())
+      }
+    } catch (error: any) {
+      const fields = (error?.errorFields as Array<{ name: Array<string | number> }> | undefined) ?? []
+      setValidationErrors(fields.map((field) => String(field.name?.[0])))
     }
   }
 
@@ -125,44 +140,22 @@ const QuestionnaireStepper = () => {
     dispatch(resetQuestionnaire())
     form.resetFields()
     setCurrentStep(0)
+    setValidationErrors([])
   }
 
   const section = useMemo(() => schema?.sections[currentStep], [schema, currentStep])
-
-  const computeMissingForSection = useCallback(
-    (sectionIndex: number, sourceValues: QuestionnaireResponses) => {
-      if (!schema) {
-        return []
-      }
-      const targetSection = schema.sections[sectionIndex]
-      if (!targetSection) {
-        return []
-      }
-      return targetSection.questions.filter(
-        (question) => question.required && isValueEmpty(sourceValues[question.id])
-      )
-    },
-    [schema]
-  )
-
-  const missingRequired = useMemo(() => {
-    if (!schema) {
-      return []
-    }
-    const mergedValues = { ...responses, ...watchedValues }
-    return computeMissingForSection(currentStep, mergedValues)
-  }, [schema, currentStep, computeMissingForSection, responses, watchedValues])
 
   const isSectionComplete = useCallback(
     (sectionIndex: number) => {
       if (!schema) {
         return false
       }
-      const mergedValues =
-        sectionIndex === currentStep ? { ...responses, ...watchedValues } : responses
-      return computeMissingForSection(sectionIndex, mergedValues).length === 0
+      const section = schema.sections[sectionIndex]
+      return section.questions.every(
+        (question) => !question.required || !isValueEmpty(responses[question.id])
+      )
     },
-    [schema, computeMissingForSection, responses, watchedValues, currentStep]
+    [schema, responses]
   )
 
   const firstIncompleteIndex = useMemo(() => {
@@ -178,7 +171,11 @@ const QuestionnaireStepper = () => {
     [firstIncompleteIndex]
   )
 
-  const canProceed = missingRequired.length === 0
+  useEffect(() => {
+    if (currentStep > firstIncompleteIndex) {
+      setCurrentStep(firstIncompleteIndex)
+    }
+  }, [currentStep, firstIncompleteIndex])
 
   if (status === 'loading' || !schema) {
     return <Card loading title="Questionario dinamico" />
@@ -219,7 +216,7 @@ const QuestionnaireStepper = () => {
           style={{ marginTop: 24 }}
           onValuesChange={() => setSectionTouched(true)}
         >
-          {missingRequired.length > 0 && (sectionTouched || validationRequested) ? (
+          {validationErrors.length > 0 ? (
             <Alert
               type="warning"
               message="Compila tutti i campi obbligatori nella sezione corrente"
@@ -254,16 +251,7 @@ const QuestionnaireStepper = () => {
             <Button onClick={handleBack} disabled={currentStep === 0}>
               Indietro
             </Button>
-            <Button
-              type="primary"
-              onClick={() => {
-                if (!canProceed) {
-                  setValidationRequested(true)
-                  return
-                }
-                void handleSubmitSection()
-              }}
-            >
+            <Button type="primary" onClick={() => void handleSubmitSection()}>
               {currentStep === schema.sections.length - 1 ? 'Calcola profilo' : 'Avanti'}
             </Button>
           </Space>
