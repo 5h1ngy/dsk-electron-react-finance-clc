@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { FilePdfOutlined } from '@ant-design/icons'
 import { Alert, Button, Card, Divider, Empty, List, Progress, Space, Statistic, Tooltip, Typography } from 'antd'
 
@@ -9,17 +10,26 @@ import {
 } from '@renderer/store/slices/questionnaire'
 import { selectReportExport } from '@renderer/store/slices/workspace'
 import { useReportExporter } from '@renderer/hooks/useReportExporter'
+import { selectProducts, setRecommendations } from '@renderer/store/slices/productUniverse'
+import { buildRecommendations } from '@renderer/store/slices/productUniverse/slice'
 
 const ScoreCard = () => {
   const dispatch = useAppDispatch()
   const score = useAppSelector(selectQuestionnaireScore)
   const meta = useAppSelector(selectScoreMeta)
   const lastExport = useAppSelector(selectReportExport)
+  const products = useAppSelector(selectProducts)
   const { exportReport } = useReportExporter()
 
   const handleRecompute = () => {
     dispatch(computeQuestionnaireScore())
   }
+
+  useEffect(() => {
+    if (score && products.length) {
+      dispatch(setRecommendations(buildRecommendations(score, products)))
+    }
+  }, [dispatch, products, score])
 
   if (!score) {
     return (

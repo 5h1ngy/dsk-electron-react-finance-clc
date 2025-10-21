@@ -18,6 +18,7 @@ import {
   setPdfImport,
   setRequestImport
 } from '@renderer/store/slices/workspace'
+import { setProductUniverse } from '@renderer/store/slices/productUniverse'
 
 const { Dragger } = Upload
 
@@ -54,6 +55,12 @@ const DemoUploadCard = () => {
   const handleFinanceUpload: UploadProps['beforeUpload'] = async (file) => {
     try {
       const summary = await parseFinanceWorkbook(file)
+      dispatch(
+        setProductUniverse({
+          products: summary.products,
+          categories: summary.categories
+        })
+      )
       dispatch(
         setFinanceImport({
           fileName: file.name,
@@ -144,9 +151,7 @@ const DemoUploadCard = () => {
           requestImport
             ? `Questionario: ${requestImport.fileName} (${requestImport.responses} risposte)`
             : 'Nessun questionario importato',
-          pdfImport
-            ? `PDF: ${pdfImport.fileName}`
-            : 'Nessun questionario PDF importato',
+          pdfImport ? `PDF: ${pdfImport.fileName}` : 'Nessun questionario PDF importato',
           financeImport
             ? `Prodotti: ${financeImport.fileName} (${financeImport.instruments} strumenti)`
             : 'Nessun universo prodotti importato'

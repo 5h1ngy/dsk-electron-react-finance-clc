@@ -74,3 +74,4 @@ const DiagnosticsPage = () => {
 }
 
 export default DiagnosticsPage
+

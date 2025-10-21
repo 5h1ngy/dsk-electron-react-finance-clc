@@ -16,12 +16,12 @@ import {
   selectResponses
 } from '@renderer/store/slices/questionnaire'
 
-import type { QuestionnaireResponses } from '@renderer/domain/questionnaire'
+import type { QuestionnaireResponses, QuestionDefinition } from '@renderer/domain/questionnaire'
 
 const isValuePresent = (value: unknown): boolean =>
   value !== undefined && value !== null && value !== ''
 
-const buildQuestionSchema = (question: ReturnType<typeof useMemo> extends never ? never : any) => {
+const buildQuestionSchema = (question: QuestionDefinition) => {
   let schema: z.ZodTypeAny
   if (question.type === 'single_choice') {
     const allowed = question.options ?? []
@@ -86,8 +86,7 @@ const QuestionnaireStepper = () => {
     control,
     reset,
     handleSubmit,
-    formState: { errors },
-    getValues
+    formState: { errors }
   } = useForm<QuestionnaireResponses>({
     resolver: sectionSchema ? zodResolver(sectionSchema) : undefined,
     defaultValues
