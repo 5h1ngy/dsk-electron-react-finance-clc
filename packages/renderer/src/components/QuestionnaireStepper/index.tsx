@@ -210,13 +210,22 @@ const QuestionnaireStepper = () => {
       ) : null}
       <Space direction="vertical" size="large" style={{ width: '100%', marginTop: 24 }}>
         {section.questions.map((question) => (
-          <div key={question.id}>
+          <div
+            key={question.id}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 8,
+              padding: '8px 0'
+            }}
+          >
             <Space align="baseline">
-              <Typography.Text strong>{question.label}</Typography.Text>
+              <Typography.Text strong style={{ fontSize: 14 }}>
+                {question.label}
+              </Typography.Text>
               {question.required ? <Typography.Text type="danger">*</Typography.Text> : null}
             </Space>
             <Controller
-              key={question.id}
               name={question.id}
               control={control}
               render={({ field }) =>
@@ -225,10 +234,10 @@ const QuestionnaireStepper = () => {
                     {...field}
                     optionType="button"
                     buttonStyle="solid"
-                    style={{ marginTop: 8 }}
+                    style={{ width: '100%' }}
                   >
                     {(question.options ?? []).map((option) => (
-                      <Radio.Button key={option} value={option}>
+                      <Radio.Button key={option} value={option} style={{ flex: 1, textAlign: 'center' }}>
                         {option}
                       </Radio.Button>
                     ))}
@@ -238,7 +247,7 @@ const QuestionnaireStepper = () => {
                     {...field}
                     value={field.value ?? undefined}
                     onChange={(value) => field.onChange(value === null ? undefined : value)}
-                    style={{ width: '100%', marginTop: 8 }}
+                    style={{ width: '100%' }}
                     min={question.min}
                     max={question.max}
                     addonAfter={question.unit}
@@ -248,7 +257,9 @@ const QuestionnaireStepper = () => {
               }
             />
             {errors[question.id]?.message ? (
-              <Typography.Text type="danger">{String(errors[question.id]?.message)}</Typography.Text>
+              <Typography.Text type="danger" style={{ fontSize: 12 }}>
+                {String(errors[question.id]?.message)}
+              </Typography.Text>
             ) : null}
           </div>
         ))}
