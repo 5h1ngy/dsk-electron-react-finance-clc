@@ -1,57 +1,65 @@
-# Offline Risk Suite - Wave 1.1
+# Offline Risk Suite - Wave 3
 
 > Electron + React offline workbench focused on ingesting questionari JSON/Excel/PDF, calcolare il profilo di rischio e preparare i flussi successivi (linee/strumenti, PDF, firma).
 
-## Novità Wave 1.1
+## Novita Wave 3
 
-- **Import PDF questionario**: upload `.pdf` con parsing testuale (formato `id: valore`) tramite `pdfjs-dist`, precompilazione dello stepper e tracking metadati dell’ultimo import (anche in Diagnostics).
-- **Hardening UX**: alert quando mancano campi obbligatori nella sezione corrente, pulsante "Esporta PDF" disabilitato finché ci sono risposte incomplete, storico import/export sempre visibile.
-- **Test & domain**: nuovo parser PDF coperto da test (`domain/importers/pdfQuestionnaire.test.ts`) e worker configurato per Vite.
+- **Firma digitale & hash offline**: il main process utilizza 
+ode-signpdf con certificati PKCS#12 caricati dall'utente per firmare il PDF, generare l'impronta SHA-256 e creare file di supporto (.sha256.txt e .manifest.json). L'IPC eport:export gestisce ora certificato, hash e percorsi salvati.
+- **Gestione certificato in UI**: nuova card dedicata nel Workbench per importare .p12/.pfx, verificare i metadati con password runtime e rimuovere il file dalla sessione. L'export richiede la password prima della firma.
+- **Diagnostica e tracciabilita**: lo stato del certificato, il path dei file hash/manifest e l'ultima SHA-256 sono visibili sia nella pagina Diagnostics sia nel riepilogo del profilo rischio. Il PDF include riferimenti alle versioni di schema e scoring.
+- **Test e hardening dominio**: suite Jest per il servizio di firma (packages/main/src/services/signature/index.test.ts) e IPC aggiornato, con certificati generati al volo tramite 
+ode-forge.
+
+## Novita Wave 1.1
+
+- **Import PDF questionario**: upload .pdf con parsing testuale (formato id: valore) tramite pdfjs-dist, precompilazione dello stepper e tracking metadati dell'ultimo import.
+- **Hardening UX**: alert quando mancano campi obbligatori, pulsante di export disabilitato finche ci sono risposte incomplete, storico import/export sempre visibile.
+- **Test & domain**: parser PDF coperto da test (domain/importers/pdfQuestionnaire.test.ts) e worker configurato per Vite.
 
 ## Baseline Wave 0
 
-- **Main process** invariato: caricamento `.env`, logger strutturato, hardening sicurezza, IPC `system:health`.
-- **Preload bridge** minimale e tipizzato (`window.api.health` + `window.api.report`), pronto a ulteriori estensioni.
+- **Main process**: caricamento .env, logger strutturato, hardening sicurezza, IPC system:health.
+- **Preload bridge**: espone window.api.health e window.api.report.
 - **Renderer Ant Design-first**
   - Layout con header + routing (Workbench, Diagnostics) e health tag live.
-  - Store Redux Toolkit con slice `questionnaire` + `workspace`.
-  - Questionario dinamico generato da JSON pre-build (`packages/renderer/data/requests_schema.json`) validato via Zod.
-  - Motore di scoring deterministico (0-100) con classi rischio/volatilità e rationales placeholder.
-  - Import manuale (drag&drop `Upload.Dragger`) per questionario `.xlsx`, universo prodotti e PDF questionario.
-  - Card riassuntive (schema, punteggio, import) basate esclusivamente su componenti Ant Design.
-- **Domain scaffolding**: moduli `questionnaire`, `scoring`, `importers`, `report` pronti per l’estensione (mappatura, idoneità, ecc.).
-- **Tooling**: electron-vite dev/build, ESLint 9, Prettier 3, TS strict, Jest (node+jsdom) con test su loader/scoring/report/importer PDF.
+  - Store Redux Toolkit con slice questionnaire, workspace, productUniverse.
+  - Questionario dinamico generato da JSON pre-build (packages/renderer/data/requests_schema.json) validato via Zod.
+  - Motore di scoring deterministico (0-100) con classi rischio/volatilita e rationales placeholder.
+  - Import manuale per questionario .xlsx, universo prodotti e PDF questionario.
+  - Card riassuntive basate su componenti Ant Design.
+- **Domain scaffolding**: moduli questionnaire, scoring, importers, eport pronti per le estensioni successive.
+- **Tooling**: electron-vite dev/build, ESLint 9, Prettier 3, TS strict, Jest (node + jsdom).
 
 ## Quick start
 
-```bash
+`ash
 npm install
-npm run dev        # starts electron-vite (main + preload + renderer)
+npm run dev        # avvia electron-vite (main + preload + renderer)
 
 npm run lint       # ESLint 9
 npm run format     # Prettier 3
 npm run typecheck  # TS node+web projects
-npm test           # Jest (health IPC + preload + renderer)
-```
+npm test           # Jest
+`
 
 ## Repository map
 
-```
+`
 packages/
-  main/      # env + logger + security + IPC (health + report export)
+  main/      # env + logger + security + IPC (health + report export firmato)
   preload/   # espone window.api.{health,report}
   renderer/
-    data/                 # schema JSON compile-time (v1)
+    data/
     domain/{questionnaire,scoring,importers,report}
-    components/           # Stepper, Score/Report card, Upload, ecc.
+    components/
     pages/{Workbench,Diagnostics}
-    store/                # slices questionnaire + workspace
+    store/
 resources/   # assets electron-builder
 .demo/       # file esempio da caricare via drag and drop (Excel/PDF)
-```
+`
 
 ## Prossime wave
 
-1. **Wave 2** – Ingest universo prodotti completo + motore mappatura regole.
-2. **Wave 3** – Firma digitale + hash.
-3. **Wave 4** – Motore idoneità/adeguatezza avanzato, explainability dettagliata.
+1. **Wave 4** - Motore idoneita/adeguatezza avanzato, explainability dettagliata.
+2. **Wave 5** - Hardening, accessibilita e packaging/firma del codice.

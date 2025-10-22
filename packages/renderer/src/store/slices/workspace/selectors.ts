@@ -23,3 +23,8 @@ export const selectReportExport = createSelector(
   selectWorkspaceState,
   (state) => state.reportExport
 )
+
+export const selectCertificate = createSelector(
+  selectWorkspaceState,
+  (state) => state.certificate
+)

@@ -1,5 +1,6 @@
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 
+import { SCORING_ENGINE_VERSION } from '@renderer/config/versions'
 import type {
   QuestionnaireResponses,
   QuestionnaireSchema
@@ -17,12 +18,16 @@ const formatDateTime = (date = new Date()): string =>
 
 const formatResponse = (value: unknown): string => {
   if (value === undefined || value === null || value === '') {
-    return '—'
+    return '-'
   }
   return String(value)
 }
 
-export const generateRiskReport = async ({ schema, responses, score }: ReportPayload): Promise<Uint8Array> => {
+export const generateRiskReport = async ({
+  schema,
+  responses,
+  score
+}: ReportPayload): Promise<Uint8Array> => {
   const pdf = await PDFDocument.create()
   const page = pdf.addPage()
   const { width, height } = page.getSize()
@@ -33,7 +38,10 @@ export const generateRiskReport = async ({ schema, responses, score }: ReportPay
 
   let cursor = height - margin
 
-  const drawText = (text: string, options: { size: number; font?: typeof bodyFont; color?: { r: number; g: number; b: number } }) => {
+  const drawText = (
+    text: string,
+    options: { size: number; font?: typeof bodyFont; color?: { r: number; g: number; b: number } }
+  ) => {
     const { size, font = bodyFont, color = rgb(0, 0, 0) } = options
     cursor -= size + 6
     page.drawText(text, {
@@ -47,13 +55,20 @@ export const generateRiskReport = async ({ schema, responses, score }: ReportPay
   }
 
   drawText('Offline Risk Suite', { size: 18, font: titleFont })
-  drawText(`Report di profilazione – ${schema.title}`, { size: 12 })
+  drawText(`Report di profilazione - ${schema.title}`, { size: 12 })
   drawText(`Generato il ${formatDateTime()}`, { size: 10, color: rgb(0.3, 0.3, 0.3) })
+  drawText(
+    `Versioni: schema ${schema.schemaVersion} | scoring ${SCORING_ENGINE_VERSION}`,
+    { size: 10, color: rgb(0.3, 0.3, 0.3) }
+  )
   cursor -= 10
-  drawText(`Punteggio: ${score.score} · Classe: ${score.riskClass} · Volatilità: ${score.volatilityBand}`, {
-    size: 12,
-    font: titleFont
-  })
+  drawText(
+    `Punteggio: ${score.score} | Classe: ${score.riskClass} | Volatilita: ${score.volatilityBand}`,
+    {
+      size: 12,
+      font: titleFont
+    }
+  )
 
   score.rationales.forEach((rationale) => drawText(`- ${rationale}`, { size: 10 }))
 
@@ -64,6 +79,16 @@ export const generateRiskReport = async ({ schema, responses, score }: ReportPay
       drawText(`${question.label}: ${formatResponse(responses[question.id])}`, { size: 10 })
     })
   })
+
+  cursor -= 30
+  drawText('La firma digitale e il relativo hash SHA-256 vengono applicati al momento dell\'esportazione.', {
+    size: 9,
+    color: rgb(0.4, 0.4, 0.4)
+  })
+  drawText(
+    'File ausiliari (.sha256.txt e .manifest.json) vengono salvati accanto al PDF per la verifica offline.',
+    { size: 9, color: rgb(0.4, 0.4, 0.4) }
+  )
 
   const bytes = await pdf.save()
   return bytes

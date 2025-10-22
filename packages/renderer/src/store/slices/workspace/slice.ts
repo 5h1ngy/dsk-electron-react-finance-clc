@@ -2,6 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 import type {
   FinanceImportMeta,
+  CertificateMeta,
   PdfImportMeta,
   ReportExportMeta,
   RequestImportMeta,
@@ -25,9 +26,18 @@ const workspaceSlice = createSlice({
     },
     setReportExport: (state, action: PayloadAction<ReportExportMeta | undefined>) => {
       state.reportExport = action.payload
+    },
+    setCertificate: (state, action: PayloadAction<CertificateMeta | undefined>) => {
+      state.certificate = action.payload
     }
   }
 })
 
-export const { setRequestImport, setFinanceImport, setPdfImport, setReportExport } = workspaceSlice.actions
+export const {
+  setRequestImport,
+  setFinanceImport,
+  setPdfImport,
+  setReportExport,
+  setCertificate
+} = workspaceSlice.actions
 export const workspaceReducer = workspaceSlice.reducer

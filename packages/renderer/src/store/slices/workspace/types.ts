@@ -17,9 +17,22 @@ export interface PdfImportMeta {
   pages: number
 }
 
+import type { CertificateSummary } from '@renderer/domain/signature/types'
+
 export interface ReportExportMeta {
   fileName: string
   exportedAt: string
+  sha256?: string
+  manifestPath?: string
+  certificateSubject?: string
+  hashPath?: string
+}
+
+export interface CertificateMeta {
+  fileName: string
+  loadedAt: string
+  base64: string
+  summary?: CertificateSummary
 }
 
 export interface WorkspaceState {
@@ -27,4 +40,5 @@ export interface WorkspaceState {
   financeImport?: FinanceImportMeta
   pdfImport?: PdfImportMeta
   reportExport?: ReportExportMeta
+  certificate?: CertificateMeta
 }

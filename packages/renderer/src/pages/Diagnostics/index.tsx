@@ -3,6 +3,7 @@ import { Card, Col, Descriptions, Row, Typography } from 'antd'
 import { useHealthStatus } from '@renderer/hooks/useHealthStatus'
 import { useAppSelector } from '@renderer/store/hooks'
 import {
+  selectCertificate,
   selectFinanceImport,
   selectPdfImport,
   selectReportExport,
@@ -15,6 +16,7 @@ const DiagnosticsPage = () => {
   const financeImport = useAppSelector(selectFinanceImport)
   const reportExport = useAppSelector(selectReportExport)
   const pdfImport = useAppSelector(selectPdfImport)
+  const certificate = useAppSelector(selectCertificate)
 
   return (
     <Row gutter={[16, 16]}>
@@ -65,6 +67,22 @@ const DiagnosticsPage = () => {
               {reportExport
                 ? `${reportExport.fileName} (${new Date(reportExport.exportedAt).toLocaleString()})`
                 : 'Nessun export effettuato'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Hash report">
+              {reportExport?.sha256 ?? 'N/D'}
+            </Descriptions.Item>
+            <Descriptions.Item label="File SHA-256">
+              {reportExport?.hashPath ?? 'N/D'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Manifest">
+              {reportExport?.manifestPath ?? 'N/D'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Certificato">
+              {certificate
+                ? `${certificate.fileName}${
+                    certificate.summary ? ` (${certificate.summary.subject})` : ' (in attesa verifica)'
+                  }`
+                : 'Nessun certificato caricato'}
             </Descriptions.Item>
           </Descriptions>
         </Card>

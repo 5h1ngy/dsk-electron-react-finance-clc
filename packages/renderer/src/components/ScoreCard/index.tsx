@@ -1,6 +1,21 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { FilePdfOutlined } from '@ant-design/icons'
-import { Alert, Button, Card, Divider, Empty, List, Progress, Space, Statistic, Tooltip, Typography } from 'antd'
+import {
+  Alert,
+  Button,
+  Card,
+  Divider,
+  Empty,
+  Input,
+  List,
+  Modal,
+  Progress,
+  Space,
+  Statistic,
+  Tooltip,
+  Typography,
+  message
+} from 'antd'
 
 import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
 import {
@@ -8,7 +23,7 @@ import {
   selectQuestionnaireScore,
   selectScoreMeta
 } from '@renderer/store/slices/questionnaire'
-import { selectReportExport } from '@renderer/store/slices/workspace'
+import { selectCertificate, selectReportExport } from '@renderer/store/slices/workspace'
 import { useReportExporter } from '@renderer/hooks/useReportExporter'
 import { selectProducts, setRecommendations } from '@renderer/store/slices/productUniverse'
 import { buildRecommendations } from '@renderer/store/slices/productUniverse/slice'
@@ -18,8 +33,12 @@ const ScoreCard = () => {
   const score = useAppSelector(selectQuestionnaireScore)
   const meta = useAppSelector(selectScoreMeta)
   const lastExport = useAppSelector(selectReportExport)
+  const certificate = useAppSelector(selectCertificate)
   const products = useAppSelector(selectProducts)
-  const { exportReport } = useReportExporter()
+  const { exportReport, exporting } = useReportExporter()
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false)
+  const [password, setPassword] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   const handleRecompute = () => {
     dispatch(computeQuestionnaireScore())
@@ -46,7 +65,36 @@ const ScoreCard = () => {
     )
   }
 
-  const exportDisabled = score.missingAnswers.length > 0
+  const exportDisabled = score.missingAnswers.length > 0 || exporting
+  const certificateLoaded = Boolean(certificate)
+
+  const exportTooltip = (() => {
+    if (score.missingAnswers.length > 0) {
+      return 'Completa tutte le risposte obbligatorie prima di esportare il PDF'
+    }
+    if (!certificateLoaded) {
+      return 'Carica e verifica un certificato P12 per abilitare la firma'
+    }
+    return undefined
+  })()
+
+  const handleExportClick = () => {
+    if (!certificateLoaded) {
+      message.warning('Carica il certificato P12 nella scheda dedicata.')
+      return
+    }
+    setPasswordModalOpen(true)
+  }
+
+  const confirmExport = async () => {
+    setSubmitting(true)
+    const ok = await exportReport(password)
+    setSubmitting(false)
+    if (ok) {
+      setPassword('')
+      setPasswordModalOpen(false)
+    }
+  }
 
   return (
     <Card
@@ -54,20 +102,15 @@ const ScoreCard = () => {
       extra={
         <Space>
           <Typography.Link onClick={handleRecompute}>Ricalcola</Typography.Link>
-          <Tooltip
-            title={
-              exportDisabled
-                ? 'Completa tutte le risposte obbligatorie prima di esportare il PDF'
-                : undefined
-            }
-          >
+          <Tooltip title={exportTooltip}>
             <Button
               type="primary"
               icon={<FilePdfOutlined />}
-              onClick={exportReport}
-              disabled={exportDisabled}
+              onClick={handleExportClick}
+              disabled={exportDisabled || !certificateLoaded}
+              loading={exporting}
             >
-              Esporta PDF
+              Esporta PDF firmato
             </Button>
           </Tooltip>
         </Space>
@@ -92,7 +135,22 @@ const ScoreCard = () => {
         {lastExport ? (
           <List.Item>
             <Typography.Text type="secondary">
-              Ultimo export {new Date(lastExport.exportedAt).toLocaleTimeString()} ({lastExport.fileName})
+              Ultimo export {new Date(lastExport.exportedAt).toLocaleTimeString()} (
+              {lastExport.fileName})
+            </Typography.Text>
+          </List.Item>
+        ) : null}
+        {lastExport?.sha256 ? (
+          <List.Item>
+            <Typography.Text type="secondary">
+              SHA-256: {lastExport.sha256}
+            </Typography.Text>
+          </List.Item>
+        ) : null}
+        {lastExport?.certificateSubject ? (
+          <List.Item>
+            <Typography.Text type="secondary">
+              Firmato con {lastExport.certificateSubject}
             </Typography.Text>
           </List.Item>
         ) : null}
@@ -113,6 +171,29 @@ const ScoreCard = () => {
           renderItem={(item) => <List.Item>{item}</List.Item>}
         />
       )}
+      <Modal
+        open={passwordModalOpen}
+        title="Firma e hash del report"
+        onCancel={() => {
+          setPasswordModalOpen(false)
+          setPassword('')
+        }}
+        onOk={confirmExport}
+        okText="Firma ed esporta"
+        confirmLoading={submitting || exporting}
+        destroyOnClose
+      >
+        <Typography.Paragraph>
+          Inserisci la password per firmare il PDF con il certificato{' '}
+          <Typography.Text strong>{certificate?.fileName}</Typography.Text>.
+        </Typography.Paragraph>
+        <Input.Password
+          placeholder="Password certificato"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          autoFocus
+        />
+      </Modal>
     </Card>
   )
 }
