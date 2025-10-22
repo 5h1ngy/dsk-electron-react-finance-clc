@@ -1,14 +1,12 @@
-import type { ProductRecord, ProductRecommendation, RiskClass } from ''@renderer/domain/mapping/rules''
-import { riskOrder, riskToBands } from ''@renderer/domain/mapping/rules''
-import type { RiskScoreResult } from ''@renderer/domain/scoring''
-
-const riskClassPriority = (riskClass: RiskClass): number => riskOrder.indexOf(riskClass)
+import type { ProductRecord, ProductRecommendation, RiskClass } from '@renderer/domain/mapping/rules'
+import { riskOrder, riskToBands } from '@renderer/domain/mapping/rules'
+import type { RiskScoreResult } from '@renderer/domain/scoring'
 
 const resolveRiskClass = (riskClass: string): RiskClass => {
   if (riskOrder.includes(riskClass as RiskClass)) {
     return riskClass as RiskClass
   }
-  return ''Prudente''
+  return 'Prudente'
 }
 
 export const mapProductsToProfile = (
@@ -19,22 +17,23 @@ export const mapProductsToProfile = (
   const riskClass = resolveRiskClass(score.riskClass)
   const allowedBands = new Set(riskToBands[riskClass])
   const filtered = products.filter((product) => allowedBands.has(product.riskBand))
+
   const uniqueByCategory = new Map<string, ProductRecommendation>()
 
-  filtered.forEach((product) => {
+  filtered.forEach((product, index) => {
     const current = uniqueByCategory.get(product.category)
+    const recommendation: ProductRecommendation = {
+      ...product,
+      matchReason: product.description ?? `Categoria ${product.category}, banda ${product.riskBand}`
+    }
+
     if (!current) {
-      uniqueByCategory.set(product.category, {
-        ...product,
-        matchReason: `Categoria ${product.category}, banda ${product.riskBand}`
-      })
+      uniqueByCategory.set(product.category, recommendation)
       return
     }
+
     if (product.name.localeCompare(current.name) < 0) {
-      uniqueByCategory.set(product.category, {
-        ...product,
-        matchReason: `Categoria ${product.category}, banda ${product.riskBand}`
-      })
+      uniqueByCategory.set(product.category, recommendation)
     }
   })
 

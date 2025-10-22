@@ -1,7 +1,7 @@
-import { Card, Empty, List, Tag, Typography } from ''antd''
+import { Card, Empty, List, Tag, Typography } from 'antd'
 
-import { useAppSelector } from ''@renderer/store/hooks''
-import { selectRecommendations } from ''@renderer/store/slices/productUniverse''
+import { useAppSelector } from '@renderer/store/hooks'
+import { selectRecommendations } from '@renderer/store/slices/productUniverse'
 
 const SuggestedProductsCard = () => {
   const recommendations = useAppSelector(selectRecommendations)
