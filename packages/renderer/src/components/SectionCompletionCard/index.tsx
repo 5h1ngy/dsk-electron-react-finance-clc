@@ -1,4 +1,5 @@
 import { Card, List, Progress, Typography } from 'antd'
+import { useTranslation } from 'react-i18next'
 
 import { useAppSelector } from '@renderer/store/hooks'
 import { selectQuestionnaireSchema, selectResponses } from '@renderer/store/slices/questionnaire'
@@ -6,11 +7,12 @@ import { selectQuestionnaireSchema, selectResponses } from '@renderer/store/slic
 const SectionCompletionCard = () => {
   const schema = useAppSelector(selectQuestionnaireSchema)
   const responses = useAppSelector(selectResponses)
+  const { t } = useTranslation()
 
   if (!schema) {
     return (
-      <Card title='Avanzamento sezioni' size='small'>
-        <Typography.Text type='secondary'>Schema non disponibile.</Typography.Text>
+      <Card title={t('sectionCompletion.title')} size="small">
+        <Typography.Text type="secondary">{t('sectionCompletion.empty')}</Typography.Text>
       </Card>
     )
   }
@@ -26,7 +28,7 @@ const SectionCompletionCard = () => {
   })
 
   return (
-    <Card title="Avanzamento sezioni" size="small" style={{ height: '100%' }}>
+    <Card title={t('sectionCompletion.title')} size="small" style={{ height: '100%' }}>
       <List
         dataSource={items}
         renderItem={(item) => (

@@ -1,6 +1,7 @@
 import { FilePdfOutlined, InboxOutlined } from '@ant-design/icons'
 import { Card, List, message, Typography, Upload } from 'antd'
 import type { UploadProps } from 'antd'
+import { useTranslation } from 'react-i18next'
 
 import { parseFinanceWorkbook } from '@renderer/domain/importers/financeWorkbook'
 import { parseQuestionnaireWorkbook } from '@renderer/domain/importers/requestWorkbook'
@@ -24,6 +25,7 @@ const { Dragger } = Upload
 
 const DemoUploadCard = () => {
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
   const schema = useAppSelector(selectQuestionnaireSchema)
   const requestImport = useAppSelector(selectRequestImport)
   const financeImport = useAppSelector(selectFinanceImport)
@@ -33,7 +35,7 @@ const DemoUploadCard = () => {
     try {
       const responses = await parseQuestionnaireWorkbook(file)
       if (!schema) {
-        throw new Error('Schema non disponibile')
+        throw new Error(t('demoUpload.messages.schemaMissing'))
       }
       dispatch(applyBulkResponses(responses))
       dispatch(
@@ -43,10 +45,10 @@ const DemoUploadCard = () => {
           responses: Object.keys(responses).length
         })
       )
-      message.success('Questionario importato correttamente')
+      message.success(t('demoUpload.messages.questionnaireSuccess'))
     } catch (error) {
       message.error(
-        error instanceof Error ? error.message : 'Impossibile importare il questionario'
+        error instanceof Error ? error.message : t('demoUpload.messages.questionnaireError')
       )
     }
     return Upload.LIST_IGNORE
@@ -69,10 +71,10 @@ const DemoUploadCard = () => {
           categories: summary.categories
         })
       )
-      message.success('Universo prodotti importato')
+      message.success(t('demoUpload.messages.productsSuccess'))
     } catch (error) {
       message.error(
-        error instanceof Error ? error.message : 'Impossibile importare il file strumenti'
+        error instanceof Error ? error.message : t('demoUpload.messages.productsError')
       )
     }
     return Upload.LIST_IGNORE
@@ -80,13 +82,13 @@ const DemoUploadCard = () => {
 
   const handlePdfUpload: UploadProps['beforeUpload'] = async (file) => {
     if (!schema) {
-      message.warning('Schema questionario non disponibile')
+      message.warning(t('demoUpload.messages.pdfSchemaMissing'))
       return Upload.LIST_IGNORE
     }
     try {
       const result = await parseQuestionnairePdf(file, schema)
       if (Object.keys(result.responses).length === 0) {
-        throw new Error('Impossibile trovare valori utili nel PDF')
+        throw new Error(t('demoUpload.messages.pdfEmpty'))
       }
       dispatch(applyBulkResponses(result.responses))
       dispatch(
@@ -96,27 +98,26 @@ const DemoUploadCard = () => {
           pages: result.pages
         })
       )
-      message.success('PDF importato e questionario precompilato')
+      message.success(t('demoUpload.messages.pdfSuccess'))
     } catch (error) {
       message.error(
-        error instanceof Error ? error.message : 'Impossibile importare il PDF del questionario'
+        error instanceof Error ? error.message : t('demoUpload.messages.pdfError')
       )
     }
     return Upload.LIST_IGNORE
   }
 
   return (
-    <Card title="Import manuale (demo)" style={{ height: '100%' }}>
+    <Card title={t('demoUpload.title')} style={{ height: '100%' }}>
       <Typography.Paragraph type="secondary">
-        Trascina qui i file forniti (.demo) per precompilare il questionario oppure per caricare
-        l&apos;universo prodotti.
+        {t('demoUpload.description')}
       </Typography.Paragraph>
       <Dragger multiple={false} beforeUpload={handleQuestionnaireUpload} accept=".xlsx,.xls" showUploadList={false}>
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
-        <p className="ant-upload-text">Questionario cliente (.xlsx)</p>
-        <p className="ant-upload-hint">Il foglio deve usare gli stessi ID delle domande</p>
+        <p className="ant-upload-text">{t('demoUpload.drop.questionnaire.title')}</p>
+        <p className="ant-upload-hint">{t('demoUpload.drop.questionnaire.hint')}</p>
       </Dragger>
       <Dragger
         multiple={false}
@@ -128,8 +129,8 @@ const DemoUploadCard = () => {
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
-        <p className="ant-upload-text">Universo prodotti (.xlsx)</p>
-        <p className="ant-upload-hint">Conteggiamo strumenti e categorie per la proposta</p>
+        <p className="ant-upload-text">{t('demoUpload.drop.products.title')}</p>
+        <p className="ant-upload-hint">{t('demoUpload.drop.products.hint')}</p>
       </Dragger>
       <Dragger
         multiple={false}
@@ -141,20 +142,28 @@ const DemoUploadCard = () => {
         <p className="ant-upload-drag-icon">
           <FilePdfOutlined />
         </p>
-        <p className="ant-upload-text">Questionario cliente (.pdf)</p>
-        <p className="ant-upload-hint">Estrarremo i valori testo formattati come id: valore</p>
+        <p className="ant-upload-text">{t('demoUpload.drop.pdf.title')}</p>
+        <p className="ant-upload-hint">{t('demoUpload.drop.pdf.hint')}</p>
       </Dragger>
       <List
         size="small"
-        header={<Typography.Text strong>Ultimi import</Typography.Text>}
+        header={<Typography.Text strong>{t('demoUpload.list.title')}</Typography.Text>}
         dataSource={[
           requestImport
-            ? `Questionario: ${requestImport.fileName} (${requestImport.responses} risposte)`
-            : 'Nessun questionario importato',
-          pdfImport ? `PDF: ${pdfImport.fileName}` : 'Nessun questionario PDF importato',
+            ? t('demoUpload.list.questionnaire', {
+                file: requestImport.fileName,
+                count: requestImport.responses
+              })
+            : t('demoUpload.list.questionnaireEmpty'),
+          pdfImport
+            ? t('demoUpload.list.pdf', { file: pdfImport.fileName })
+            : t('demoUpload.list.pdfEmpty'),
           financeImport
-            ? `Prodotti: ${financeImport.fileName} (${financeImport.instruments} strumenti)`
-            : 'Nessun universo prodotti importato'
+            ? t('demoUpload.list.products', {
+                file: financeImport.fileName,
+                count: financeImport.instruments
+              })
+            : t('demoUpload.list.productsEmpty')
         ]}
         style={{ marginTop: 16 }}
         renderItem={(item) => <List.Item>{item}</List.Item>}

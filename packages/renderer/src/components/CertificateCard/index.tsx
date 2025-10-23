@@ -5,28 +5,29 @@ import {
   Card,
   Descriptions,
   Input,
-  message,
   Modal,
   Space,
   Typography,
-  Upload
+  Upload,
+  message
 } from 'antd'
 import type { UploadProps } from 'antd'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { arrayBufferToBase64, extractCertificateSummary } from '@renderer/domain/signature'
 import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
 import { selectCertificate, setCertificate } from '@renderer/store/slices/workspace'
 
-const readFileBase64 = (file: File): Promise<string> =>
+const readFileBase64 = (file: File, translate: (key: string) => string): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader()
-    reader.onerror = () => reject(new Error('Impossibile leggere il file selezionato'))
+    reader.onerror = () => reject(new Error(translate('certificate.messages.fileRead')))
     reader.onload = () => {
       if (reader.result instanceof ArrayBuffer) {
         resolve(arrayBufferToBase64(reader.result))
       } else {
-        reject(new Error('Formato del file non supportato'))
+        reject(new Error(translate('certificate.messages.unsupported')))
       }
     }
     reader.readAsArrayBuffer(file)
@@ -34,6 +35,7 @@ const readFileBase64 = (file: File): Promise<string> =>
 
 const CertificateCard = () => {
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
   const certificate = useAppSelector(selectCertificate)
   const [verifyModalOpen, setVerifyModalOpen] = useState(false)
   const [password, setPassword] = useState('')
@@ -41,7 +43,7 @@ const CertificateCard = () => {
 
   const handleUpload: UploadProps['beforeUpload'] = async (file) => {
     try {
-      const base64 = await readFileBase64(file)
+      const base64 = await readFileBase64(file, t)
       dispatch(
         setCertificate({
           fileName: file.name,
@@ -49,11 +51,9 @@ const CertificateCard = () => {
           base64
         })
       )
-      message.success('Certificato caricato. Verifica la password per leggere i metadati.')
+      message.success(t('certificate.messages.uploaded'))
     } catch (error) {
-      message.error(
-        error instanceof Error ? error.message : 'Impossibile caricare il certificato'
-      )
+      message.error(error instanceof Error ? error.message : t('certificate.messages.uploadError'))
     }
     return Upload.LIST_IGNORE
   }
@@ -63,20 +63,18 @@ const CertificateCard = () => {
       return
     }
     if (!password) {
-      message.warning('Inserisci la password del certificato.')
+      message.warning(t('certificate.messages.passwordMissing'))
       return
     }
     setVerifying(true)
     try {
       const summary = extractCertificateSummary(certificate.base64, password)
       dispatch(setCertificate({ ...certificate, summary }))
-      message.success('Certificato verificato e metadati disponibili.')
+      message.success(t('certificate.messages.verified'))
       setVerifyModalOpen(false)
       setPassword('')
     } catch (error) {
-      message.error(
-        error instanceof Error ? error.message : 'Verifica certificato non riuscita'
-      )
+      message.error(error instanceof Error ? error.message : t('certificate.messages.verifyError'))
     } finally {
       setVerifying(false)
     }
@@ -85,7 +83,7 @@ const CertificateCard = () => {
   const handleClear = () => {
     dispatch(setCertificate(undefined))
     setPassword('')
-    message.info('Certificato rimosso dalla sessione.')
+    message.info(t('certificate.messages.removed'))
   }
 
   const summary = certificate?.summary
@@ -93,16 +91,16 @@ const CertificateCard = () => {
   return (
     <>
       <Card
-        title="Certificato firma digitale"
+        title={t('certificate.title')}
         size="small"
         extra={
           certificate ? (
             <Space>
               <Button size="small" onClick={() => setVerifyModalOpen(true)}>
-                Verifica password
+                {t('certificate.buttons.verify')}
               </Button>
               <Button danger size="small" onClick={handleClear}>
-                Rimuovi
+                {t('certificate.buttons.remove')}
               </Button>
             </Space>
           ) : null
@@ -116,7 +114,7 @@ const CertificateCard = () => {
             accept=".p12,.pfx"
           >
             <Button icon={<SafetyCertificateOutlined />}>
-              {certificate ? 'Sostituisci certificato' : 'Carica certificato .p12/.pfx'}
+              {certificate ? t('certificate.buttons.replace') : t('certificate.buttons.upload')}
             </Button>
           </Upload>
           {certificate ? (
@@ -125,59 +123,67 @@ const CertificateCard = () => {
                 type={summary ? 'success' : 'warning'}
                 showIcon
                 message={
-                  summary
-                    ? 'Certificato pronto per la firma.'
-                    : 'Inserisci la password per sbloccare il certificato.'
+                  summary ? t('certificate.alert.ready') : t('certificate.alert.locked')
                 }
               />
               <Descriptions column={1} size="small" bordered>
-                <Descriptions.Item label="File">{certificate.fileName}</Descriptions.Item>
+                <Descriptions.Item label={t('certificate.labels.file')}>
+                  {certificate.fileName}
+                </Descriptions.Item>
                 {summary ? (
                   <>
-                    <Descriptions.Item label="Soggetto">{summary.subject}</Descriptions.Item>
-                    <Descriptions.Item label="Emittente">{summary.issuer}</Descriptions.Item>
-                    <Descriptions.Item label="Seriale">{summary.serialNumber}</Descriptions.Item>
-                    <Descriptions.Item label="Validità">
-                      {new Date(summary.notBefore).toLocaleDateString()} →{' '}
-                      {new Date(summary.notAfter).toLocaleDateString()}
+                    <Descriptions.Item label={t('certificate.labels.subject')}>
+                      {summary.subject}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Thumbprint SHA-1">
+                    <Descriptions.Item label={t('certificate.labels.issuer')}>
+                      {summary.issuer}
+                    </Descriptions.Item>
+                    <Descriptions.Item label={t('certificate.labels.serial')}>
+                      {summary.serialNumber}
+                    </Descriptions.Item>
+                    <Descriptions.Item label={t('certificate.labels.validity')}>
+                      {t('certificate.validityRange', {
+                        start: new Date(summary.notBefore).toLocaleDateString(),
+                        end: new Date(summary.notAfter).toLocaleDateString()
+                      })}
+                    </Descriptions.Item>
+                    <Descriptions.Item label={t('certificate.labels.thumbprint')}>
                       {summary.thumbprint}
                     </Descriptions.Item>
                   </>
                 ) : (
-                  <Descriptions.Item label="Metadati">
-                    In attesa di verifica password.
+                  <Descriptions.Item label={t('certificate.labels.metadata')}>
+                    {t('certificate.metadata.pending')}
                   </Descriptions.Item>
                 )}
               </Descriptions>
             </>
           ) : (
             <Typography.Text type="secondary">
-              Nessun certificato importato. Il file resta solo in memoria e verrà usato per firmare i
-              PDF della sessione.
+              {t('certificate.metadata.empty')}
             </Typography.Text>
           )}
         </Space>
       </Card>
       <Modal
         open={verifyModalOpen}
-        title="Verifica certificato"
+        title={t('certificate.modal.title')}
         onCancel={() => {
           setVerifyModalOpen(false)
           setPassword('')
         }}
         onOk={handleVerify}
-        okText="Verifica"
+        okText={t('certificate.modal.confirm')}
         confirmLoading={verifying}
         destroyOnClose
       >
         <Typography.Paragraph>
-          Inserisci la password associata al file{' '}
-          <Typography.Text strong>{certificate?.fileName}</Typography.Text> per leggere i metadati.
+          {t('certificate.modal.description', {
+            file: certificate?.fileName ?? 'P12'
+          })}
         </Typography.Paragraph>
         <Input.Password
-          placeholder="Password certificato"
+          placeholder={t('certificate.modal.placeholder')}
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           autoFocus

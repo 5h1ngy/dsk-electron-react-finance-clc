@@ -62,29 +62,24 @@ const normalizeResponse = (
   }
 }
 
+const rationaleKeys: Record<string, string[]> = {
+  Dinamico: ['scoring.rationales.Dinamico.0', 'scoring.rationales.Dinamico.1'],
+  Bilanciato: ['scoring.rationales.Bilanciato.0', 'scoring.rationales.Bilanciato.1'],
+  Prudente: ['scoring.rationales.Prudente.0', 'scoring.rationales.Prudente.1'],
+  Conservativo: ['scoring.rationales.Conservativo.0', 'scoring.rationales.Conservativo.1']
+}
+
 const buildRationales = (score: number): string[] => {
   if (score >= 75) {
-    return [
-      'Profilo orientato alla crescita del capitale con elevata sopportazione della volatilita.',
-      'Indicata esposizione significativa a strumenti dinamici e ciclici.'
-    ]
+    return rationaleKeys.Dinamico
   }
   if (score >= 50) {
-    return [
-      'Profilo bilanciato: disponibilita a rischi moderati per ottenere crescita nel medio periodo.',
-      'Importante mantenere diversificazione tra strumenti difensivi e dinamici.'
-    ]
+    return rationaleKeys.Bilanciato
   }
   if (score >= 25) {
-    return [
-      'Profilo prudente: priorita alla protezione del capitale con crescita contenuta.',
-      'Preferenza per strumenti a bassa volatilita e soluzioni a durata media.'
-    ]
+    return rationaleKeys.Prudente
   }
-  return [
-    'Profilo conservativo: capitale da preservare e bassa tolleranza alle perdite.',
-    'Soluzioni raccomandate: linee garantite, monetari e titoli investment grade a breve.'
-  ]
+  return rationaleKeys.Conservativo
 }
 
 export const calculateRiskScore = (

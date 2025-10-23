@@ -1,4 +1,5 @@
 import { Card, Col, Descriptions, Row, Space, Typography } from 'antd'
+import { useTranslation } from 'react-i18next'
 
 import SchemaSummaryCard from '@renderer/components/SchemaSummaryCard'
 import { useHealthStatus } from '@renderer/hooks/useHealthStatus'
@@ -18,6 +19,7 @@ const DiagnosticsPage = () => {
   const reportExport = useAppSelector(selectReportExport)
   const pdfImport = useAppSelector(selectPdfImport)
   const certificate = useAppSelector(selectCertificate)
+  const { t } = useTranslation()
 
   return (
     <Space direction="vertical" size="large" style={{ width: '100%' }}>
@@ -26,45 +28,60 @@ const DiagnosticsPage = () => {
           <SchemaSummaryCard />
         </Col>
         <Col span={12}>
-          <Card title="Ultimi import">
+          <Card title={t('diagnostics.imports.title')}>
             <Descriptions column={1} size="small">
-              <Descriptions.Item label="Questionario">
+              <Descriptions.Item label={t('diagnostics.imports.labels.questionnaire')}>
                 {requestImport
-                  ? `${requestImport.fileName} (${requestImport.responses} risposte)`
-                  : 'Nessun file caricato'}
+                  ? t('diagnostics.imports.values.questionnaire', {
+                      file: requestImport.fileName,
+                      count: requestImport.responses
+                    })
+                  : t('diagnostics.imports.empty.questionnaire')}
               </Descriptions.Item>
-              <Descriptions.Item label="Universe prodotti">
+              <Descriptions.Item label={t('diagnostics.imports.labels.products')}>
                 {financeImport
-                  ? `${financeImport.fileName} (${financeImport.instruments} strumenti)`
-                  : 'Nessun file caricato'}
+                  ? t('diagnostics.imports.values.products', {
+                      file: financeImport.fileName,
+                      count: financeImport.instruments
+                    })
+                  : t('diagnostics.imports.empty.products')}
               </Descriptions.Item>
-              <Descriptions.Item label="Questionario PDF">
+              <Descriptions.Item label={t('diagnostics.imports.labels.pdf')}>
                 {pdfImport
-                  ? `${pdfImport.fileName} (${pdfImport.pages} pagine)`
-                  : 'Nessun PDF importato'}
+                  ? t('diagnostics.imports.values.pdf', {
+                      file: pdfImport.fileName,
+                      pages: pdfImport.pages
+                    })
+                  : t('diagnostics.imports.empty.pdf')}
               </Descriptions.Item>
-              <Descriptions.Item label="Report PDF">
+              <Descriptions.Item label={t('diagnostics.imports.labels.report')}>
                 {reportExport
-                  ? `${reportExport.fileName} (${new Date(reportExport.exportedAt).toLocaleString()})`
-                  : 'Nessun export effettuato'}
+                  ? t('diagnostics.imports.values.report', {
+                      file: reportExport.fileName,
+                      date: new Date(reportExport.exportedAt).toLocaleString()
+                    })
+                  : t('diagnostics.imports.empty.report')}
               </Descriptions.Item>
-              <Descriptions.Item label="Hash report">
-                {reportExport?.sha256 ?? 'N/D'}
+              <Descriptions.Item label={t('diagnostics.imports.labels.hash')}>
+                {reportExport?.sha256 ?? t('diagnostics.imports.empty.hash')}
               </Descriptions.Item>
-              <Descriptions.Item label="File SHA-256">
-                {reportExport?.hashPath ?? 'N/D'}
+              <Descriptions.Item label={t('diagnostics.imports.labels.hashFile')}>
+                {reportExport?.hashPath ?? t('diagnostics.imports.empty.hashFile')}
               </Descriptions.Item>
-              <Descriptions.Item label="Manifest">
-                {reportExport?.manifestPath ?? 'N/D'}
+              <Descriptions.Item label={t('diagnostics.imports.labels.manifest')}>
+                {reportExport?.manifestPath ?? t('diagnostics.imports.empty.manifest')}
               </Descriptions.Item>
-              <Descriptions.Item label="Certificato">
+              <Descriptions.Item label={t('diagnostics.imports.labels.certificate')}>
                 {certificate
-                  ? `${certificate.fileName}${
-                      certificate.summary
-                        ? ` (${certificate.summary.subject})`
-                        : ' (in attesa verifica)'
-                    }`
-                  : 'Nessun certificato caricato'}
+                  ? certificate.summary
+                    ? t('diagnostics.imports.certificate.verified', {
+                        file: certificate.fileName,
+                        subject: certificate.summary.subject
+                      })
+                    : t('diagnostics.imports.certificate.pending', {
+                        file: certificate.fileName
+                      })
+                  : t('diagnostics.imports.empty.certificate')}
               </Descriptions.Item>
             </Descriptions>
           </Card>
@@ -73,10 +90,10 @@ const DiagnosticsPage = () => {
       <Row gutter={[16, 16]}>
         <Col span={24}>
           <Card
-            title="Health"
+            title={t('health.card.title')}
             extra={
               <Typography.Link onClick={() => refresh()} disabled={loading}>
-                Aggiorna
+                {t('health.card.refresh')}
               </Typography.Link>
             }
             loading={loading}
@@ -85,14 +102,18 @@ const DiagnosticsPage = () => {
               <Typography.Text type="danger">{error}</Typography.Text>
             ) : snapshot ? (
               <Descriptions column={1} size="small">
-                <Descriptions.Item label="Versione">{snapshot.version}</Descriptions.Item>
-                <Descriptions.Item label="Stato">{snapshot.status}</Descriptions.Item>
-                <Descriptions.Item label="Uptime">
+                <Descriptions.Item label={t('diagnostics.health.version')}>
+                  {snapshot.version}
+                </Descriptions.Item>
+                <Descriptions.Item label={t('diagnostics.health.status')}>
+                  {snapshot.status}
+                </Descriptions.Item>
+                <Descriptions.Item label={t('diagnostics.health.uptime')}>
                   {Math.round(snapshot.uptimeSeconds)}s
                 </Descriptions.Item>
               </Descriptions>
             ) : (
-              <Typography.Text type="secondary">In attesa di risposta...</Typography.Text>
+              <Typography.Text type="secondary">{t('health.card.waiting')}</Typography.Text>
             )}
           </Card>
         </Col>

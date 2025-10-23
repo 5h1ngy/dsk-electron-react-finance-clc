@@ -1,6 +1,7 @@
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 
 import { SCORING_ENGINE_VERSION } from '@renderer/config/versions'
+import i18n from '@renderer/i18n'
 import type {
   QuestionnaireResponses,
   QuestionnaireSchema
@@ -54,23 +55,38 @@ export const generateRiskReport = async ({
     })
   }
 
-  drawText('Offline Risk Suite', { size: 18, font: titleFont })
-  drawText(`Report di profilazione - ${schema.title}`, { size: 12 })
-  drawText(`Generato il ${formatDateTime()}`, { size: 10, color: rgb(0.3, 0.3, 0.3) })
+  const localizedRiskClass = i18n.t(`risk.class.${score.riskClass}`)
+  const localizedVolatility = i18n.t(`risk.band.${score.volatilityBand}`)
+
+  drawText(i18n.t('app.title'), { size: 18, font: titleFont })
+  drawText(i18n.t('report.pdf.title', { title: schema.title }), { size: 12 })
+  drawText(i18n.t('report.pdf.generated', { date: formatDateTime() }), {
+    size: 10,
+    color: rgb(0.3, 0.3, 0.3)
+  })
   drawText(
-    `Versioni: schema ${schema.schemaVersion} | scoring ${SCORING_ENGINE_VERSION}`,
+    i18n.t('report.pdf.versions', {
+      schema: schema.schemaVersion,
+      scoring: SCORING_ENGINE_VERSION
+    }),
     { size: 10, color: rgb(0.3, 0.3, 0.3) }
   )
   cursor -= 10
   drawText(
-    `Punteggio: ${score.score} | Classe: ${score.riskClass} | Volatilita: ${score.volatilityBand}`,
+    i18n.t('report.pdf.summary', {
+      score: score.score,
+      riskClass: localizedRiskClass,
+      volatility: localizedVolatility
+    }),
     {
       size: 12,
       font: titleFont
     }
   )
 
-  score.rationales.forEach((rationale) => drawText(`- ${rationale}`, { size: 10 }))
+  score.rationales.forEach((rationale) =>
+    drawText(`- ${i18n.t(rationale)}`, { size: 10 })
+  )
 
   schema.sections.forEach((section) => {
     cursor -= 20
@@ -81,12 +97,15 @@ export const generateRiskReport = async ({
   })
 
   cursor -= 30
-  drawText('La firma digitale e il relativo hash SHA-256 vengono applicati al momento dell\'esportazione.', {
-    size: 9,
-    color: rgb(0.4, 0.4, 0.4)
-  })
   drawText(
-    'File ausiliari (.sha256.txt e .manifest.json) vengono salvati accanto al PDF per la verifica offline.',
+    i18n.t('report.pdf.hashNotice'),
+    {
+      size: 9,
+      color: rgb(0.4, 0.4, 0.4)
+    }
+  )
+  drawText(
+    i18n.t('report.pdf.manifestNotice'),
     { size: 9, color: rgb(0.4, 0.4, 0.4) }
   )
 

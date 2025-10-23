@@ -2,6 +2,7 @@ import { BankOutlined, ExperimentOutlined } from '@ant-design/icons'
 import { Layout, Menu, Space, Typography } from 'antd'
 import type { ReactNode } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import { HealthStatusTag } from '@renderer/components/HealthStatus'
 import { useHealthStatus } from '@renderer/hooks/useHealthStatus'
@@ -12,15 +13,16 @@ interface AppLayoutProps {
   children: ReactNode
 }
 
-const menuItems = [
-  { key: '/', label: 'Workbench', icon: <BankOutlined /> },
-  { key: '/diagnostics', label: 'Diagnostics', icon: <ExperimentOutlined /> }
-]
-
 const AppLayout = ({ children }: AppLayoutProps) => {
   const navigate = useNavigate()
   const location = useLocation()
   const { snapshot, loading, error, refresh } = useHealthStatus()
+  const { t } = useTranslation()
+
+  const menuItems = [
+    { key: '/', label: t('app.menu.workbench'), icon: <BankOutlined /> },
+    { key: '/diagnostics', label: t('app.menu.diagnostics'), icon: <ExperimentOutlined /> }
+  ]
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -36,7 +38,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 32, flex: 1, minWidth: 0 }}>
           <Typography.Title level={4} style={{ color: '#fff', margin: 0 }}>
-            Offline Risk Suite
+            {t('app.title')}
           </Typography.Title>
           <Menu
             theme="dark"

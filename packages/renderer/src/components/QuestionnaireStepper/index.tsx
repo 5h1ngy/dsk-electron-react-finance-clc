@@ -3,6 +3,8 @@ import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert, Button, Card, InputNumber, Radio, Space, Statistic, Steps, Typography } from 'antd'
+import { useTranslation } from 'react-i18next'
+import type { TFunction } from 'i18next'
 
 import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
 import {
@@ -21,24 +23,26 @@ import type { QuestionnaireResponses, QuestionDefinition } from '@renderer/domai
 const isValuePresent = (value: unknown): boolean =>
   value !== undefined && value !== null && value !== ''
 
-const buildQuestionSchema = (question: QuestionDefinition) => {
+const buildQuestionSchema = (question: QuestionDefinition, t: TFunction) => {
   let schema: z.ZodTypeAny
   if (question.type === 'single_choice') {
     const allowed = question.options ?? []
     schema = z
-      .string({ required_error: 'Campo obbligatorio' })
-      .refine((value) => allowed.includes(value), { message: 'Valore non valido' })
+      .string({ required_error: t('questionnaire.validation.required') })
+      .refine((value) => allowed.includes(value), {
+        message: t('questionnaire.validation.invalidChoice')
+      })
   } else {
     schema = z
       .number({
-        required_error: 'Campo obbligatorio',
-        invalid_type_error: 'Inserisci un numero valido'
+        required_error: t('questionnaire.validation.required'),
+        invalid_type_error: t('questionnaire.validation.invalidNumber')
       })
       .refine(
         (value) =>
           (question.min === undefined || value >= question.min) &&
           (question.max === undefined || value <= question.max),
-        { message: 'Valore fuori range' }
+        { message: t('questionnaire.validation.outOfRange') }
       )
   }
   return question.required ? schema : schema.optional()
@@ -50,6 +54,7 @@ const QuestionnaireStepper = () => {
   const status = useAppSelector(selectQuestionnaireStatus)
   const responses = useAppSelector(selectResponses)
   const progress = useAppSelector(selectAnsweredProgress)
+  const { t } = useTranslation()
   const [currentStep, setCurrentStep] = useState(0)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
 
@@ -67,10 +72,10 @@ const QuestionnaireStepper = () => {
     }
     const shape: Record<string, z.ZodTypeAny> = {}
     section.questions.forEach((question) => {
-      shape[question.id] = buildQuestionSchema(question)
+      shape[question.id] = buildQuestionSchema(question, t)
     })
     return z.object(shape)
-  }, [section])
+  }, [section, t])
 
   const defaultValues = useMemo(() => {
     const values: QuestionnaireResponses = {}
@@ -169,22 +174,23 @@ const QuestionnaireStepper = () => {
   }
 
   if (status === 'loading' || !schema || !section) {
-    return <Card loading title="Questionario dinamico" />
+    return <Card loading title={t('questionnaire.title')} />
   }
 
   return (
     <Card
-      title="Questionario dinamico"
+      title={t('questionnaire.title')}
       style={{ height: '100%' }}
       extra={
         <Space size="large">
           <div style={{ minWidth: 160, textAlign: 'right' }}>
             <Typography.Text type="secondary">
-              Completamento <Typography.Text strong>{progress.completed}%</Typography.Text>
+              {t('questionnaire.completion')}{' '}
+              <Typography.Text strong>{progress.completed}%</Typography.Text>
             </Typography.Text>
           </div>
           <Button onClick={handleReset} type="link">
-            Azzera risposte
+            {t('questionnaire.reset')}
           </Button>
         </Space>
       }
@@ -202,7 +208,7 @@ const QuestionnaireStepper = () => {
       {validationErrors.length > 0 ? (
         <Alert
           type="warning"
-          message="Compila tutti i campi obbligatori nella sezione corrente"
+          message={t('questionnaire.alert')}
           showIcon
           style={{ marginTop: 16 }}
         />
@@ -262,17 +268,15 @@ const QuestionnaireStepper = () => {
             ) : null}
           </div>
         ))}
-        <Alert
-          type="info"
-          message="Puoi importare il questionario da Excel, PDF oppure compilarlo manualmente."
-          showIcon
-        />
+        <Alert type="info" message={t('questionnaire.info')} showIcon />
         <Space>
           <Button onClick={handleBack} disabled={currentStep === 0}>
-            Indietro
+            {t('questionnaire.nav.back')}
           </Button>
           <Button type="primary" onClick={handleNext}>
-            {currentStep === schema.sections.length - 1 ? 'Calcola profilo' : 'Avanti'}
+            {currentStep === schema.sections.length - 1
+              ? t('questionnaire.nav.finish')
+              : t('questionnaire.nav.next')}
           </Button>
         </Space>
       </Space>

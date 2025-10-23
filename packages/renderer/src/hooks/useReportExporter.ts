@@ -1,5 +1,6 @@
 import { message } from 'antd'
 import { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { SCORING_ENGINE_VERSION } from '@renderer/config/versions'
 import {
@@ -34,6 +35,7 @@ export const useReportExporter = () => {
   const score = useAppSelector(selectQuestionnaireScore)
   const certificate = useAppSelector(selectCertificate)
   const [exporting, setExporting] = useState(false)
+  const { t } = useTranslation()
 
   const buildMetadata = (summary: CertificateSummary) => ({
     schemaVersion: schema?.schemaVersion ?? 'unknown',
@@ -51,15 +53,15 @@ export const useReportExporter = () => {
   const exportReport = useCallback(
     async (password: string): Promise<boolean> => {
       if (!schema || !score) {
-        message.warning('Completa il questionario prima di esportare il report.')
+        message.warning(t('report.messages.missingData'))
         return false
       }
       if (!certificate) {
-        message.warning('Carica e verifica un certificato P12 per firmare il PDF.')
+        message.warning(t('report.messages.certificateMissing'))
         return false
       }
       if (!password) {
-        message.warning('Inserisci la password del certificato.')
+        message.warning(t('report.messages.passwordMissing'))
         return false
       }
       setExporting(true)
@@ -81,7 +83,7 @@ export const useReportExporter = () => {
           includeHashFile: true
         })
         if (!response.ok) {
-          message.error(response.message ?? 'Impossibile esportare il report')
+          message.error(response.message ?? t('report.messages.exportError'))
           return false
         }
         if (response.cancelled) {
@@ -97,20 +99,20 @@ export const useReportExporter = () => {
             hashPath: response.hashPath
           })
         )
-        message.success('Report firmato ed esportato correttamente.')
+        message.success(t('report.messages.success'))
         return true
       } catch (error) {
         message.error(
           error instanceof Error
             ? error.message
-            : 'Errore inatteso durante la generazione del report'
+            : t('report.messages.unexpected')
         )
         return false
       } finally {
         setExporting(false)
       }
     },
-    [certificate, dispatch, responses, schema, score]
+    [certificate, dispatch, responses, schema, score, t]
   )
 
   return { exportReport, exporting }

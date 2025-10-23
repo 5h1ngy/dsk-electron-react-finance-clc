@@ -1,15 +1,17 @@
 import { Card, Empty, List, Tag, Typography } from 'antd'
+import { useTranslation } from 'react-i18next'
 
 import { useAppSelector } from '@renderer/store/hooks'
 import { selectRecommendations } from '@renderer/store/slices/productUniverse'
 
 const SuggestedProductsCard = () => {
   const recommendations = useAppSelector(selectRecommendations)
+  const { t } = useTranslation()
 
   return (
-    <Card title="Proposta strumenti" size="small" style={{ height: '100%' }}>
+    <Card title={t('suggestedProducts.title')} size="small" style={{ height: '100%' }}>
       {recommendations.length === 0 ? (
-        <Empty description="Carica universo prodotti e calcola il profilo" />
+        <Empty description={t('suggestedProducts.empty')} />
       ) : (
         <List
           size="small"
@@ -25,7 +27,7 @@ const SuggestedProductsCard = () => {
                 }
               />
               <Tag color="blue">{item.category}</Tag>
-              <Tag color="gold">{item.riskBand}</Tag>
+              <Tag color="gold">{t(`risk.band.${item.riskBand}`)}</Tag>
             </List.Item>
           )}
         />

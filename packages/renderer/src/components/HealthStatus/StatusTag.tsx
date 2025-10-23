@@ -1,5 +1,6 @@
 import { ClockCircleOutlined, ReloadOutlined } from '@ant-design/icons'
 import { Button, Space, Tag, Tooltip, Typography } from 'antd'
+import { useTranslation } from 'react-i18next'
 
 import type { HealthSnapshot } from '@main/ipc/health'
 
@@ -35,18 +36,19 @@ const tonePalette = {
 }
 
 const HealthStatusTag = ({ snapshot, loading, error, onRefresh, tone = 'light' }: StatusTagProps) => {
+  const { t } = useTranslation()
   const palette = tonePalette[tone]
 
   if (error) {
     return (
       <Space>
-        <Tag style={palette.tagError}>Offline</Tag>
+        <Tag style={palette.tagError}>{t('health.status.offline')}</Tag>
         <Button
           type="text"
           icon={<ReloadOutlined style={{ color: palette.refresh }} />}
           onClick={onRefresh}
           loading={loading}
-          aria-label="Riprova health check"
+          aria-label={t('health.status.retryAria')}
           style={{ color: palette.refresh }}
         />
       </Space>
@@ -54,13 +56,13 @@ const HealthStatusTag = ({ snapshot, loading, error, onRefresh, tone = 'light' }
   }
 
   if (!snapshot) {
-    return <Tag color="default">Health check...</Tag>
+    return <Tag color="default">{t('health.status.loading')}</Tag>
   }
 
   return (
     <Space size="small">
-      <Tag style={palette.tagSuccess}>Healthy</Tag>
-      <Tooltip title={`Versione ${snapshot.version}`}>
+      <Tag style={palette.tagSuccess}>{t('health.status.healthy')}</Tag>
+      <Tooltip title={t('health.status.version', { version: snapshot.version })}>
         <Typography.Text style={{ color: palette.text }}>
           <ClockCircleOutlined /> {new Date(snapshot.timestamp).toLocaleTimeString()}
         </Typography.Text>
@@ -70,7 +72,7 @@ const HealthStatusTag = ({ snapshot, loading, error, onRefresh, tone = 'light' }
         icon={<ReloadOutlined style={{ color: palette.refresh }} />}
         onClick={onRefresh}
         loading={loading}
-        aria-label="Aggiorna health check"
+        aria-label={t('health.status.refreshAria')}
         style={{ color: palette.refresh }}
       />
     </Space>

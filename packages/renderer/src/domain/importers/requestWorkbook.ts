@@ -1,5 +1,6 @@
 import { read, utils } from 'xlsx'
 
+import i18n from '@renderer/i18n'
 import type {
   QuestionnaireResponseValue,
   QuestionnaireResponses
@@ -26,12 +27,12 @@ export const parseQuestionnaireWorkbook = async (file: File): Promise<Questionna
   const workbook = read(buffer, { type: 'array' })
   const sheet = workbook.Sheets[workbook.SheetNames[0]]
   if (!sheet) {
-    throw new Error('Workbook senza fogli')
+    throw new Error(i18n.t('errors.workbook.noSheets'))
   }
   const rows = utils.sheet_to_json<unknown[]>(sheet, { header: 1, blankrows: false })
   const [header, ...data] = rows
   if (!header || !header.length) {
-    throw new Error('Workbook senza intestazioni')
+    throw new Error(i18n.t('errors.workbook.noHeaders'))
   }
   const firstRow = data[0] ?? []
   return toRecord(header, firstRow)

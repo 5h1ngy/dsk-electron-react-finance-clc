@@ -1,6 +1,7 @@
 import type { ProductRecord, ProductRecommendation, RiskClass } from '@renderer/domain/mapping/rules'
 import { riskOrder, riskToBands } from '@renderer/domain/mapping/rules'
 import type { RiskScoreResult } from '@renderer/domain/scoring'
+import i18n from '@renderer/i18n'
 
 const resolveRiskClass = (riskClass: string): RiskClass => {
   if (riskOrder.includes(riskClass as RiskClass)) {
@@ -24,7 +25,12 @@ export const mapProductsToProfile = (
     const current = uniqueByCategory.get(product.category)
     const recommendation: ProductRecommendation = {
       ...product,
-      matchReason: product.description ?? `Categoria ${product.category}, banda ${product.riskBand}`
+      matchReason:
+        product.description ??
+        i18n.t('mapping.matchReason', {
+          category: product.category,
+          band: product.riskBand
+        })
     }
 
     if (!current) {

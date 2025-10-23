@@ -16,6 +16,7 @@ import {
   Typography,
   message
 } from 'antd'
+import { useTranslation } from 'react-i18next'
 
 import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
 import {
@@ -36,6 +37,7 @@ const ScoreCard = () => {
   const certificate = useAppSelector(selectCertificate)
   const products = useAppSelector(selectProducts)
   const { exportReport, exporting } = useReportExporter()
+  const { t } = useTranslation()
   const [passwordModalOpen, setPasswordModalOpen] = useState(false)
   const [password, setPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -52,13 +54,11 @@ const ScoreCard = () => {
 
   if (!score) {
     return (
-      <Card title="Profilo rischio">
+      <Card title={t('score.title')}>
         <Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}
           description={
-            <Typography.Text>
-              Compila il questionario per generare il profilo di rischio.
-            </Typography.Text>
+            <Typography.Text>{t('score.empty')}</Typography.Text>
           }
         />
       </Card>
@@ -70,17 +70,17 @@ const ScoreCard = () => {
 
   const exportTooltip = (() => {
     if (score.missingAnswers.length > 0) {
-      return 'Completa tutte le risposte obbligatorie prima di esportare il PDF'
+      return t('score.exportTooltipIncomplete')
     }
     if (!certificateLoaded) {
-      return 'Carica e verifica un certificato P12 per abilitare la firma'
+      return t('score.exportTooltipCertificate')
     }
     return undefined
   })()
 
   const handleExportClick = () => {
     if (!certificateLoaded) {
-      message.warning('Carica il certificato P12 nella scheda dedicata.')
+      message.warning(t('score.messages.certificateMissing'))
       return
     }
     setPasswordModalOpen(true)
@@ -98,10 +98,10 @@ const ScoreCard = () => {
 
   return (
     <Card
-      title="Profilo rischio"
+      title={t('score.title')}
       extra={
         <Space>
-          <Typography.Link onClick={handleRecompute}>Ricalcola</Typography.Link>
+          <Typography.Link onClick={handleRecompute}>{t('score.recompute')}</Typography.Link>
           <Tooltip title={exportTooltip}>
             <Button
               type="primary"
@@ -110,7 +110,7 @@ const ScoreCard = () => {
               disabled={exportDisabled || !certificateLoaded}
               loading={exporting}
             >
-              Esporta PDF firmato
+              {t('score.export')}
             </Button>
           </Tooltip>
         </Space>
@@ -120,37 +120,44 @@ const ScoreCard = () => {
       <Divider />
       <List size="small">
         <List.Item>
-          <Statistic title="Classe" value={score.riskClass} />
+          <Statistic title={t('score.stats.class')} value={t(`risk.class.${score.riskClass}`)} />
         </List.Item>
         <List.Item>
-          <Statistic title="Volatilita" value={score.volatilityBand} />
+          <Statistic
+            title={t('score.stats.volatility')}
+            value={t(`risk.band.${score.volatilityBand}`)}
+          />
         </List.Item>
         {meta?.lastCalculatedAt ? (
           <List.Item>
             <Typography.Text type="secondary">
-              Aggiornato alle {new Date(meta.lastCalculatedAt).toLocaleTimeString()}
+              {t('score.stats.updated', {
+                time: new Date(meta.lastCalculatedAt).toLocaleTimeString()
+              })}
             </Typography.Text>
           </List.Item>
         ) : null}
         {lastExport ? (
           <List.Item>
             <Typography.Text type="secondary">
-              Ultimo export {new Date(lastExport.exportedAt).toLocaleTimeString()} (
-              {lastExport.fileName})
+              {t('score.stats.lastExport', {
+                time: new Date(lastExport.exportedAt).toLocaleTimeString(),
+                file: lastExport.fileName
+              })}
             </Typography.Text>
           </List.Item>
         ) : null}
         {lastExport?.sha256 ? (
           <List.Item>
             <Typography.Text type="secondary">
-              SHA-256: {lastExport.sha256}
+              {t('score.stats.hash', { hash: lastExport.sha256 })}
             </Typography.Text>
           </List.Item>
         ) : null}
         {lastExport?.certificateSubject ? (
           <List.Item>
             <Typography.Text type="secondary">
-              Firmato con {lastExport.certificateSubject}
+              {t('score.stats.certificate', { subject: lastExport.certificateSubject })}
             </Typography.Text>
           </List.Item>
         ) : null}
@@ -159,36 +166,35 @@ const ScoreCard = () => {
         <Alert
           type="warning"
           showIcon
-          message="Mancano alcune risposte obbligatorie"
+          message={t('score.messages.missingAnswers')}
           description={score.missingAnswers.join(', ')}
           style={{ marginTop: 16 }}
         />
       ) : (
         <List
-          header={<Typography.Text strong>Note principali</Typography.Text>}
+          header={<Typography.Text strong>{t('score.notesTitle')}</Typography.Text>}
           dataSource={score.rationales}
           style={{ marginTop: 16 }}
-          renderItem={(item) => <List.Item>{item}</List.Item>}
+          renderItem={(item) => <List.Item>{t(item)}</List.Item>}
         />
       )}
       <Modal
         open={passwordModalOpen}
-        title="Firma e hash del report"
+        title={t('score.modal.title')}
         onCancel={() => {
           setPasswordModalOpen(false)
           setPassword('')
         }}
         onOk={confirmExport}
-        okText="Firma ed esporta"
+        okText={t('score.modal.confirm')}
         confirmLoading={submitting || exporting}
         destroyOnClose
       >
         <Typography.Paragraph>
-          Inserisci la password per firmare il PDF con il certificato{' '}
-          <Typography.Text strong>{certificate?.fileName}</Typography.Text>.
+          {t('score.modal.description', { file: certificate?.fileName ?? 'P12' })}
         </Typography.Paragraph>
         <Input.Password
-          placeholder="Password certificato"
+          placeholder={t('score.modal.placeholder')}
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           autoFocus

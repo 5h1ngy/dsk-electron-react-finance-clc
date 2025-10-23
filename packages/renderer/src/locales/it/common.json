@@ -1,0 +1,287 @@
+{
+  "app": {
+    "title": "Offline Risk Suite",
+    "menu": {
+      "workbench": "Workbench",
+      "diagnostics": "Diagnostics"
+    }
+  },
+  "common": {
+    "notAvailable": "N/D",
+    "none": "Nessun dato disponibile"
+  },
+  "health": {
+    "status": {
+      "offline": "Offline",
+      "loading": "Verifica stato...",
+      "healthy": "Operativo",
+      "version": "Versione {{version}}",
+      "retryAria": "Riprova controllo stato",
+      "refreshAria": "Aggiorna controllo stato"
+    },
+    "card": {
+      "title": "Health",
+      "refresh": "Aggiorna",
+      "waiting": "In attesa di risposta..."
+    }
+  },
+  "demoUpload": {
+    "title": "Import manuale (demo)",
+    "description": "Trascina qui i file forniti (.demo) per precompilare il questionario oppure per caricare l'universo prodotti.",
+    "drop": {
+      "questionnaire": {
+        "title": "Questionario cliente (.xlsx)",
+        "hint": "Il foglio deve usare gli stessi ID delle domande"
+      },
+      "products": {
+        "title": "Universo prodotti (.xlsx)",
+        "hint": "Conteggiamo strumenti e categorie per la proposta"
+      },
+      "pdf": {
+        "title": "Questionario cliente (.pdf)",
+        "hint": "Estrarremo i valori testo formattati come id: valore"
+      }
+    },
+    "messages": {
+      "schemaMissing": "Schema non disponibile",
+      "questionnaireSuccess": "Questionario importato correttamente",
+      "questionnaireError": "Impossibile importare il questionario",
+      "productsSuccess": "Universo prodotti importato",
+      "productsError": "Impossibile importare il file strumenti",
+      "pdfSchemaMissing": "Schema questionario non disponibile",
+      "pdfEmpty": "Impossibile trovare valori utili nel PDF",
+      "pdfSuccess": "PDF importato e questionario precompilato",
+      "pdfError": "Impossibile importare il PDF del questionario"
+    },
+    "list": {
+      "title": "Ultimi import",
+      "questionnaire": "Questionario: {{file}} ({{count}} risposte)",
+      "questionnaireEmpty": "Nessun questionario importato",
+      "pdf": "PDF: {{file}}",
+      "pdfEmpty": "Nessun questionario PDF importato",
+      "products": "Prodotti: {{file}} ({{count}} strumenti)",
+      "productsEmpty": "Nessun universo prodotti importato"
+    }
+  },
+  "certificate": {
+    "title": "Certificato firma digitale",
+    "buttons": {
+      "verify": "Verifica password",
+      "remove": "Rimuovi",
+      "upload": "Carica certificato .p12/.pfx",
+      "replace": "Sostituisci certificato"
+    },
+    "messages": {
+      "fileRead": "Impossibile leggere il file selezionato",
+      "unsupported": "Formato del file non supportato",
+      "uploaded": "Certificato caricato. Verifica la password per leggere i metadati.",
+      "uploadError": "Impossibile caricare il certificato",
+      "passwordMissing": "Inserisci la password del certificato.",
+      "verified": "Certificato verificato e metadati disponibili.",
+      "verifyError": "Verifica certificato non riuscita",
+      "removed": "Certificato rimosso dalla sessione."
+    },
+    "alert": {
+      "ready": "Certificato pronto per la firma.",
+      "locked": "Inserisci la password per sbloccare il certificato."
+    },
+    "labels": {
+      "file": "File",
+      "subject": "Soggetto",
+      "issuer": "Emittente",
+      "serial": "Seriale",
+      "validity": "Validità",
+      "thumbprint": "Thumbprint SHA-1",
+      "metadata": "Metadati"
+    },
+    "metadata": {
+      "pending": "In attesa di verifica password.",
+      "empty": "Nessun certificato importato. Il file resta solo in memoria e verrà usato per firmare i PDF della sessione."
+    },
+    "modal": {
+      "title": "Verifica certificato",
+      "description": "Inserisci la password associata al file {{file}} per leggere i metadati.",
+      "placeholder": "Password certificato",
+      "confirm": "Verifica"
+    },
+    "validityRange": "{{start}} -> {{end}}"
+  },
+  "questionnaire": {
+    "loadingTitle": "Questionario dinamico",
+    "title": "Questionario dinamico",
+    "completion": "Completamento",
+    "reset": "Azzera risposte",
+    "alert": "Compila tutti i campi obbligatori nella sezione corrente",
+    "info": "Puoi importare il questionario da Excel, PDF oppure compilarlo manualmente.",
+    "nav": {
+      "back": "Indietro",
+      "next": "Avanti",
+      "finish": "Calcola profilo"
+    },
+    "validation": {
+      "required": "Campo obbligatorio",
+      "invalidChoice": "Valore non valido",
+      "invalidNumber": "Inserisci un numero valido",
+      "outOfRange": "Valore fuori range"
+    }
+  },
+  "sectionCompletion": {
+    "title": "Avanzamento sezioni",
+    "empty": "Schema non disponibile."
+  },
+  "schemaSummary": {
+    "title": "Questionario configurato",
+    "empty": "Schema questionario non disponibile",
+    "version": "Versione",
+    "sections": "Sezioni",
+    "questions": "Domande"
+  },
+  "score": {
+    "title": "Profilo rischio",
+    "empty": "Compila il questionario per generare il profilo di rischio.",
+    "recompute": "Ricalcola",
+    "export": "Esporta PDF firmato",
+    "exportTooltipIncomplete": "Completa tutte le risposte obbligatorie prima di esportare il PDF",
+    "exportTooltipCertificate": "Carica e verifica un certificato P12 per abilitare la firma",
+    "messages": {
+      "certificateMissing": "Carica il certificato P12 nella scheda dedicata.",
+      "missingAnswers": "Mancano alcune risposte obbligatorie"
+    },
+    "stats": {
+      "class": "Classe",
+      "volatility": "Volatilità",
+      "updated": "Aggiornato alle {{time}}",
+      "lastExport": "Ultimo export {{time}} ({{file}})",
+      "hash": "SHA-256: {{hash}}",
+      "certificate": "Firmato con {{subject}}"
+    },
+    "notesTitle": "Note principali",
+    "modal": {
+      "title": "Firma e hash del report",
+      "description": "Inserisci la password per firmare il PDF con il certificato {{file}}.",
+      "placeholder": "Password certificato",
+      "confirm": "Firma ed esporta"
+    }
+  },
+  "suggestedProducts": {
+    "title": "Proposta strumenti",
+    "empty": "Carica universo prodotti e calcola il profilo"
+  },
+  "productUniverse": {
+    "title": "Universo prodotti",
+    "stat": "Strumenti importati",
+    "empty": "Carica il file .xlsx per visualizzare categorie e conteggi."
+  },
+  "diagnostics": {
+    "health": {
+      "version": "Versione",
+      "status": "Stato",
+      "uptime": "Uptime"
+    },
+    "imports": {
+      "title": "Ultimi import",
+      "labels": {
+        "questionnaire": "Questionario",
+        "products": "Universo prodotti",
+        "pdf": "Questionario PDF",
+        "report": "Report PDF",
+        "hash": "Hash report",
+        "hashFile": "File SHA-256",
+        "manifest": "Manifest",
+        "certificate": "Certificato"
+      },
+      "values": {
+        "questionnaire": "{{file}} ({{count}} risposte)",
+        "products": "{{file}} ({{count}} strumenti)",
+        "pdf": "{{file}} ({{pages}} pagine)",
+        "report": "{{file}} ({{date}})"
+      },
+      "empty": {
+        "questionnaire": "Nessun file caricato",
+        "products": "Nessun file caricato",
+        "pdf": "Nessun PDF importato",
+        "report": "Nessun export effettuato",
+        "hash": "N/D",
+        "hashFile": "N/D",
+        "manifest": "N/D",
+        "certificate": "Nessun certificato caricato"
+      },
+      "certificate": {
+        "verified": "{{file}} ({{subject}})",
+        "pending": "{{file}} (in attesa verifica)"
+      }
+    }
+  },
+  "report": {
+    "messages": {
+      "missingData": "Completa il questionario prima di esportare il report.",
+      "certificateMissing": "Carica e verifica un certificato P12 per firmare il PDF.",
+      "passwordMissing": "Inserisci la password del certificato.",
+      "exportError": "Impossibile esportare il report",
+      "success": "Report firmato ed esportato correttamente.",
+      "unexpected": "Errore inatteso durante la generazione del report"
+    },
+    "pdf": {
+      "title": "Report di profilazione - {{title}}",
+      "generated": "Generato il {{date}}",
+      "versions": "Versioni: schema {{schema}} | scoring {{scoring}}",
+      "summary": "Punteggio: {{score}} | Classe: {{riskClass}} | Volatilità: {{volatility}}",
+      "hashNotice": "La firma digitale e il relativo hash SHA-256 vengono applicati al momento dell'esportazione.",
+      "manifestNotice": "File ausiliari (.sha256.txt e .manifest.json) vengono salvati accanto al PDF per la verifica offline."
+    }
+  },
+  "errors": {
+    "health": "Impossibile contattare il main process",
+    "workbook": {
+      "noSheets": "Workbook senza fogli",
+      "noHeaders": "Workbook senza intestazioni",
+      "invalidFinance": "Workbook universo prodotti non valido"
+    }
+  },
+  "finance": {
+    "defaults": {
+      "category": "Non specificato",
+      "product": "Strumento {{index}}",
+      "riskBand": "Bassa"
+    }
+  },
+  "mapping": {
+    "matchReason": "Categoria {{category}}, banda {{band}}"
+  },
+  "risk": {
+    "class": {
+      "Conservativo": "Conservativo",
+      "Prudente": "Prudente",
+      "Bilanciato": "Bilanciato",
+      "Dinamico": "Dinamico"
+    },
+    "band": {
+      "Bassa": "Bassa",
+      "Medio-Bassa": "Medio-Bassa",
+      "Medio": "Medio",
+      "Alta": "Alta",
+      "Media": "Media",
+      "Elevata": "Elevata"
+    }
+  },
+  "scoring": {
+    "rationales": {
+      "Dinamico": [
+        "Profilo orientato alla crescita del capitale con elevata sopportazione della volatilità.",
+        "Indicata esposizione significativa a strumenti dinamici e ciclici."
+      ],
+      "Bilanciato": [
+        "Profilo bilanciato: disponibilità a rischi moderati per ottenere crescita nel medio periodo.",
+        "Importante mantenere diversificazione tra strumenti difensivi e dinamici."
+      ],
+      "Prudente": [
+        "Profilo prudente: priorità alla protezione del capitale con crescita contenuta.",
+        "Preferenza per strumenti a bassa volatilità e soluzioni a durata media."
+      ],
+      "Conservativo": [
+        "Profilo conservativo: capitale da preservare e bassa tolleranza alle perdite.",
+        "Soluzioni raccomandate: linee garantite, monetari e titoli investment grade a breve."
+      ]
+    }
+  }
+}

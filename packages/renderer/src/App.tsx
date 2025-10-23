@@ -7,6 +7,7 @@ import AppLayout from '@renderer/layout/AppLayout'
 import WorkbenchPage from '@renderer/pages/Workbench'
 import DiagnosticsPage from '@renderer/pages/Diagnostics'
 import { store } from '@renderer/store'
+import '@renderer/i18n'
 
 const App = () => (
   <Provider store={store}>
