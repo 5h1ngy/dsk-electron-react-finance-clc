@@ -2,7 +2,7 @@ import { SafetyCertificateOutlined } from '@ant-design/icons'
 import { Alert, Button, Card, Descriptions, Input, Modal, Space, Typography, Upload } from 'antd'
 import { useTranslation } from 'react-i18next'
 
-import { useCertificateCard } from '@renderer/components/CertificateCard/hooks/useCertificateCard'
+import { useCertificateCard } from '@renderer/components/CertificateCard.hooks'
 
 const CertificateCard = () => {
   const { t } = useTranslation()

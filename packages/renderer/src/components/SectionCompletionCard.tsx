@@ -1,6 +1,6 @@
 import { Card, List, Progress, Typography } from 'antd'
 
-import { useSectionCompletionCard } from '@renderer/components/SectionCompletionCard/hooks/useSectionCompletionCard'
+import { useSectionCompletionCard } from '@renderer/components/SectionCompletionCard.hooks'
 
 const SectionCompletionCard = () => {
   const { title, emptyText, hasSchema, items } = useSectionCompletionCard()

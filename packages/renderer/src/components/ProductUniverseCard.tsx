@@ -1,6 +1,6 @@
 import { Card, List, Statistic, Typography } from 'antd'
 
-import { useProductUniverseCard } from '@renderer/components/ProductUniverseCard/hooks/useProductUniverseCard'
+import { useProductUniverseCard } from '@renderer/components/ProductUniverseCard.hooks'
 
 const ProductUniverseCard = () => {
   const { title, statLabel, emptyText, categories, productCount } = useProductUniverseCard()

@@ -10,7 +10,7 @@ import {
   Typography
 } from 'antd'
 
-import { useQuestionnaireStepper } from '@renderer/components/QuestionnaireStepper/hooks/useQuestionnaireStepper'
+import { useQuestionnaireStepper } from '@renderer/components/QuestionnaireStepper.hooks'
 
 const QuestionnaireStepper = () => {
   const {

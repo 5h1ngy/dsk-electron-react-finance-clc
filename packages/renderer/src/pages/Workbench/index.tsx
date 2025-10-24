@@ -6,7 +6,7 @@ import QuestionnaireStepper from '@renderer/components/QuestionnaireStepper'
 import ScoreCard from '@renderer/components/ScoreCard'
 import SectionCompletionCard from '@renderer/components/SectionCompletionCard'
 import SuggestedProductsCard from '@renderer/components/SuggestedProductsCard'
-import { useWorkbenchPage } from '@renderer/pages/Workbench/hooks/useWorkbenchPage'
+import { useWorkbenchPage } from '@renderer/pages/Workbench/hooks'
 
 const WorkbenchPage = () => {
   useWorkbenchPage()

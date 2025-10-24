@@ -1,7 +1,7 @@
 import { Card, Col, Descriptions, Row, Space, Typography } from 'antd'
 
 import SchemaSummaryCard from '@renderer/components/SchemaSummaryCard'
-import { useDiagnosticsPage } from '@renderer/pages/Diagnostics/hooks/useDiagnosticsPage'
+import { useDiagnosticsPage } from '@renderer/pages/Diagnostics/hooks'
 
 const DiagnosticsPage = () => {
   const { importsTitle, importEntries, healthCard } = useDiagnosticsPage()

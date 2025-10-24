@@ -1,6 +1,6 @@
 import { Card, List, Statistic, Typography } from 'antd'
 
-import { useSchemaSummaryCard } from '@renderer/components/SchemaSummaryCard/hooks/useSchemaSummaryCard'
+import { useSchemaSummaryCard } from '@renderer/components/SchemaSummaryCard.hooks'
 
 const SchemaSummaryCard = () => {
   const { title, isLoading, hasSchema, stats, labels, emptyText } = useSchemaSummaryCard()

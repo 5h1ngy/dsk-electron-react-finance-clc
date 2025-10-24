@@ -1,7 +1,7 @@
 import { FilePdfOutlined, InboxOutlined } from '@ant-design/icons'
 import { Card, List, Typography, Upload } from 'antd'
 
-import { useDemoUploadCard } from '@renderer/components/DemoUploadCard/hooks/useDemoUploadCard'
+import { useDemoUploadCard } from '@renderer/components/DemoUploadCard.hooks'
 
 const { Dragger } = Upload
 

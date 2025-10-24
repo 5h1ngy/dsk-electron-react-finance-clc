@@ -15,7 +15,7 @@ import {
   Typography
 } from 'antd'
 
-import { useScoreCard } from '@renderer/components/ScoreCard/hooks/useScoreCard'
+import { useScoreCard } from '@renderer/components/ScoreCard.hooks'
 
 const ScoreCard = () => {
   const {

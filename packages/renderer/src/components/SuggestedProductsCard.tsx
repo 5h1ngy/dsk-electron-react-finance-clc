@@ -1,6 +1,6 @@
 import { Card, Empty, List, Tag, Typography } from 'antd'
 
-import { useSuggestedProductsCard } from '@renderer/components/SuggestedProductsCard/hooks/useSuggestedProductsCard'
+import { useSuggestedProductsCard } from '@renderer/components/SuggestedProductsCard.hooks'
 
 const SuggestedProductsCard = () => {
   const { title, emptyText, recommendations, formatRiskBand } = useSuggestedProductsCard()
