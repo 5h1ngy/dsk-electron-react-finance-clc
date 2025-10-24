@@ -4,7 +4,9 @@
         "packages/renderer/src/env.d.ts",
         "packages/renderer/src/**/*",
         "packages/renderer/src/**/*.tsx",
-        "packages/preload/src/**/*.d.ts"
+        "packages/preload/src/**/*.d.ts",
+        "packages/engines/**/*.ts",
+        "packages/engines/**/*.tsx"
     ],
     "compilerOptions":  {
         "composite":  true,
@@ -13,6 +15,9 @@
         "paths":  {
             "@renderer/*":  [
                 "packages/renderer/src/*"
+            ],
+            "@engines/*": [
+                "packages/engines/*"
             ],
             "@preload/*":  [
                 "packages/preload/src/*"

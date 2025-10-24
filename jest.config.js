@@ -2,6 +2,7 @@ const sharedModuleNameMapper = {
   '^@main/(.*)$': '<rootDir>/packages/main/src/$1',
   '^@preload/(.*)$': '<rootDir>/packages/preload/src/$1',
   '^@renderer/(.*)$': '<rootDir>/packages/renderer/src/$1',
+  '^@engines/(.*)$': '<rootDir>/packages/engines/$1',
   '\\.(css|less|sass|scss)$': '<rootDir>/test/__mocks__/styleMock.ts',
   '\\.(png|jpg|jpeg|gif|svg)$': '<rootDir>/test/__mocks__/fileMock.ts'
 }
@@ -14,10 +15,12 @@ const config = {
   coveragePathIgnorePatterns: [
     '<rootDir>/packages/main/src/index.ts',
     '<rootDir>/packages/preload/src/types.ts',
-    '<rootDir>/packages/renderer/src/main.tsx'
+    '<rootDir>/packages/renderer/src/main.tsx',
+    '<rootDir>/packages/engines/index.ts'
   ],
   collectCoverageFrom: [
     'packages/**/*.{ts,tsx}',
+    'packages/engines/**/*.{ts,tsx}',
     '!**/*.d.ts',
     '!**/*.test.ts',
     '!**/*.test.tsx',
@@ -53,7 +56,10 @@ const config = {
       displayName: 'renderer',
       preset: 'ts-jest',
       testEnvironment: 'jsdom',
-      testMatch: ['<rootDir>/packages/renderer/**/*.test.ts?(x)'],
+      testMatch: [
+        '<rootDir>/packages/renderer/**/*.test.ts?(x)',
+        '<rootDir>/packages/engines/**/*.test.ts?(x)'
+      ],
       moduleNameMapper: sharedModuleNameMapper,
       transform: {
         '^.+\\.(ts|tsx)$': [

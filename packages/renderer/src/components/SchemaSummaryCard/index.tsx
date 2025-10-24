@@ -1,43 +1,33 @@
 import { Card, List, Statistic, Typography } from 'antd'
-import { useTranslation } from 'react-i18next'
 
-import { useAppSelector } from '@renderer/store/hooks'
-import {
-  selectQuestionnaireSchema,
-  selectQuestionnaireStatus
-} from '@renderer/store/slices/questionnaire'
+import { useSchemaSummaryCard } from '@renderer/components/SchemaSummaryCard/hooks/useSchemaSummaryCard'
 
 const SchemaSummaryCard = () => {
-  const schema = useAppSelector(selectQuestionnaireSchema)
-  const status = useAppSelector(selectQuestionnaireStatus)
-  const { t } = useTranslation()
+  const { title, isLoading, hasSchema, stats, labels, emptyText } = useSchemaSummaryCard()
 
-  if (status === 'loading') {
-    return <Card loading title={t('schemaSummary.title')} />
+  if (isLoading) {
+    return <Card loading title={title} />
   }
 
-  if (!schema) {
+  if (!hasSchema || !stats) {
     return (
       <Card>
-        <Typography.Text type="secondary">{t('schemaSummary.empty')}</Typography.Text>
+        <Typography.Text type="secondary">{emptyText}</Typography.Text>
       </Card>
     )
   }
 
-  const sections = schema.sections.length
-  const questions = schema.sections.reduce((acc, section) => acc + section.questions.length, 0)
-
   return (
-    <Card title={t('schemaSummary.title')} size="small" bordered>
+    <Card title={title} size="small" bordered>
       <List size="small">
         <List.Item>
-          <Statistic title={t('schemaSummary.version')} value={schema.schemaVersion} />
+          <Statistic title={labels.version} value={stats.version} />
         </List.Item>
         <List.Item>
-          <Statistic title={t('schemaSummary.sections')} value={sections} />
+          <Statistic title={labels.sections} value={stats.sections} />
         </List.Item>
         <List.Item>
-          <Statistic title={t('schemaSummary.questions')} value={questions} />
+          <Statistic title={labels.questions} value={stats.questions} />
         </List.Item>
       </List>
     </Card>

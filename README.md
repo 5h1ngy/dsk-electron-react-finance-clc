@@ -8,14 +8,14 @@
 ode-signpdf con certificati PKCS#12 caricati dall'utente per firmare il PDF, generare l'impronta SHA-256 e creare file di supporto (.sha256.txt e .manifest.json). L'IPC eport:export gestisce ora certificato, hash e percorsi salvati.
 - **Gestione certificato in UI**: nuova card dedicata nel Workbench per importare .p12/.pfx, verificare i metadati con password runtime e rimuovere il file dalla sessione. L'export richiede la password prima della firma.
 - **Diagnostica e tracciabilita**: lo stato del certificato, il path dei file hash/manifest e l'ultima SHA-256 sono visibili sia nella pagina Diagnostics sia nel riepilogo del profilo rischio. Il PDF include riferimenti alle versioni di schema e scoring.
-- **Test e hardening dominio**: suite Jest per il servizio di firma (packages/main/src/services/signature/index.test.ts) e IPC aggiornato, con certificati generati al volo tramite 
+- **Test e hardening engines**: suite Jest per il servizio di firma (packages/main/src/services/signature/index.test.ts) e IPC aggiornato, con certificati generati al volo tramite 
 ode-forge.
 
 ## Novita Wave 1.1
 
 - **Import PDF questionario**: upload .pdf con parsing testuale (formato id: valore) tramite pdfjs-dist, precompilazione dello stepper e tracking metadati dell'ultimo import.
 - **Hardening UX**: alert quando mancano campi obbligatori, pulsante di export disabilitato finche ci sono risposte incomplete, storico import/export sempre visibile.
-- **Test & domain**: parser PDF coperto da test (domain/importers/pdfQuestionnaire.test.ts) e worker configurato per Vite.
+- **Test & engines**: parser PDF coperto da test (engines/importers/pdfQuestionnaire.test.ts) e worker configurato per Vite.
 
 ## Baseline Wave 0
 
@@ -24,11 +24,11 @@ ode-forge.
 - **Renderer Ant Design-first**
   - Layout con header + routing (Workbench, Diagnostics) e health tag live.
   - Store Redux Toolkit con slice questionnaire, workspace, productUniverse.
-  - Questionario dinamico generato da JSON pre-build (packages/renderer/data/requests_schema.json) validato via Zod.
+  - Questionario dinamico generato da JSON pre-build (packages/renderer/src/config/questionnaire.json) validato via Zod.
   - Motore di scoring deterministico (0-100) con classi rischio/volatilita e rationales placeholder.
   - Import manuale per questionario .xlsx, universo prodotti e PDF questionario.
   - Card riassuntive basate su componenti Ant Design.
-- **Domain scaffolding**: moduli questionnaire, scoring, importers, eport pronti per le estensioni successive.
+- **Engines scaffolding**: moduli questionnaire, scoring, importers, report pronti per le estensioni successive.
 - **Tooling**: electron-vite dev/build, ESLint 9, Prettier 3, TS strict, Jest (node + jsdom).
 
 ## Quick start
@@ -50,11 +50,11 @@ packages/
   main/      # env + logger + security + IPC (health + report export firmato)
   preload/   # espone window.api.{health,report}
   renderer/
-    data/
-    domain/{questionnaire,scoring,importers,report}
+    config/
     components/
     pages/{Workbench,Diagnostics}
     store/
+engines/     # questionnaire, scoring, importers, mapping, report, signature
 resources/   # assets electron-builder
 .demo/       # file esempio da caricare via drag and drop (Excel/PDF)
 `
@@ -63,3 +63,6 @@ resources/   # assets electron-builder
 
 1. **Wave 4** - Motore idoneita/adeguatezza avanzato, explainability dettagliata.
 2. **Wave 5** - Hardening, accessibilita e packaging/firma del codice.
+
+
+

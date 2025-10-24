@@ -1,8 +1,8 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-import { mapProductsToProfile } from '@renderer/domain/mapping'
-import type { ProductRecord, ProductRecommendation } from '@renderer/domain/mapping/rules'
-import type { RiskScoreResult } from '@renderer/domain/scoring'
+import { mapProductsToProfile } from '@engines/mapping'
+import type { ProductRecord, ProductRecommendation } from '@engines/mapping/rules'
+import type { RiskScoreResult } from '@engines/scoring'
 import type { ProductUniverseState } from '@renderer/store/slices/productUniverse/types'
 
 const initialState: ProductUniverseState = {
@@ -35,3 +35,4 @@ export const buildRecommendations = (
   score: RiskScoreResult,
   products: ProductRecord[]
 ): ProductRecommendation[] => mapProductsToProfile(score, products)
+

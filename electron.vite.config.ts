@@ -7,6 +7,7 @@ export default defineConfig({
     resolve: {
       alias: {
         '@main': resolve(__dirname, 'packages/main/src'),
+        '@engines': resolve(__dirname, 'packages/engines'),
         '@preload': resolve(__dirname, 'packages/preload/src')
       }
     },
@@ -21,7 +22,8 @@ export default defineConfig({
     resolve: {
       alias: {
         '@preload': resolve(__dirname, 'packages/preload/src'),
-        '@main': resolve(__dirname, 'packages/main/src')
+        '@main': resolve(__dirname, 'packages/main/src'),
+        '@engines': resolve(__dirname, 'packages/engines')
       }
     },
     build: {
@@ -38,6 +40,7 @@ export default defineConfig({
     resolve: {
       alias: {
         '@renderer': resolve(__dirname, 'packages/renderer/src'),
+        '@engines': resolve(__dirname, 'packages/engines'),
         '@preload': resolve(__dirname, 'packages/preload/src'),
         '@main': resolve(__dirname, 'packages/main/src')
       }

@@ -1,92 +1,24 @@
 import { SafetyCertificateOutlined } from '@ant-design/icons'
-import {
-  Alert,
-  Button,
-  Card,
-  Descriptions,
-  Input,
-  Modal,
-  Space,
-  Typography,
-  Upload,
-  message
-} from 'antd'
-import type { UploadProps } from 'antd'
-import { useState } from 'react'
+import { Alert, Button, Card, Descriptions, Input, Modal, Space, Typography, Upload } from 'antd'
 import { useTranslation } from 'react-i18next'
 
-import { arrayBufferToBase64, extractCertificateSummary } from '@renderer/domain/signature'
-import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
-import { selectCertificate, setCertificate } from '@renderer/store/slices/workspace'
-
-const readFileBase64 = (file: File, translate: (key: string) => string): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onerror = () => reject(new Error(translate('certificate.messages.fileRead')))
-    reader.onload = () => {
-      if (reader.result instanceof ArrayBuffer) {
-        resolve(arrayBufferToBase64(reader.result))
-      } else {
-        reject(new Error(translate('certificate.messages.unsupported')))
-      }
-    }
-    reader.readAsArrayBuffer(file)
-  })
+import { useCertificateCard } from '@renderer/components/CertificateCard/hooks/useCertificateCard'
 
 const CertificateCard = () => {
-  const dispatch = useAppDispatch()
   const { t } = useTranslation()
-  const certificate = useAppSelector(selectCertificate)
-  const [verifyModalOpen, setVerifyModalOpen] = useState(false)
-  const [password, setPassword] = useState('')
-  const [verifying, setVerifying] = useState(false)
-
-  const handleUpload: UploadProps['beforeUpload'] = async (file) => {
-    try {
-      const base64 = await readFileBase64(file, t)
-      dispatch(
-        setCertificate({
-          fileName: file.name,
-          loadedAt: new Date().toISOString(),
-          base64
-        })
-      )
-      message.success(t('certificate.messages.uploaded'))
-    } catch (error) {
-      message.error(error instanceof Error ? error.message : t('certificate.messages.uploadError'))
-    }
-    return Upload.LIST_IGNORE
-  }
-
-  const handleVerify = async () => {
-    if (!certificate) {
-      return
-    }
-    if (!password) {
-      message.warning(t('certificate.messages.passwordMissing'))
-      return
-    }
-    setVerifying(true)
-    try {
-      const summary = extractCertificateSummary(certificate.base64, password)
-      dispatch(setCertificate({ ...certificate, summary }))
-      message.success(t('certificate.messages.verified'))
-      setVerifyModalOpen(false)
-      setPassword('')
-    } catch (error) {
-      message.error(error instanceof Error ? error.message : t('certificate.messages.verifyError'))
-    } finally {
-      setVerifying(false)
-    }
-  }
-
-  const handleClear = () => {
-    dispatch(setCertificate(undefined))
-    setPassword('')
-    message.info(t('certificate.messages.removed'))
-  }
-
-  const summary = certificate?.summary
+  const {
+    certificate,
+    summary,
+    verifyModalOpen,
+    password,
+    verifying,
+    handleUpload,
+    handleVerify,
+    handleClear,
+    openVerifyModal,
+    closeVerifyModal,
+    setPassword
+  } = useCertificateCard()
 
   return (
     <>
@@ -96,7 +28,7 @@ const CertificateCard = () => {
         extra={
           certificate ? (
             <Space>
-              <Button size="small" onClick={() => setVerifyModalOpen(true)}>
+              <Button size="small" onClick={openVerifyModal}>
                 {t('certificate.buttons.verify')}
               </Button>
               <Button danger size="small" onClick={handleClear}>
@@ -168,10 +100,7 @@ const CertificateCard = () => {
       <Modal
         open={verifyModalOpen}
         title={t('certificate.modal.title')}
-        onCancel={() => {
-          setVerifyModalOpen(false)
-          setPassword('')
-        }}
+        onCancel={closeVerifyModal}
         onOk={handleVerify}
         okText={t('certificate.modal.confirm')}
         confirmLoading={verifying}
@@ -194,3 +123,4 @@ const CertificateCard = () => {
 }
 
 export default CertificateCard
+

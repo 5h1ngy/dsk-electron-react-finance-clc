@@ -6,8 +6,8 @@ import { SCORING_ENGINE_VERSION } from '@renderer/config/versions'
 import {
   extractCertificateSummary,
   type CertificateSummary
-} from '@renderer/domain/signature'
-import { generateRiskReport } from '@renderer/domain/report'
+} from '@engines/signature'
+import { generateRiskReport } from '@engines/report'
 import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
 import {
   selectQuestionnaireSchema,
@@ -117,3 +117,4 @@ export const useReportExporter = () => {
 
   return { exportReport, exporting }
 }
+
