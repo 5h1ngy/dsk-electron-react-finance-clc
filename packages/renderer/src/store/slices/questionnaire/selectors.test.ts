@@ -48,8 +48,8 @@ describe('questionnaire selectors', () => {
   it('selects primitive slices', () => {
     expect(selectQuestionnaireSchema(state)).toBe(schema)
     expect(selectQuestionnaireStatus(state)).toBe('ready')
-    expect(selectResponses(state)).toEqual({ q1: 1 })
-    expect(selectQuestionnaireScore(state)).toEqual({ score: 70 })
+    expect(selectResponses(state)).toEqual(responses)
+    expect(selectQuestionnaireScore(state)).toEqual(score)
     expect(selectScoreMeta(state)).toEqual({ lastCalculatedAt: 'now' })
   })
 
