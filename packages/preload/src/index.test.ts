@@ -12,8 +12,12 @@ describe('preload entry point', () => {
     jest.resetModules()
   })
 
+  const withContextIsolation = (value: boolean) => {
+    ;(process as NodeJS.Process & { contextIsolated?: boolean }).contextIsolated = value
+  }
+
   it('exposes the preload api when context isolation is enabled', async () => {
-    ;(process as any).contextIsolated = true
+    withContextIsolation(true)
     const module = await import('@preload/index')
     expect(exposeMock).toHaveBeenCalledWith(
       'api',
@@ -23,16 +27,17 @@ describe('preload entry point', () => {
   })
 
   it('assigns api on window when context isolation is disabled', async () => {
-    ;(process as any).contextIsolated = false
-    const originalWindow = (global as any).window
+    withContextIsolation(false)
+    const globalWithWindow = global as typeof globalThis & { window?: Record<string, unknown> }
+    const originalWindow = globalWithWindow.window
     try {
-      ;(global as any).window = {} as Record<string, unknown>
+      globalWithWindow.window = {}
       await import('@preload/index')
-      expect((global as any).window.api).toEqual(
+      expect(globalWithWindow.window?.api).toEqual(
         expect.objectContaining({ health: expect.any(Object), report: expect.any(Object) })
       )
     } finally {
-      ;(global as any).window = originalWindow
+      globalWithWindow.window = originalWindow
     }
   })
 })

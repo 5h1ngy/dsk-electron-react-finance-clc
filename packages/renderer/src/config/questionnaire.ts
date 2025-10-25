@@ -9,4 +9,3 @@ export const loadQuestionnaireSchema = (): QuestionnaireSchema => {
   const parsed = questionnaireSchema.parse(rawSchema)
   return normalizeSchema(parsed)
 }
-

@@ -5,23 +5,42 @@ import {
   selectReportExport,
   selectRequestImport
 } from './selectors'
+import type { RootState } from '@renderer/store/types'
 
-const state = {
+const state: Pick<RootState, 'workspace'> = {
   workspace: {
-    requestImport: { fileName: 'q.xlsx' },
-    financeImport: { fileName: 'p.xlsx' },
-    pdfImport: { fileName: 'q.pdf' },
-    reportExport: { fileName: 'report.pdf' },
-    certificate: { fileName: 'cert.p12' }
+    requestImport: { fileName: 'q.xlsx', importedAt: 'now', responses: 10 },
+    financeImport: {
+      fileName: 'p.xlsx',
+      importedAt: 'now',
+      instruments: 5,
+      categories: [{ name: 'Azioni', count: 5 }]
+    },
+    pdfImport: { fileName: 'q.pdf', importedAt: 'now', pages: 2 },
+    reportExport: { fileName: 'report.pdf', exportedAt: 'now' },
+    certificate: { fileName: 'cert.p12', loadedAt: 'now', base64: 'BASE64' }
   }
-} as any
+}
 
 describe('workspace selectors', () => {
   it('extracts entities from state slice', () => {
-    expect(selectRequestImport(state)).toEqual({ fileName: 'q.xlsx' })
-    expect(selectFinanceImport(state)).toEqual({ fileName: 'p.xlsx' })
-    expect(selectPdfImport(state)).toEqual({ fileName: 'q.pdf' })
-    expect(selectReportExport(state)).toEqual({ fileName: 'report.pdf' })
-    expect(selectCertificate(state)).toEqual({ fileName: 'cert.p12' })
+    expect(selectRequestImport(state)).toEqual({
+      fileName: 'q.xlsx',
+      importedAt: 'now',
+      responses: 10
+    })
+    expect(selectFinanceImport(state)).toEqual({
+      fileName: 'p.xlsx',
+      importedAt: 'now',
+      instruments: 5,
+      categories: [{ name: 'Azioni', count: 5 }]
+    })
+    expect(selectPdfImport(state)).toEqual({ fileName: 'q.pdf', importedAt: 'now', pages: 2 })
+    expect(selectReportExport(state)).toEqual({ fileName: 'report.pdf', exportedAt: 'now' })
+    expect(selectCertificate(state)).toEqual({
+      fileName: 'cert.p12',
+      loadedAt: 'now',
+      base64: 'BASE64'
+    })
   })
 })

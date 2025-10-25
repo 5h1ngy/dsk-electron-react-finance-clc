@@ -71,12 +71,6 @@ const questionnaireSlice = createSlice({
   }
 })
 
-export const {
-  setResponse,
-  applyBulkResponses,
-  resetQuestionnaire,
-  computeQuestionnaireScore
-} = questionnaireSlice.actions
+export const { setResponse, applyBulkResponses, resetQuestionnaire, computeQuestionnaireScore } =
+  questionnaireSlice.actions
 export const questionnaireReducer = questionnaireSlice.reducer
-
-

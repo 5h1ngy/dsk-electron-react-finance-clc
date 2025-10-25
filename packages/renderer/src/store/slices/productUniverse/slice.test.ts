@@ -27,7 +27,9 @@ describe('productUniverse slice', () => {
   it('updates recommendations list', () => {
     const state = productUniverseReducer(
       undefined,
-      setRecommendations([{ name: 'Prodotto', category: 'Azioni', riskBand: 'Bassa', matchReason: 'Motivo' }])
+      setRecommendations([
+        { name: 'Prodotto', category: 'Azioni', riskBand: 'Bassa', matchReason: 'Motivo' }
+      ])
     )
     expect(state.recommendations).toHaveLength(1)
   })

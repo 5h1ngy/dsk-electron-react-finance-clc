@@ -49,4 +49,3 @@ export const normalizeSchema = (input: ParsedQuestionnaireSchema): Questionnaire
     }))
   }))
 })
-

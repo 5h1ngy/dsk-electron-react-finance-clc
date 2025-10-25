@@ -1,9 +1,4 @@
-import {
-  workspaceReducer,
-  setCertificate,
-  setRequestImport,
-  setReportExport
-} from './slice'
+import { workspaceReducer, setCertificate, setRequestImport, setReportExport } from './slice'
 
 describe('workspace slice', () => {
   it('stores certificate metadata', () => {

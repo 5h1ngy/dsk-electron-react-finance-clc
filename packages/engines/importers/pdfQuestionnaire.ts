@@ -43,9 +43,7 @@ export const parseQuestionnairePdf = async (
   for (let pageIndex = 1; pageIndex <= pdf.numPages; pageIndex++) {
     const page = await pdf.getPage(pageIndex)
     const content = await page.getTextContent()
-    const pageText = content.items
-      .map((item) => ('str' in item ? item.str : ''))
-      .join('\n')
+    const pageText = content.items.map((item) => ('str' in item ? item.str : '')).join('\n')
     text += `\n${pageText}`
   }
 
@@ -66,4 +64,3 @@ export const parseQuestionnairePdf = async (
 
   return { responses, pages }
 }
-

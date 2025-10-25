@@ -7,9 +7,7 @@ jest.mock('./SectionCompletionCard.hooks', () => ({
   useSectionCompletionCard: jest.fn()
 }))
 
-const mockHook = useSectionCompletionCard as jest.MockedFunction<
-  typeof useSectionCompletionCard
->
+const mockHook = useSectionCompletionCard as jest.MockedFunction<typeof useSectionCompletionCard>
 
 describe('SectionCompletionCard', () => {
   it('renders completion progress when schema exists', () => {

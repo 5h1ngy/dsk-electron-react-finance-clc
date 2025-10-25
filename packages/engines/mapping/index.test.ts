@@ -27,9 +27,7 @@ describe('mapProductsToProfile', () => {
   })
 
   it('falls back to a translated match reason when description is missing', () => {
-    const products = [
-      { name: 'Theta', category: 'Bilanciati', riskBand: 'Bassa' }
-    ]
+    const products = [{ name: 'Theta', category: 'Bilanciati', riskBand: 'Bassa' }]
 
     const [recommendation] = mapProductsToProfile(
       { ...baseScore, riskClass: 'Conservativo' },

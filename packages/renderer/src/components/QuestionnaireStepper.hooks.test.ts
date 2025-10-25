@@ -13,10 +13,7 @@ jest.mock('react-hook-form', () => ({
   useForm: () => ({
     control: {},
     reset: jest.fn(),
-    handleSubmit:
-      (onValid: () => void) =>
-      async () =>
-        onValid(),
+    handleSubmit: (onValid: () => void) => async () => onValid(),
     formState: { errors: {} }
   })
 }))

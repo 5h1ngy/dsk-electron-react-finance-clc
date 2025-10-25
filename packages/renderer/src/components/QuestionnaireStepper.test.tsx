@@ -1,8 +1,19 @@
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
 
+type ControllerRenderArgs = {
+  field: {
+    value: unknown
+    onChange: (value: unknown) => void
+  }
+}
+
+type ControllerProps = {
+  render: (args: ControllerRenderArgs) => React.ReactNode
+}
+
 jest.mock('react-hook-form', () => ({
-  Controller: ({ render }: { render: (props: any) => React.ReactNode }) =>
+  Controller: ({ render }: ControllerProps) =>
     render({ field: { value: undefined, onChange: jest.fn() } })
 }))
 
@@ -13,9 +24,7 @@ jest.mock('./QuestionnaireStepper.hooks', () => ({
   useQuestionnaireStepper: jest.fn()
 }))
 
-const mockHook = useQuestionnaireStepper as jest.MockedFunction<
-  typeof useQuestionnaireStepper
->
+const mockHook = useQuestionnaireStepper as jest.MockedFunction<typeof useQuestionnaireStepper>
 
 describe('QuestionnaireStepper', () => {
   it('renders questions and forwards navigation events', () => {
@@ -46,9 +55,7 @@ describe('QuestionnaireStepper', () => {
       section: {
         id: 'section-1',
         label: 'Section 1',
-        questions: [
-          { id: 'q1', label: 'Question 1', type: 'number', required: true, weight: 1 }
-        ]
+        questions: [{ id: 'q1', label: 'Question 1', type: 'number', required: true, weight: 1 }]
       },
       schema: {
         schemaVersion: '1',

@@ -7,9 +7,7 @@ jest.mock('./SuggestedProductsCard.hooks', () => ({
   useSuggestedProductsCard: jest.fn()
 }))
 
-const mockHook = useSuggestedProductsCard as jest.MockedFunction<
-  typeof useSuggestedProductsCard
->
+const mockHook = useSuggestedProductsCard as jest.MockedFunction<typeof useSuggestedProductsCard>
 
 describe('SuggestedProductsCard', () => {
   it('renders recommendations with risk bands', () => {

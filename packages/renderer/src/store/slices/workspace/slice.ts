@@ -33,11 +33,6 @@ const workspaceSlice = createSlice({
   }
 })
 
-export const {
-  setRequestImport,
-  setFinanceImport,
-  setPdfImport,
-  setReportExport,
-  setCertificate
-} = workspaceSlice.actions
+export const { setRequestImport, setFinanceImport, setPdfImport, setReportExport, setCertificate } =
+  workspaceSlice.actions
 export const workspaceReducer = workspaceSlice.reducer

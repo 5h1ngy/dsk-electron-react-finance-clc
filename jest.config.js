@@ -41,7 +41,10 @@ const config = {
       displayName: 'main',
       preset: 'ts-jest',
       testEnvironment: 'node',
-      testMatch: ['<rootDir>/packages/main/**/*.test.ts', '<rootDir>/packages/preload/**/*.test.ts'],
+      testMatch: [
+        '<rootDir>/packages/main/**/*.test.ts',
+        '<rootDir>/packages/preload/**/*.test.ts'
+      ],
       moduleNameMapper: sharedModuleNameMapper,
       transform: {
         '^.+\\.(ts|tsx)$': [

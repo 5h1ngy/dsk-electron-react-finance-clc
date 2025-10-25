@@ -8,11 +8,9 @@ const createWindow = (): BrowserWindow =>
     isMinimized: jest.fn().mockReturnValue(false),
     restore: jest.fn(),
     focus: jest.fn()
-  } as unknown as BrowserWindow)
+  }) as unknown as BrowserWindow
 
-const createDeps = (
-  overrides: Partial<MainProcessDependencies> = {}
-): MainProcessDependencies => {
+const createDeps = (overrides: Partial<MainProcessDependencies> = {}): MainProcessDependencies => {
   const window = createWindow()
   return {
     appRef: {

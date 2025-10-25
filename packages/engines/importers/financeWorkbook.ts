@@ -69,4 +69,3 @@ export const parseFinanceWorkbook = async (file: File): Promise<FinanceUniverseS
     products
   }
 }
-

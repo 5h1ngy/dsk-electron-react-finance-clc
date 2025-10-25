@@ -43,4 +43,3 @@ export const useHealthStatus = (): HealthState => {
 
   return { snapshot, loading, error, refresh }
 }
-

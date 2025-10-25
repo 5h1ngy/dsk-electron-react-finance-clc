@@ -1,4 +1,4 @@
-jest.mock("pdfjs-dist/build/pdf.worker?url", () => '', { virtual: true })
+jest.mock('pdfjs-dist/build/pdf.worker?url', () => '', { virtual: true })
 jest.mock('pdfjs-dist', () => ({
   GlobalWorkerOptions: {},
   getDocument: () => ({
@@ -17,11 +17,12 @@ jest.mock('pdfjs-dist', () => ({
 import { loadQuestionnaireSchema } from '@renderer/config/questionnaire'
 import { parseQuestionnairePdf } from '@engines/importers/pdfQuestionnaire'
 
-const createFakeFile = (): File => ({
-  name: 'questionario.pdf',
-  type: 'application/pdf',
-  arrayBuffer: async () => new ArrayBuffer(0)
-}) as File
+const createFakeFile = (): File =>
+  ({
+    name: 'questionario.pdf',
+    type: 'application/pdf',
+    arrayBuffer: async () => new ArrayBuffer(0)
+  }) as File
 
 describe('parseQuestionnairePdf', () => {
   it('estrae i valori riconoscendo id:value nel PDF', async () => {
@@ -32,5 +33,3 @@ describe('parseQuestionnairePdf', () => {
     expect(result.responses.exp_know_2).toBe('Si')
   })
 })
-
-

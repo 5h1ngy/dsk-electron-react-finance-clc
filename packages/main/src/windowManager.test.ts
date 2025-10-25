@@ -43,10 +43,7 @@ describe('MainWindowManager', () => {
 
     expect(window).toBe(instance)
     expect(ctor).toHaveBeenCalledWith(MAIN_WINDOW_OPTIONS)
-    expect(instance.webContents.on).toHaveBeenCalledWith(
-      'console-message',
-      expect.any(Function)
-    )
+    expect(instance.webContents.on).toHaveBeenCalledWith('console-message', expect.any(Function))
     expect(logger.info).toHaveBeenCalledWith('Main window instantiated', 'Window')
   })
 
@@ -64,9 +61,8 @@ describe('MainWindowManager', () => {
 
     expect(instance.loadURL).toHaveBeenCalledWith('http://localhost:5173')
     expect(instance.loadFile).not.toHaveBeenCalled()
-    const [, handler] = instance.webContents.once.mock.calls.find(
-      ([channel]) => channel === 'dom-ready'
-    ) ?? []
+    const [, handler] =
+      instance.webContents.once.mock.calls.find(([channel]) => channel === 'dom-ready') ?? []
     expect(handler).toBeDefined()
     handler?.()
     expect(instance.webContents.openDevTools).toHaveBeenCalled()
@@ -83,13 +79,18 @@ describe('MainWindowManager', () => {
     })
 
     await manager.createMainWindow()
-    const [, handler] = instance.webContents.on.mock.calls.find(
-      ([channel]) => channel === 'console-message'
-    ) ?? []
+    const [, handler] =
+      instance.webContents.on.mock.calls.find(([channel]) => channel === 'console-message') ?? []
     handler?.({ preventDefault } as { preventDefault: () => void }, 1, 'hello', 10, 'bundle.js')
     expect(logger.renderer).toHaveBeenCalledWith(1, 'hello', 'bundle.js', 10)
 
-    handler?.({ preventDefault } as { preventDefault: () => void }, 1, 'ignore this', 10, 'bundle.js')
+    handler?.(
+      { preventDefault } as { preventDefault: () => void },
+      1,
+      'ignore this',
+      10,
+      'bundle.js'
+    )
     expect(preventDefault).toHaveBeenCalled()
   })
 })

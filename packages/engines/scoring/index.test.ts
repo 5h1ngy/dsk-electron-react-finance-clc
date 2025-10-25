@@ -31,5 +31,3 @@ describe('calculateRiskScore', () => {
     expect(dynamicResult.score).toBeGreaterThan(conservativeResult.score)
   })
 })
-
-

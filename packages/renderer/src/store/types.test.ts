@@ -5,4 +5,3 @@ describe('store types', () => {
     expect(types).toBeDefined()
   })
 })
-

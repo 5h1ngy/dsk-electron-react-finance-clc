@@ -8,10 +8,7 @@ export const useSuggestedProductsCard = () => {
   const recommendations = useAppSelector(selectRecommendations)
   const { t } = useTranslation()
 
-  const formatRiskBand = useCallback(
-    (band: string) => t(`risk.band.${band}`),
-    [t]
-  )
+  const formatRiskBand = useCallback((band: string) => t(`risk.band.${band}`), [t])
 
   return {
     title: t('suggestedProducts.title'),

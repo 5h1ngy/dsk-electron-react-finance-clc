@@ -60,9 +60,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
           />
         </Space>
       </Header>
-      <Content style={{ padding: 24, overflow: 'auto' }}>
-        {children}
-      </Content>
+      <Content style={{ padding: 24, overflow: 'auto' }}>{children}</Content>
     </Layout>
   )
 }

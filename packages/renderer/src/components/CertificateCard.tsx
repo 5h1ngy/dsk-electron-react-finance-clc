@@ -54,9 +54,7 @@ const CertificateCard = () => {
               <Alert
                 type={summary ? 'success' : 'warning'}
                 showIcon
-                message={
-                  summary ? t('certificate.alert.ready') : t('certificate.alert.locked')
-                }
+                message={summary ? t('certificate.alert.ready') : t('certificate.alert.locked')}
               />
               <Descriptions column={1} size="small" bordered>
                 <Descriptions.Item label={t('certificate.labels.file')}>
@@ -91,9 +89,7 @@ const CertificateCard = () => {
               </Descriptions>
             </>
           ) : (
-            <Typography.Text type="secondary">
-              {t('certificate.metadata.empty')}
-            </Typography.Text>
+            <Typography.Text type="secondary">{t('certificate.metadata.empty')}</Typography.Text>
           )}
         </Space>
       </Card>
@@ -123,4 +119,3 @@ const CertificateCard = () => {
 }
 
 export default CertificateCard
-

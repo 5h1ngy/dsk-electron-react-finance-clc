@@ -31,7 +31,10 @@ export class MainProcessApplication {
     if (gotLock) {
       return
     }
-    this.deps.logger.warn('Second application instance detected. Quitting current launch.', 'Bootstrap')
+    this.deps.logger.warn(
+      'Second application instance detected. Quitting current launch.',
+      'Bootstrap'
+    )
     this.deps.appRef.quit()
     process.exit(0)
   }

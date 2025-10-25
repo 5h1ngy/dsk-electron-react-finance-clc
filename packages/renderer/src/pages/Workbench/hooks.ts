@@ -1,2 +1,1 @@
-export const useWorkbenchPage = () => ({} as const);
-
+export const useWorkbenchPage = () => ({}) as const

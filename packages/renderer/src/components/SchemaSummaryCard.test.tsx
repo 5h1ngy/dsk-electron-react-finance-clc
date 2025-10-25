@@ -54,4 +54,3 @@ describe('SchemaSummaryCard', () => {
     expect(screen.getByText('schemaSummary.empty')).toBeInTheDocument()
   })
 })
-

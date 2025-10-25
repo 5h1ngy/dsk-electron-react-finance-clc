@@ -64,9 +64,7 @@ export const useCertificateCard = () => {
       setVerifyModalOpen(false)
       setPassword('')
     } catch (error) {
-      message.error(
-        error instanceof Error ? error.message : t('certificate.messages.verifyError')
-      )
+      message.error(error instanceof Error ? error.message : t('certificate.messages.verifyError'))
     } finally {
       setVerifying(false)
     }

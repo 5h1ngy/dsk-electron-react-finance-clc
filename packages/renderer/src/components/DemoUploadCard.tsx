@@ -6,18 +6,18 @@ import { useDemoUploadCard } from '@renderer/components/DemoUploadCard.hooks'
 const { Dragger } = Upload
 
 const DemoUploadCard = () => {
-  const {
-    copy,
-    listItems,
-    handleQuestionnaireUpload,
-    handleFinanceUpload,
-    handlePdfUpload
-  } = useDemoUploadCard()
+  const { copy, listItems, handleQuestionnaireUpload, handleFinanceUpload, handlePdfUpload } =
+    useDemoUploadCard()
 
   return (
     <Card title={copy.title} style={{ height: '100%' }}>
       <Typography.Paragraph type="secondary">{copy.description}</Typography.Paragraph>
-      <Dragger multiple={false} beforeUpload={handleQuestionnaireUpload} accept=".xlsx,.xls" showUploadList={false}>
+      <Dragger
+        multiple={false}
+        beforeUpload={handleQuestionnaireUpload}
+        accept=".xlsx,.xls"
+        showUploadList={false}
+      >
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>

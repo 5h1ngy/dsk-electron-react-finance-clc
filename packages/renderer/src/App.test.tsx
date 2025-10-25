@@ -25,4 +25,3 @@ describe('App', () => {
     expect(await screen.findByText('WorkbenchPage')).toBeInTheDocument()
   })
 })
-

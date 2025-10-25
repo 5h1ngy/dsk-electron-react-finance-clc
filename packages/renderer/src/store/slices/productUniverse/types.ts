@@ -5,4 +5,3 @@ export interface ProductUniverseState {
   categories: Array<{ name: string; count: number }>
   recommendations: ProductRecommendation[]
 }
-

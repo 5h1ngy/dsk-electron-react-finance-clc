@@ -1,12 +1,11 @@
-import type {
-  QuestionnaireSchema,
-  QuestionnaireResponseValue
-} from '@engines/questionnaire'
+import type { QuestionnaireSchema, QuestionnaireResponseValue } from '@engines/questionnaire'
 import type { RiskScoreResult } from '@engines/scoring/types'
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
 
-const resolveRiskClass = (score: number): { label: string; volatility: RiskScoreResult['volatilityBand'] } => {
+const resolveRiskClass = (
+  score: number
+): { label: string; volatility: RiskScoreResult['volatilityBand'] } => {
   if (score < 25) {
     return { label: 'Conservativo', volatility: 'Bassa' }
   }
@@ -33,7 +32,10 @@ const normalizeNumericResponse = (
   return clamp((value - min) / (max - min), 0, 1)
 }
 
-const normalizeChoiceResponse = (options: string[] | undefined, value: QuestionnaireResponseValue): number | undefined => {
+const normalizeChoiceResponse = (
+  options: string[] | undefined,
+  value: QuestionnaireResponseValue
+): number | undefined => {
   if (!options?.length) {
     return undefined
   }
@@ -119,4 +121,3 @@ export const calculateRiskScore = (
 }
 
 export * from './types'
-

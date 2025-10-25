@@ -7,10 +7,7 @@ import { parseFinanceWorkbook } from '@engines/importers/financeWorkbook'
 import { parseQuestionnairePdf } from '@engines/importers/pdfQuestionnaire'
 import { parseQuestionnaireWorkbook } from '@engines/importers/requestWorkbook'
 import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
-import {
-  applyBulkResponses,
-  selectQuestionnaireSchema
-} from '@renderer/store/slices/questionnaire'
+import { applyBulkResponses, selectQuestionnaireSchema } from '@renderer/store/slices/questionnaire'
 import {
   selectFinanceImport,
   selectPdfImport,
@@ -71,9 +68,7 @@ export const useDemoUploadCard = () => {
       )
       message.success(t('demoUpload.messages.productsSuccess'))
     } catch (error) {
-      message.error(
-        error instanceof Error ? error.message : t('demoUpload.messages.productsError')
-      )
+      message.error(error instanceof Error ? error.message : t('demoUpload.messages.productsError'))
     }
     return Upload.LIST_IGNORE
   }

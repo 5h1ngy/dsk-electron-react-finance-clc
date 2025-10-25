@@ -1,10 +1,7 @@
 import { read, utils } from 'xlsx'
 
 import i18n from '@renderer/i18n'
-import type {
-  QuestionnaireResponseValue,
-  QuestionnaireResponses
-} from '@engines/questionnaire'
+import type { QuestionnaireResponseValue, QuestionnaireResponses } from '@engines/questionnaire'
 
 const toRecord = (header: unknown[], row: unknown[]): QuestionnaireResponses => {
   const record: QuestionnaireResponses = {}
@@ -37,4 +34,3 @@ export const parseQuestionnaireWorkbook = async (file: File): Promise<Questionna
   const firstRow = data[0] ?? []
   return toRecord(header, firstRow)
 }
-

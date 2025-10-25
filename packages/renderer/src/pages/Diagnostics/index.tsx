@@ -40,9 +40,7 @@ const DiagnosticsPage = () => {
               <Typography.Text type="danger">{error}</Typography.Text>
             ) : snapshot ? (
               <Descriptions column={1} size="small">
-                <Descriptions.Item label={labels.version}>
-                  {snapshot.version}
-                </Descriptions.Item>
+                <Descriptions.Item label={labels.version}>{snapshot.version}</Descriptions.Item>
                 <Descriptions.Item label={labels.status}>{snapshot.status}</Descriptions.Item>
                 <Descriptions.Item label={labels.uptime}>
                   {Math.round(snapshot.uptimeSeconds)}s

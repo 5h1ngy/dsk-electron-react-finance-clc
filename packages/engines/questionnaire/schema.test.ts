@@ -1,4 +1,4 @@
-import { loadQuestionnaireSchema } from '@renderer/config/questionnaire';
+import { loadQuestionnaireSchema } from '@renderer/config/questionnaire'
 
 describe('questionnaire schema loader', () => {
   it('parses sections and questions', () => {
@@ -7,4 +7,3 @@ describe('questionnaire schema loader', () => {
     expect(schema.sections[0].questions.length).toBeGreaterThan(0)
   })
 })
-

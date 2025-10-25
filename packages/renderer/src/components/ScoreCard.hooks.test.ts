@@ -60,22 +60,28 @@ describe('useScoreCard', () => {
   })
 
   it('dispatches recommendations when score and products are available', () => {
-    jest.mocked(buildRecommendations).mockReturnValue([
-      { name: 'Prodotto', category: 'Azioni', riskBand: 'Bassa', matchReason: 'Match' }
-    ])
+    jest
+      .mocked(buildRecommendations)
+      .mockReturnValue([
+        { name: 'Prodotto', category: 'Azioni', riskBand: 'Bassa', matchReason: 'Match' }
+      ])
     jest
       .mocked(useAppSelector)
       .mockReturnValueOnce(baseScore)
       .mockReturnValueOnce({ lastCalculatedAt: new Date().toISOString() })
       .mockReturnValueOnce(undefined)
       .mockReturnValueOnce({ fileName: 'cert.p12', base64: 'BASE64' })
-      .mockReturnValueOnce([{ name: 'Prodotto', category: 'Azioni', riskBand: 'Bassa', matchReason: 'Match' }])
+      .mockReturnValueOnce([
+        { name: 'Prodotto', category: 'Azioni', riskBand: 'Bassa', matchReason: 'Match' }
+      ])
 
     renderHook(() => useScoreCard())
 
     expect(buildRecommendations).toHaveBeenCalled()
     expect(mockDispatch).toHaveBeenCalledWith(
-      setRecommendations([{ name: 'Prodotto', category: 'Azioni', riskBand: 'Bassa', matchReason: 'Match' }])
+      setRecommendations([
+        { name: 'Prodotto', category: 'Azioni', riskBand: 'Bassa', matchReason: 'Match' }
+      ])
     )
   })
 

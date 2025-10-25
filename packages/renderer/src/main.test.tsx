@@ -18,17 +18,16 @@ describe('renderer entrypoint', () => {
     document.body.innerHTML = ''
   })
 
-  it('throws when the root container is missing', () => {
-    expect(() => require('./main')).toThrow('Root container not found')
+  it('throws when the root container is missing', async () => {
+    await expect(import('./main')).rejects.toThrow('Root container not found')
   })
 
-  it('mounts the React application into the root container', () => {
+  it('mounts the React application into the root container', async () => {
     const container = document.createElement('div')
     container.id = 'root'
     document.body.appendChild(container)
 
-    expect(() => require('./main')).not.toThrow()
+    await expect(import('./main')).resolves.toBeDefined()
     expect(mockedCreateRoot).toHaveBeenCalled()
   })
 })
-

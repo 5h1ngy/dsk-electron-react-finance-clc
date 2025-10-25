@@ -148,12 +148,9 @@ export const useQuestionnaireStepper = () => {
     [currentStep, dispatch, schema]
   )
 
-  const onInvalid = useCallback(
-    (formErrors: typeof errors) => {
-      setValidationErrors(Object.keys(formErrors))
-    },
-    [errors]
-  )
+  const onInvalid = useCallback((formErrors: typeof errors) => {
+    setValidationErrors(Object.keys(formErrors))
+  }, [])
 
   const handleNext = useCallback(() => {
     void handleSubmit(onSubmit, onInvalid)()

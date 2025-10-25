@@ -1,14 +1,5 @@
 import { Controller } from 'react-hook-form'
-import {
-  Alert,
-  Button,
-  Card,
-  InputNumber,
-  Radio,
-  Space,
-  Steps,
-  Typography
-} from 'antd'
+import { Alert, Button, Card, InputNumber, Radio, Space, Steps, Typography } from 'antd'
 
 import { useQuestionnaireStepper } from '@renderer/components/QuestionnaireStepper.hooks'
 
@@ -42,8 +33,7 @@ const QuestionnaireStepper = () => {
         <Space size="large">
           <div style={{ minWidth: 160, textAlign: 'right' }}>
             <Typography.Text type="secondary">
-              {copy.completion}{' '}
-              <Typography.Text strong>{progress.completed}%</Typography.Text>
+              {copy.completion} <Typography.Text strong>{progress.completed}%</Typography.Text>
             </Typography.Text>
           </div>
           <Button onClick={handleReset} type="link">

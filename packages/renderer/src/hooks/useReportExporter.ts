@@ -3,10 +3,7 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { SCORING_ENGINE_VERSION } from '@renderer/config/versions'
-import {
-  extractCertificateSummary,
-  type CertificateSummary
-} from '@engines/signature'
+import { extractCertificateSummary, type CertificateSummary } from '@engines/signature'
 import { generateRiskReport } from '@engines/report'
 import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
 import {
@@ -14,10 +11,7 @@ import {
   selectQuestionnaireScore,
   selectResponses
 } from '@renderer/store/slices/questionnaire'
-import {
-  selectCertificate,
-  setReportExport
-} from '@renderer/store/slices/workspace'
+import { selectCertificate, setReportExport } from '@renderer/store/slices/workspace'
 
 const toBase64 = (bytes: Uint8Array): string => {
   let binary = ''
@@ -37,18 +31,21 @@ export const useReportExporter = () => {
   const [exporting, setExporting] = useState(false)
   const { t } = useTranslation()
 
-  const buildMetadata = (summary: CertificateSummary) => ({
-    schemaVersion: schema?.schemaVersion ?? 'unknown',
-    scoringVersion: SCORING_ENGINE_VERSION,
-    questionnaireTitle: schema?.title ?? 'unknown',
-    generatedAt: new Date().toISOString(),
-    riskClass: score?.riskClass ?? 'N/A',
-    riskScore: score?.score ?? 0,
-    volatility: score?.volatilityBand ?? 'N/A',
-    certificateSubject: summary.subject,
-    certificateIssuer: summary.issuer,
-    certificateSerial: summary.serialNumber
-  })
+  const buildMetadata = useCallback(
+    (summary: CertificateSummary) => ({
+      schemaVersion: schema?.schemaVersion ?? 'unknown',
+      scoringVersion: SCORING_ENGINE_VERSION,
+      questionnaireTitle: schema?.title ?? 'unknown',
+      generatedAt: new Date().toISOString(),
+      riskClass: score?.riskClass ?? 'N/A',
+      riskScore: score?.score ?? 0,
+      volatility: score?.volatilityBand ?? 'N/A',
+      certificateSubject: summary.subject,
+      certificateIssuer: summary.issuer,
+      certificateSerial: summary.serialNumber
+    }),
+    [schema?.schemaVersion, schema?.title, score?.riskClass, score?.score, score?.volatilityBand]
+  )
 
   const exportReport = useCallback(
     async (password: string): Promise<boolean> => {
@@ -102,19 +99,14 @@ export const useReportExporter = () => {
         message.success(t('report.messages.success'))
         return true
       } catch (error) {
-        message.error(
-          error instanceof Error
-            ? error.message
-            : t('report.messages.unexpected')
-        )
+        message.error(error instanceof Error ? error.message : t('report.messages.unexpected'))
         return false
       } finally {
         setExporting(false)
       }
     },
-    [certificate, dispatch, responses, schema, score, t]
+    [buildMetadata, certificate, dispatch, responses, schema, score, t]
   )
 
   return { exportReport, exporting }
 }
-

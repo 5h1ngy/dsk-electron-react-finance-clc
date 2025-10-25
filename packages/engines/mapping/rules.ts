@@ -18,4 +18,3 @@ export interface ProductRecord {
 export interface ProductRecommendation extends ProductRecord {
   matchReason: string
 }
-

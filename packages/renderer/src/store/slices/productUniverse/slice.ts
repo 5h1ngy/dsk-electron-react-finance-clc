@@ -17,7 +17,10 @@ const productUniverseSlice = createSlice({
   reducers: {
     setProductUniverse: (
       state,
-      action: PayloadAction<{ products: ProductRecord[]; categories: Array<{ name: string; count: number }> }>
+      action: PayloadAction<{
+        products: ProductRecord[]
+        categories: Array<{ name: string; count: number }>
+      }>
     ) => {
       state.products = action.payload.products
       state.categories = action.payload.categories
@@ -35,4 +38,3 @@ export const buildRecommendations = (
   score: RiskScoreResult,
   products: ProductRecord[]
 ): ProductRecommendation[] => mapProductsToProfile(score, products)
-

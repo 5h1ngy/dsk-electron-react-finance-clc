@@ -20,10 +20,7 @@ const decodePkcs12 = (base64: string, password: string): forge.pkcs12.Pkcs12Pfx 
   return forge.pkcs12.pkcs12FromAsn1(asn1, password)
 }
 
-export const extractCertificateSummary = (
-  base64: string,
-  password: string
-): CertificateSummary => {
+export const extractCertificateSummary = (base64: string, password: string): CertificateSummary => {
   try {
     const p12 = decodePkcs12(base64, password)
     const certBags = p12.getBags({ bagType: forge.pki.oids.certBag })
@@ -54,4 +51,3 @@ export const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
   })
   return btoa(binary)
 }
-

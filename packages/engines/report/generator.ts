@@ -2,10 +2,7 @@ import { PDFDocument, StandardFonts, rgb, type RGB } from 'pdf-lib'
 
 import { SCORING_ENGINE_VERSION } from '@renderer/config/versions'
 import i18n from '@renderer/i18n'
-import type {
-  QuestionnaireResponses,
-  QuestionnaireSchema
-} from '@engines/questionnaire'
+import type { QuestionnaireResponses, QuestionnaireSchema } from '@engines/questionnaire'
 import type { RiskScoreResult } from '@engines/scoring'
 
 export interface ReportPayload {
@@ -39,7 +36,10 @@ export const generateRiskReport = async ({
 
   let cursor = height - margin
 
-  const drawText = (text: string, options: { size: number; font?: typeof bodyFont; color?: RGB }) => {
+  const drawText = (
+    text: string,
+    options: { size: number; font?: typeof bodyFont; color?: RGB }
+  ) => {
     const { size, font = bodyFont, color = rgb(0, 0, 0) } = options
     cursor -= size + 6
     page.drawText(text, {
@@ -81,9 +81,7 @@ export const generateRiskReport = async ({
     }
   )
 
-  score.rationales.forEach((rationale) =>
-    drawText(`- ${i18n.t(rationale)}`, { size: 10 })
-  )
+  score.rationales.forEach((rationale) => drawText(`- ${i18n.t(rationale)}`, { size: 10 }))
 
   schema.sections.forEach((section) => {
     cursor -= 20
@@ -94,19 +92,12 @@ export const generateRiskReport = async ({
   })
 
   cursor -= 30
-  drawText(
-    i18n.t('report.pdf.hashNotice'),
-    {
-      size: 9,
-      color: rgb(0.4, 0.4, 0.4)
-    }
-  )
-  drawText(
-    i18n.t('report.pdf.manifestNotice'),
-    { size: 9, color: rgb(0.4, 0.4, 0.4) }
-  )
+  drawText(i18n.t('report.pdf.hashNotice'), {
+    size: 9,
+    color: rgb(0.4, 0.4, 0.4)
+  })
+  drawText(i18n.t('report.pdf.manifestNotice'), { size: 9, color: rgb(0.4, 0.4, 0.4) })
 
   const bytes = await pdf.save()
   return bytes
 }
-

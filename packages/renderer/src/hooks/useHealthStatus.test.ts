@@ -29,4 +29,3 @@ describe('useHealthStatus', () => {
     expect(result.current.error).toBe('Boom')
   })
 })
-

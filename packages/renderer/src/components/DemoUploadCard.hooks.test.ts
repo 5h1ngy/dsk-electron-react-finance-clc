@@ -21,9 +21,7 @@ jest.mock('@engines/importers/pdfQuestionnaire', () => ({
 describe('useDemoUploadCard', () => {
   beforeEach(() => {
     jest.mocked(useAppDispatch).mockReturnValue(jest.fn())
-    jest.mocked(useAppSelector)
-      .mockReset()
-      .mockReturnValue(undefined)
+    jest.mocked(useAppSelector).mockReset().mockReturnValue(undefined)
   })
 
   it('builds copy and list items based on selector data', () => {

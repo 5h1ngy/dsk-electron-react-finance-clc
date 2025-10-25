@@ -35,7 +35,13 @@ const tonePalette = {
   }
 }
 
-const HealthStatusTag = ({ snapshot, loading, error, onRefresh, tone = 'light' }: StatusTagProps) => {
+const HealthStatusTag = ({
+  snapshot,
+  loading,
+  error,
+  onRefresh,
+  tone = 'light'
+}: StatusTagProps) => {
   const { t } = useTranslation()
   const palette = tonePalette[tone]
 

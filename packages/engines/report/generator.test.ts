@@ -8,7 +8,8 @@ describe('generateRiskReport', () => {
     const schema = loadQuestionnaireSchema()
     const responses = schema.sections.reduce<QuestionnaireResponses>((acc, section) => {
       section.questions.forEach((question) => {
-        acc[question.id] = question.type === 'single_choice' && question.options?.[0] ? question.options[0] : 1
+        acc[question.id] =
+          question.type === 'single_choice' && question.options?.[0] ? question.options[0] : 1
       })
       return acc
     }, {})
@@ -17,5 +18,3 @@ describe('generateRiskReport', () => {
     expect(pdfBytes.length).toBeGreaterThan(100)
   })
 })
-
-

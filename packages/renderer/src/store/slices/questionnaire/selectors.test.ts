@@ -6,29 +6,43 @@ import {
   selectScoreMeta,
   selectAnsweredProgress
 } from './selectors'
+import type { QuestionnaireSchema, QuestionnaireResponses } from '@engines/questionnaire'
+import type { RiskScoreResult } from '@engines/scoring'
+import type { RootState } from '@renderer/store/types'
 
-const schema = {
+const schema: QuestionnaireSchema = {
+  schemaVersion: '1',
+  title: 'Schema',
   sections: [
     {
       id: 's1',
       label: 'Section',
       questions: [
-        { id: 'q1', required: true },
-        { id: 'q2', required: true }
+        { id: 'q1', label: 'Q1', type: 'number', required: true, weight: 1 },
+        { id: 'q2', label: 'Q2', type: 'number', required: true, weight: 1 }
       ]
     }
   ]
 }
 
-const state = {
+const responses: QuestionnaireResponses = { q1: 1 }
+const score: RiskScoreResult = {
+  score: 70,
+  riskClass: 'Prudente',
+  volatilityBand: 'Media',
+  missingAnswers: [],
+  rationales: []
+}
+
+const state: Pick<RootState, 'questionnaire'> = {
   questionnaire: {
     schema,
     schemaStatus: 'ready',
-    responses: { q1: 1 },
-    score: { score: 70 },
+    responses,
+    score,
     lastCalculatedAt: 'now'
   }
-} as any
+}
 
 describe('questionnaire selectors', () => {
   it('selects primitive slices', () => {

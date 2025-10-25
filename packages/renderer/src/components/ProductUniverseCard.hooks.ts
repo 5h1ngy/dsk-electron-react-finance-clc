@@ -1,10 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { useAppSelector } from '@renderer/store/hooks'
-import {
-  selectProductCategories,
-  selectProducts
-} from '@renderer/store/slices/productUniverse'
+import { selectProductCategories, selectProducts } from '@renderer/store/slices/productUniverse'
 
 export const useProductUniverseCard = () => {
   const categories = useAppSelector(selectProductCategories)

@@ -45,4 +45,3 @@ export const mapProductsToProfile = (
 
   return Array.from(uniqueByCategory.values()).slice(0, limit)
 }
-

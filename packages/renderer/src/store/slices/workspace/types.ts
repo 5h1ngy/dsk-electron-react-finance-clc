@@ -42,4 +42,3 @@ export interface WorkspaceState {
   reportExport?: ReportExportMeta
   certificate?: CertificateMeta
 }
-
