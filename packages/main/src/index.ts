@@ -6,7 +6,7 @@ import { registerHealthIpc } from '@main/ipc/health'
 import { registerReportIpc } from '@main/ipc/report'
 import { mainWindowManager, MainWindowManager } from '@main/windowManager'
 
-interface MainProcessDependencies {
+export interface MainProcessDependencies {
   appRef: typeof app
   logger: typeof logger
   windowManager: MainWindowManager
@@ -15,7 +15,7 @@ interface MainProcessDependencies {
   registerReportIpc: () => void
 }
 
-class MainProcessApplication {
+export class MainProcessApplication {
   private mainWindow: BrowserWindow | null = null
 
   constructor(private readonly deps: MainProcessDependencies) {}
@@ -106,4 +106,6 @@ const application = new MainProcessApplication({
   registerReportIpc
 })
 
-application.bootstrap()
+if (process.env.NODE_ENV !== 'test') {
+  application.bootstrap()
+}

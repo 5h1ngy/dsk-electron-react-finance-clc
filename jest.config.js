@@ -56,6 +56,7 @@ const config = {
       displayName: 'renderer',
       preset: 'ts-jest',
       testEnvironment: 'jsdom',
+      setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'],
       testMatch: [
         '<rootDir>/packages/renderer/**/*.test.ts?(x)',
         '<rootDir>/packages/engines/**/*.test.ts?(x)'

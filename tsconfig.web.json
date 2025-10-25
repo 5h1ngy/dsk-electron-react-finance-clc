@@ -28,7 +28,8 @@
         },
         "strict":  true,
         "types":  [
-            "jest"
+            "jest",
+            "@testing-library/jest-dom"
         ],
         "resolveJsonModule": true
     }
