@@ -21,7 +21,7 @@ export const mapProductsToProfile = (
 
   const uniqueByCategory = new Map<string, ProductRecommendation>()
 
-  filtered.forEach((product, index) => {
+  filtered.forEach((product) => {
     const current = uniqueByCategory.get(product.category)
     const recommendation: ProductRecommendation = {
       ...product,

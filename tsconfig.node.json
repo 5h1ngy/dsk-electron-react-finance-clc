@@ -25,6 +25,9 @@
             ],
             "@preload/*":  [
                 "packages/preload/src/*"
+            ],
+            "@renderer/*": [
+                "packages/renderer/src/*"
             ]
         }
     }

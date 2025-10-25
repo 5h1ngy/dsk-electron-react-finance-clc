@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
 import { setCertificate } from '@renderer/store/slices/workspace'
 import { arrayBufferToBase64, extractCertificateSummary } from '@engines/signature'
 import { Upload } from 'antd'
+import type { RcFile } from 'antd/es/upload/interface'
 
 jest.mock('@renderer/store/hooks', () => ({
   useAppDispatch: jest.fn(),
@@ -31,25 +32,14 @@ jest.mock('antd', () => {
 
 const mockDispatch = jest.fn()
 
-const createFile = () => new File(['test'], 'cert.p12', { type: 'application/x-pkcs12' })
-
-class FileReaderMock implements Partial<FileReader> {
-  public result: ArrayBuffer | string | null = null
-  public onload: ((this: FileReader, ev: ProgressEvent<FileReader>) => void) | null = null
-  public onerror: ((this: FileReader, ev: ProgressEvent<FileReader>) => void) | null = null
-
-  readAsArrayBuffer(): void {
-    this.result = new ArrayBuffer(8)
-    this.onload?.({} as ProgressEvent<FileReader>)
-  }
-}
+const createFile = (): RcFile =>
+  Object.assign(new File(['test'], 'cert.p12', { type: 'application/x-pkcs12' }), {
+    uid: 'test',
+    lastModifiedDate: new Date()
+  })
 
 describe('useCertificateCard', () => {
   beforeEach(() => {
-    Object.defineProperty(global, 'FileReader', {
-      writable: true,
-      value: FileReaderMock
-    })
     jest.mocked(useAppDispatch).mockReturnValue(mockDispatch)
     jest.mocked(useAppSelector).mockReturnValue(undefined)
     mockDispatch.mockReset()
@@ -69,7 +59,7 @@ describe('useCertificateCard', () => {
 
     let outcome: unknown
     await act(async () => {
-      outcome = await result.current.handleUpload(createFile())
+      outcome = await result.current.handleUpload(createFile(), [])
     })
 
     expect(outcome).toBe(Upload.LIST_IGNORE)

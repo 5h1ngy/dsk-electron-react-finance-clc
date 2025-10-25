@@ -12,7 +12,11 @@ const mockHook = useCertificateCard as jest.MockedFunction<typeof useCertificate
 describe('CertificateCard', () => {
   it('renders the certificate summary when metadata is available', () => {
     mockHook.mockReturnValue({
-      certificate: { fileName: 'client.p12' },
+      certificate: {
+        fileName: 'client.p12',
+        base64: 'BASE64',
+        loadedAt: new Date().toISOString()
+      },
       summary: {
         subject: 'CN=Client',
         issuer: 'CN=Issuer',

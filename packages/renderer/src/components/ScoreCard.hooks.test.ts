@@ -6,6 +6,7 @@ import { useReportExporter } from '@renderer/hooks/useReportExporter'
 import { buildRecommendations } from '@renderer/store/slices/productUniverse/slice'
 import { setRecommendations } from '@renderer/store/slices/productUniverse'
 import { message } from 'antd'
+import type { RiskScoreResult } from '@engines/scoring'
 
 jest.mock('@renderer/store/hooks', () => ({
   useAppDispatch: jest.fn(),
@@ -40,6 +41,14 @@ jest.mock('antd', () => {
 const mockDispatch = jest.fn()
 
 describe('useScoreCard', () => {
+  const baseScore: RiskScoreResult = {
+    score: 70,
+    riskClass: 'Prudente',
+    volatilityBand: 'Media',
+    missingAnswers: [],
+    rationales: []
+  }
+
   beforeEach(() => {
     jest.mocked(useAppDispatch).mockReturnValue(mockDispatch)
     jest.mocked(useReportExporter).mockReturnValue({
@@ -52,40 +61,28 @@ describe('useScoreCard', () => {
 
   it('dispatches recommendations when score and products are available', () => {
     jest.mocked(buildRecommendations).mockReturnValue([
-      { name: 'Prodotto', category: 'Azioni', riskBand: 'Medio' }
+      { name: 'Prodotto', category: 'Azioni', riskBand: 'Bassa', matchReason: 'Match' }
     ])
     jest
       .mocked(useAppSelector)
-      .mockReturnValueOnce({
-        score: 70,
-        riskClass: 'Prudente',
-        volatilityBand: 'Medio',
-        missingAnswers: [],
-        rationales: []
-      })
+      .mockReturnValueOnce(baseScore)
       .mockReturnValueOnce({ lastCalculatedAt: new Date().toISOString() })
       .mockReturnValueOnce(undefined)
       .mockReturnValueOnce({ fileName: 'cert.p12', base64: 'BASE64' })
-      .mockReturnValueOnce([{ name: 'Prodotto', category: 'Azioni', riskBand: 'Medio' }])
+      .mockReturnValueOnce([{ name: 'Prodotto', category: 'Azioni', riskBand: 'Bassa', matchReason: 'Match' }])
 
     renderHook(() => useScoreCard())
 
     expect(buildRecommendations).toHaveBeenCalled()
     expect(mockDispatch).toHaveBeenCalledWith(
-      setRecommendations([{ name: 'Prodotto', category: 'Azioni', riskBand: 'Medio' }])
+      setRecommendations([{ name: 'Prodotto', category: 'Azioni', riskBand: 'Bassa', matchReason: 'Match' }])
     )
   })
 
   it('warns when trying to export without a certificate', async () => {
     jest
       .mocked(useAppSelector)
-      .mockReturnValueOnce({
-        score: 70,
-        riskClass: 'Prudente',
-        volatilityBand: 'Medio',
-        missingAnswers: [],
-        rationales: []
-      })
+      .mockReturnValueOnce(baseScore)
       .mockReturnValueOnce({})
       .mockReturnValueOnce(undefined)
       .mockReturnValueOnce(undefined)

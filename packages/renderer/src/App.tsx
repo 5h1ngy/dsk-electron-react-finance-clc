@@ -19,7 +19,7 @@ const App = () => (
         }
       }}
     >
-      <HashRouter>
+      <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <AppLayout>
           <Routes>
             <Route index element={<WorkbenchPage />} />

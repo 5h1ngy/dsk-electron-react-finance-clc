@@ -27,7 +27,8 @@ const createDeps = (
       error: jest.fn(),
       info: jest.fn(),
       success: jest.fn(),
-      debug: jest.fn()
+      debug: jest.fn(),
+      renderer: jest.fn()
     } as MainProcessDependencies['logger'],
     windowManager: {
       createMainWindow: jest.fn().mockResolvedValue(window)

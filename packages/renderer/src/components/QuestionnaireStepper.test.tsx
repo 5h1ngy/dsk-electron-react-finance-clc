@@ -1,7 +1,8 @@
+import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
 
 jest.mock('react-hook-form', () => ({
-  Controller: ({ render }: { render: (props: any) => JSX.Element }) =>
+  Controller: ({ render }: { render: (props: any) => React.ReactNode }) =>
     render({ field: { value: undefined, onChange: jest.fn() } })
 }))
 
@@ -32,8 +33,8 @@ describe('QuestionnaireStepper', () => {
           finish: 'questionnaire.nav.finish'
         }
       },
-      progress: { completed: 50 },
-      control: { _dummy: true },
+      progress: { completed: 50, required: 100 },
+      control: {} as ReturnType<typeof useQuestionnaireStepper>['control'],
       errors: {},
       validationErrors: [],
       handleNext,
@@ -43,8 +44,21 @@ describe('QuestionnaireStepper', () => {
       currentStep: 0,
       steps: [{ key: 's1', title: 'S1', disabled: false }],
       section: {
+        id: 'section-1',
+        label: 'Section 1',
         questions: [
-          { id: 'q1', label: 'Question 1', type: 'number', required: true }
+          { id: 'q1', label: 'Question 1', type: 'number', required: true, weight: 1 }
+        ]
+      },
+      schema: {
+        schemaVersion: '1',
+        title: 'Test Schema',
+        sections: [
+          {
+            id: 'section-1',
+            label: 'Section 1',
+            questions: []
+          }
         ]
       },
       isReady: true,

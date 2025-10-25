@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react'
+import type { RiskScoreResult } from '@engines/scoring'
 
 import ScoreCard from './ScoreCard'
 import { useScoreCard } from './ScoreCard.hooks'
@@ -9,17 +10,18 @@ jest.mock('./ScoreCard.hooks', () => ({
 
 const mockHook = useScoreCard as jest.MockedFunction<typeof useScoreCard>
 
+const baseScore: RiskScoreResult = {
+  score: 70,
+  missingAnswers: [],
+  riskClass: 'Prudente',
+  volatilityBand: 'Media',
+  rationales: ['reason.1']
+}
+
 const baseHookValue = {
   title: 'score.title',
   emptyDescription: 'score.empty',
-  score: {
-    score: 70,
-    missingAnswers: [],
-    riskClass: 'Prudente',
-    volatilityBand: 'Medio',
-    rationales: ['reason.1'],
-    metadata: {}
-  },
+  score: baseScore,
   statHighlights: [{ title: 'score.stats.class', value: 'Prudente' }],
   metaDetails: ['detail-1'],
   notes: ['note-1'],
@@ -63,7 +65,7 @@ describe('ScoreCard', () => {
   it('renders empty state when score is missing', () => {
     mockHook.mockReturnValue({
       ...baseHookValue,
-      score: null
+      score: undefined
     })
 
     render(<ScoreCard />)

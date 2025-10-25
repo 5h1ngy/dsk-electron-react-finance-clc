@@ -172,3 +172,32 @@ export const shouldSuppressDevtoolsMessage = (sourceId: string, message: string)
 
   return false
 }
+
+const AUTOFILL_STDERR_PATTERNS = ['Request Autofill.enable failed', 'Request Autofill.setAddresses failed']
+let stderrPatched = false
+
+const suppressChromiumAutofillNoise = () => {
+  if (stderrPatched) {
+    return
+  }
+  const originalWrite = process.stderr.write.bind(process.stderr)
+  const filteredWrite: typeof process.stderr.write = (chunk, encoding?: any, callback?: any) => {
+    const message =
+      typeof chunk === 'string' ? chunk : chunk.toString(typeof encoding === 'string' ? encoding : undefined)
+    if (AUTOFILL_STDERR_PATTERNS.some((pattern) => message.includes(pattern))) {
+      if (!autoFillWarningLogged) {
+        defaultLogger.debug('Suppressed verbose devtools Autofill noise. DevTools remains functional.', 'DevTools')
+        autoFillWarningLogged = true
+      }
+      if (typeof callback === 'function') {
+        callback()
+      }
+      return true
+    }
+    return originalWrite(chunk as any, encoding as any, callback)
+  }
+  process.stderr.write = filteredWrite
+  stderrPatched = true
+}
+
+suppressChromiumAutofillNoise()

@@ -5,7 +5,7 @@ import HealthStatusTag from './StatusTag'
 const snapshot = {
   version: '1.0.0',
   timestamp: new Date('2024-01-01').toISOString(),
-  status: 'ok',
+  status: 'healthy' as const,
   uptimeSeconds: 10
 }
 

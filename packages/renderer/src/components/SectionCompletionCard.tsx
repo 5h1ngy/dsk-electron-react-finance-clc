@@ -1,4 +1,4 @@
-import { Card, List, Progress, Typography } from 'antd'
+import { Card, List, Progress, Typography, Tooltip } from 'antd'
 
 import { useSectionCompletionCard } from '@renderer/components/SectionCompletionCard.hooks'
 
@@ -22,12 +22,9 @@ const SectionCompletionCard = () => {
             <List.Item.Meta
               title={item.title}
               description={
-                <Progress
-                  percent={item.percent}
-                  size="small"
-                  showInfo
-                  tooltip={{ formatter: () => `${item.percent}%` }}
-                />
+                <Tooltip title={`${item.percent}%`}>
+                  <Progress percent={item.percent} size="small" showInfo />
+                </Tooltip>
               }
             />
           </List.Item>

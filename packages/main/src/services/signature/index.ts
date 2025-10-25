@@ -59,9 +59,7 @@ export interface SignedReport {
   certificate: CertificateDetails
 }
 
-const formatDistinguishedName = (
-  attributes: forge.pki.CertificateField['attributes']
-): string =>
+const formatDistinguishedName = (attributes: forge.pki.CertificateField[]): string =>
   attributes
     .map((attribute) => `${attribute.shortName ?? attribute.name}=${attribute.value}`)
     .join(', ')

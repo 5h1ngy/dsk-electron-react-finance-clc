@@ -1,4 +1,4 @@
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
+import { PDFDocument, StandardFonts, rgb, type RGB } from 'pdf-lib'
 
 import { SCORING_ENGINE_VERSION } from '@renderer/config/versions'
 import i18n from '@renderer/i18n'
@@ -39,10 +39,7 @@ export const generateRiskReport = async ({
 
   let cursor = height - margin
 
-  const drawText = (
-    text: string,
-    options: { size: number; font?: typeof bodyFont; color?: { r: number; g: number; b: number } }
-  ) => {
+  const drawText = (text: string, options: { size: number; font?: typeof bodyFont; color?: RGB }) => {
     const { size, font = bodyFont, color = rgb(0, 0, 0) } = options
     cursor -= size + 6
     page.drawText(text, {

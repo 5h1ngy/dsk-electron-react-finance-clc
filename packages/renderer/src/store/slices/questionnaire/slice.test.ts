@@ -30,7 +30,7 @@ describe('questionnaire slice', () => {
   it('applies bulk responses skipping undefined values', () => {
     const state = questionnaireReducer(
       { schemaStatus: 'ready', responses: {} },
-      applyBulkResponses({ q1: undefined, q2: 10 })
+      applyBulkResponses({ q1: undefined, q2: 10 } as any)
     )
     expect(state.responses).toEqual({ q2: 10 })
   })
