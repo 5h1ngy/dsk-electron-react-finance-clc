@@ -6,6 +6,18 @@
   "author": "DSK Digital Lab",
   "homepage": "https://github.com/dsk-lab/dsk-finance-clc",
   "license": "UNLICENSED",
+  "topics": [
+    "electron",
+    "react",
+    "typescript",
+    "redux-toolkit",
+    "finance",
+    "risk-profiling",
+    "pdf-signing",
+    "offline-first",
+    "vite",
+    "digital-signature"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/dsk-lab/dsk-finance-clc.git"
