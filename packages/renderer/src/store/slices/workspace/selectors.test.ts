@@ -7,7 +7,9 @@ import {
 } from './selectors'
 import type { RootState } from '@renderer/store/types'
 
-const state: Pick<RootState, 'workspace'> = {
+const buildState = (): RootState => ({
+  questionnaire: undefined as never,
+  productUniverse: undefined as never,
   workspace: {
     requestImport: { fileName: 'q.xlsx', importedAt: 'now', responses: 10 },
     financeImport: {
@@ -20,10 +22,11 @@ const state: Pick<RootState, 'workspace'> = {
     reportExport: { fileName: 'report.pdf', exportedAt: 'now' },
     certificate: { fileName: 'cert.p12', loadedAt: 'now', base64: 'BASE64' }
   }
-}
+})
 
 describe('workspace selectors', () => {
   it('extracts entities from state slice', () => {
+    const state = buildState()
     expect(selectRequestImport(state)).toEqual({
       fileName: 'q.xlsx',
       importedAt: 'now',

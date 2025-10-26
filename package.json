@@ -1,10 +1,18 @@
 {
-  "name": "react-ts",
+  "name": "dsk-finance-clc",
   "version": "0.1.0",
-  "description": "An Electron application with React and TypeScript",
+  "description": "DSK Finance CLC è un workbench offline per profilazione rischio, import questionari e firma digitale basato su Electron + React.",
   "main": "./out/main/index.js",
-  "author": "example.com",
-  "homepage": "https://electron-vite.org",
+  "author": "DSK Digital Lab",
+  "homepage": "https://github.com/dsk-lab/dsk-finance-clc",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dsk-lab/dsk-finance-clc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dsk-lab/dsk-finance-clc/issues"
+  },
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint --cache .",

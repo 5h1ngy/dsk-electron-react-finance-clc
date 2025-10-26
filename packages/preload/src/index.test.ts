@@ -13,7 +13,7 @@ describe('preload entry point', () => {
   })
 
   const withContextIsolation = (value: boolean) => {
-    ;(process as NodeJS.Process & { contextIsolated?: boolean }).contextIsolated = value
+    ;(process as typeof process & { contextIsolated?: boolean }).contextIsolated = value
   }
 
   it('exposes the preload api when context isolation is enabled', async () => {
@@ -28,10 +28,12 @@ describe('preload entry point', () => {
 
   it('assigns api on window when context isolation is disabled', async () => {
     withContextIsolation(false)
-    const globalWithWindow = global as typeof globalThis & { window?: Record<string, unknown> }
+    const globalWithWindow = global as typeof globalThis & {
+      window?: Window & typeof globalThis & Record<string, unknown>
+    }
     const originalWindow = globalWithWindow.window
     try {
-      globalWithWindow.window = {}
+      globalWithWindow.window = {} as Window & typeof globalThis & Record<string, unknown>
       await import('@preload/index')
       expect(globalWithWindow.window?.api).toEqual(
         expect.objectContaining({ health: expect.any(Object), report: expect.any(Object) })

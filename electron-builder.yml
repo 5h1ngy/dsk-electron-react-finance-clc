@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: react-ts
+appId: com.dsk.finance.clc
+productName: DSK Finance CLC
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: react-ts
+  executableName: dsk-finance-clc
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
@@ -40,4 +40,4 @@ appImage:
 npmRebuild: false
 publish:
   provider: generic
-  url: https://example.com/auto-updates
+  url: https://updates.dsk-finance-clc.local

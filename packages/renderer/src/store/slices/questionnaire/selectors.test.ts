@@ -34,18 +34,21 @@ const score: RiskScoreResult = {
   rationales: []
 }
 
-const state: Pick<RootState, 'questionnaire'> = {
+const buildState = (): RootState => ({
   questionnaire: {
     schema,
     schemaStatus: 'ready',
     responses,
     score,
     lastCalculatedAt: 'now'
-  }
-}
+  },
+  workspace: undefined as never,
+  productUniverse: undefined as never
+})
 
 describe('questionnaire selectors', () => {
   it('selects primitive slices', () => {
+    const state = buildState()
     expect(selectQuestionnaireSchema(state)).toBe(schema)
     expect(selectQuestionnaireStatus(state)).toBe('ready')
     expect(selectResponses(state)).toEqual(responses)
@@ -54,6 +57,7 @@ describe('questionnaire selectors', () => {
   })
 
   it('computes answered progress for required questions', () => {
+    const state = buildState()
     expect(selectAnsweredProgress(state)).toEqual({ completed: 50, required: 2 })
   })
 })

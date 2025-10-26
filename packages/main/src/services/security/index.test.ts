@@ -13,6 +13,7 @@ const createDetails = (url: string): OnBeforeRequestListenerDetails => ({
   resourceType: 'xhr',
   timestamp: Date.now(),
   webContentsId: 1,
+  referrer: '',
   uploadData: []
 })
 

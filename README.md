@@ -1,1 +1,62 @@
-# Offline Risk Suite - Wave 3> Electron + React offline workbench focused on ingesting questionari JSON/Excel/PDF, calcolare il profilo di rischio e preparare i flussi successivi (linee/strumenti, PDF, firma).## Novita Wave 3- **Firma digitale & hash offline**: il main process utilizza  ode-signpdf con certificati PKCS#12 caricati dall'utente per firmare il PDF, generare l'impronta SHA-256 e creare file di supporto (.sha256.txt e .manifest.json). L'IPC  eport:export gestisce ora certificato, hash e percorsi salvati.- **Gestione certificato in UI**: nuova card dedicata nel Workbench per importare .p12/.pfx, verificare i metadati con password runtime e rimuovere il file dalla sessione. L'export richiede la password prima della firma.- **Diagnostica e tracciabilita**: lo stato del certificato, il path dei file hash/manifest e l'ultima SHA-256 sono visibili sia nella pagina Diagnostics sia nel riepilogo del profilo rischio. Il PDF include riferimenti alle versioni di schema e scoring.- **Test e hardening engines**: suite Jest per il servizio di firma (packages/main/src/services/signature/index.test.ts) e IPC aggiornato, con certificati generati al volo tramite  ode-forge.## Novita Wave 1.1- **Import PDF questionario**: upload .pdf con parsing testuale (formato id: valore) tramite pdfjs-dist, precompilazione dello stepper e tracking metadati dell'ultimo import.- **Hardening UX**: alert quando mancano campi obbligatori, pulsante di export disabilitato finche ci sono risposte incomplete, storico import/export sempre visibile.- **Test & engines**: parser PDF coperto da test (engines/importers/pdfQuestionnaire.test.ts) e worker configurato per Vite.## Baseline Wave 0- **Main process**: caricamento .env, logger strutturato, hardening sicurezza, IPC system:health.- **Preload bridge**: espone window.api.health e window.api.report.- **Renderer Ant Design-first**  - Layout con header + routing (Workbench, Diagnostics) e health tag live.  - Store Redux Toolkit con slice questionnaire, workspace, productUniverse.  - Questionario dinamico generato da JSON pre-build (packages/renderer/src/config/questionnaire.json) validato via Zod.  - Motore di scoring deterministico (0-100) con classi rischio/volatilita e rationales placeholder.  - Import manuale per questionario .xlsx, universo prodotti e PDF questionario.  - Card riassuntive basate su componenti Ant Design.- **Engines scaffolding**: moduli questionnaire, scoring, importers, report pronti per le estensioni successive.- **Tooling**: electron-vite dev/build, ESLint 9, Prettier 3, TS strict, Jest (node + jsdom).## Quick start`ashnpm installnpm run dev # avvia electron-vite (main + preload + renderer)npm run lint # ESLint 9npm run format # Prettier 3npm run typecheck # TS node+web projectsnpm test # Jest`## Repository map`packages/  main/      # env + logger + security + IPC (health + report export firmato)  preload/   # espone window.api.{health,report}  renderer/    config/    components/    pages/{Workbench,Diagnostics}    store/engines/     # questionnaire, scoring, importers, mapping, report, signatureresources/   # assets electron-builder.demo/       # file esempio da caricare via drag and drop (Excel/PDF)`## Prossime wave1. **Wave 4** - Motore idoneita/adeguatezza avanzato, explainability dettagliata.2. **Wave 5** - Hardening, accessibilita e packaging/firma del codice.
+# DSK Finance CLC ⚡️🏦
+
+> Workbench offline per team finance/consulenti: importa questionari Excel/PDF, calcola il profilo di rischio, genera proposte strumenti e firma digitalmente i PDF direttamente sul dispositivo.
+
+![Workbench preview](assets/screen-1.png)
+
+## ✨ Feature Highlights
+
+- **Profilazione dinamica** – questionario generato via schema JSON validato con Zod, stepper con validazione e calcolo rischio deterministico (classe + banda di volatilità + rationales localizzate).
+- **Motore import** – parser Excel per richieste e universo prodotti, estrazione PDF (pattern `id: valore`), sincronizzazione immediata con Redux Toolkit.
+- **Firma digitale end-to-end** – upload certificati `.p12/.pfx`, verifica password, estrazione metadati, firma PDF via `node-signpdf` e generazione automatica di hash SHA‑256 e manifest JSON.
+- **Suggerimenti strumenti** – mapping risk-class → categorie/bande consentite, deduplicazione per categoria e testo motivazionale localizzato.
+- **Diagnostica integrata** – pagina dedicata con stato health IPC, cronologia import/export, certificato attuale e percorsi hash/manifest.
+- **Hardening Electron** – CSP dinamica, blocco request in packaging, bridge preload tipizzato (`window.api.health/report`), logging strutturato e suppress dei warning Autofill DevTools.
+
+## 🧩 Architecture Overview
+
+```
+packages/
+  main/       # logger, sicurezza, IPC health/report, firma + export
+  preload/    # bridge contextIsolation con API tipizzate
+  renderer/   # React 19 + Ant Design 5, Redux Toolkit store e pagine Workbench/Diagnostics
+engines/
+  questionnaire, scoring, mapping, importers, report, signature
+assets/       # screenshot & risorse builder
+resources/    # icon & extra per electron-builder
+```
+
+## 🛠️ Quick Start
+
+```bash
+npm install
+npm run dev          # avvia electron-vite (main + preload + renderer)
+npm run lint         # ESLint 9
+npm run format       # Prettier 3
+npm run typecheck    # TS node + web projects
+npm test             # Jest (node + jsdom)
+```
+
+## 📦 Packaging & Release
+
+- `npm run build` – compila main/preload/renderer con electron-vite (senza installer).
+- `npm run build:win` – build + `electron-builder --win` (NSIS).
+- `npm run build:unpack` – produce la cartella portabile (`--dir`).
+- Configurazione `electron-builder.yml` aggiornata con `productName` **DSK Finance CLC**, `appId` `com.dsk.finance.clc` e feed generico `https://updates.dsk-finance-clc.local`.
+
+## 🧪 Testing & Quality
+
+- Suite Jest end-to-end per engines, IPC main, preload bridge, hooks React e Redux slices (`packages/**/__tests__`).
+- Testing Library per UI (componenti card, stepper, layout, App router).
+- ESLint 9 + TypeScript strict, React Hooks lint, Prettier 3.
+- `npm run lint` e `npm run typecheck` sono già parte del workflow `build`.
+
+## 🤝 Workflow consigliato
+
+1. `npm run dev` per lavorare sul Workbench/Diagnostics.
+2. Aggiungi nuovi import/engine in `packages/engines/*` e connettili tramite Redux slices.
+3. Aggiorna gli hook/componenti e coprili con test (`*.test.ts(x)`).
+4. Esegui `npm run lint && npm run typecheck && npm test`.
+5. Esegui `npm run build:win` (o target OS preferito) per generare l’installer condivisibile.
+
+Buon lavoro con **DSK Finance CLC**! 💼📈 Se hai bisogno di nuove wave (es. explainability adeguatezza, packaging firmato), continua a iterare partendo da questa base.
