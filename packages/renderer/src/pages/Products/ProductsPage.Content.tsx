@@ -1,8 +1,8 @@
-import { Alert, Button, Card, Space, Table, Tag, Upload } from 'antd'
+import { Alert, Button, Space, Table, Tag, Upload, theme } from 'antd'
 import type { UploadProps } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { UploadOutlined, DatabaseOutlined } from '@ant-design/icons'
-import { useCallback, useMemo, useState } from 'react'
+import { UploadOutlined } from '@ant-design/icons'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { parseFinanceWorkbook } from '@engines/importers/financeWorkbook'
@@ -19,6 +19,7 @@ interface ProductRow {
 
 const ProductsPageContent = () => {
   const { t } = useTranslation()
+  const { token } = theme.useToken()
   const [data, setData] = useState<ProductRow[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -124,30 +125,29 @@ const ProductsPageContent = () => {
     return Upload.LIST_IGNORE
   }
 
+  useEffect(() => {
+    void loadDemoData()
+  }, [loadDemoData])
+
   return (
-    <Card>
-      <Space direction="vertical" size="large" style={{ width: '100%' }}>
-        <Space>
-          <Button icon={<DatabaseOutlined />} onClick={loadDemoData} loading={loading}>
-            {t('products.actions.loadDemo')}
+    <Space direction="vertical" size={token.marginLG} style={{ width: '100%' }}>
+      <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+        <Upload beforeUpload={handleUpload} showUploadList={false} accept=".xlsx,.xls">
+          <Button icon={<UploadOutlined />} loading={loading}>
+            {t('products.actions.upload')}
           </Button>
-          <Upload beforeUpload={handleUpload} showUploadList={false} accept=".xlsx,.xls">
-            <Button icon={<UploadOutlined />} loading={loading}>
-              {t('products.actions.upload')}
-            </Button>
-          </Upload>
-        </Space>
-        {error ? <Alert type="error" message={error} showIcon /> : null}
-        <Table
-          columns={columns}
-          dataSource={data}
-          loading={loading}
-          pagination={{ pageSize: 10, showSizeChanger: false }}
-          scroll={{ x: 900 }}
-          locale={{ emptyText: t('products.empty') }}
-        />
+        </Upload>
       </Space>
-    </Card>
+      {error ? <Alert type="error" message={error} showIcon /> : null}
+      <Table
+        columns={columns}
+        dataSource={data}
+        loading={loading}
+        pagination={{ pageSize: 10, showSizeChanger: false }}
+        scroll={{ x: 900 }}
+        locale={{ emptyText: t('products.empty') }}
+      />
+    </Space>
   )
 }
 

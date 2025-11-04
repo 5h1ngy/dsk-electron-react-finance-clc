@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
 import { useReportExporter } from '@renderer/hooks/useReportExporter'
 import { buildRecommendations } from '@renderer/store/slices/productUniverse/slice'
 import { setRecommendations } from '@renderer/store/slices/productUniverse'
-import { message } from 'antd'
 import type { RiskScoreResult } from '@engines/scoring'
 
 jest.mock('@renderer/store/hooks', () => ({
@@ -53,6 +52,7 @@ describe('useScoreCard', () => {
     jest.mocked(useAppDispatch).mockReturnValue(mockDispatch)
     jest.mocked(useReportExporter).mockReturnValue({
       exportReport: jest.fn().mockResolvedValue(true),
+      exportUnsignedReport: jest.fn().mockResolvedValue(true),
       exporting: false
     })
     mockDispatch.mockReset()
@@ -85,7 +85,7 @@ describe('useScoreCard', () => {
     )
   })
 
-  it('warns when trying to export without a certificate', async () => {
+  it('opens unsigned export modal when certificate is missing', async () => {
     jest
       .mocked(useAppSelector)
       .mockReturnValueOnce(baseScore)
@@ -100,6 +100,6 @@ describe('useScoreCard', () => {
       result.current.handleExportClick()
     })
 
-    expect(message.warning).toHaveBeenCalledWith('score.messages.certificateMissing')
+    expect(result.current.unsignedModalOpen).toBe(true)
   })
 })

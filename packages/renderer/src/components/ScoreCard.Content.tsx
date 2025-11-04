@@ -1,15 +1,14 @@
-import { FilePdfOutlined } from '@ant-design/icons'
+import { FilePdfOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import {
   Alert,
   Button,
   Card,
-  Divider,
   Input,
-  List,
   Modal,
   Progress,
   Space,
   Statistic,
+  Tag,
   Tooltip,
   Typography,
   theme
@@ -24,6 +23,13 @@ interface ScoreCardModalCopy {
   confirm: string
 }
 
+interface UnsignedModalCopy {
+  title: string
+  description: string
+  confirm: string
+  cancel: string
+}
+
 interface ScoreCardContentProps {
   title: string
   statHighlights: Array<{ title: string; value: string }>
@@ -36,13 +42,17 @@ interface ScoreCardContentProps {
   recomputeLabel: string
   notesTitle: string
   modalCopy: ScoreCardModalCopy
+  unsignedModalCopy: UnsignedModalCopy
   passwordModalOpen: boolean
+  unsignedModalOpen: boolean
   password: string
   setPassword: (value: string) => void
   handleRecompute: () => void
   handleExportClick: () => void
   handleModalClose: () => void
+  handleUnsignedClose: () => void
   confirmExport: () => Promise<void>
+  confirmUnsignedExport: () => Promise<void>
   exporting: boolean
   submitting: boolean
   certificateFileName: string
@@ -61,20 +71,23 @@ const ScoreCardContent = ({
   recomputeLabel,
   notesTitle,
   modalCopy,
+  unsignedModalCopy,
   passwordModalOpen,
+  unsignedModalOpen,
   password,
   setPassword,
   handleRecompute,
   handleExportClick,
   handleModalClose,
+  handleUnsignedClose,
   confirmExport,
+  confirmUnsignedExport,
   exporting,
   submitting,
   certificateFileName,
   score
 }: ScoreCardContentProps) => {
   const { token } = theme.useToken()
-
   const exportDisabled = score.missingAnswers.length > 0 || exporting
 
   return (
@@ -82,7 +95,9 @@ const ScoreCardContent = ({
       title={title}
       extra={
         <Space>
-          <Typography.Link onClick={handleRecompute}>{recomputeLabel}</Typography.Link>
+          <Tooltip title={recomputeLabel}>
+            <Button type="text" onClick={handleRecompute} icon={<InfoCircleOutlined />} />
+          </Tooltip>
           <Tooltip title={exportTooltip}>
             <Button
               type="primary"
@@ -97,36 +112,55 @@ const ScoreCardContent = ({
         </Space>
       }
     >
-      <Space direction="vertical" size="large" style={{ width: '100%' }}>
-        <Progress type="dashboard" percent={score.score} strokeColor={token.colorPrimary} />
-        <Divider style={{ margin: 0 }} />
-        <List size="small">
-          {statHighlights.map((item) => (
-            <List.Item key={item.title}>
-              <Statistic title={item.title} value={item.value} />
-            </List.Item>
-          ))}
-          {metaDetails.map((detail) => (
-            <List.Item key={detail}>
-              <Typography.Text type="secondary">{detail}</Typography.Text>
-            </List.Item>
-          ))}
-        </List>
+      <Space direction="vertical" size={token.marginLG} style={{ width: '100%' }}>
+        <Space
+          align="center"
+          size="large"
+          style={{ width: '100%', justifyContent: 'space-between', flexWrap: 'wrap' }}
+        >
+          <Progress
+            type="dashboard"
+            percent={score.score}
+            strokeColor={{ from: token.colorPrimary, to: token.colorSuccess }}
+            size={140}
+            format={(value) => (
+              <Typography.Title level={3} style={{ margin: 0 }}>
+                {value}
+              </Typography.Title>
+            )}
+          />
+          <Space direction="vertical" size={token.marginSM}>
+            {statHighlights.map((stat) => (
+              <Statistic key={stat.title} title={stat.title} value={stat.value} />
+            ))}
+          </Space>
+          <Space direction="vertical" size={4}>
+            {metaDetails.map((detail) => (
+              <Tag key={detail} color="default">
+                {detail}
+              </Tag>
+            ))}
+          </Space>
+        </Space>
+
         {score.missingAnswers.length > 0 ? (
-          <Alert
-            type="warning"
-            showIcon
-            message={alertMessage}
-            description={missingAnswersDescription}
-          />
+          <Alert type="warning" showIcon message={alertMessage} description={missingAnswersDescription} />
         ) : (
-          <List
-            header={<Typography.Text strong>{notesTitle}</Typography.Text>}
-            dataSource={notes}
-            renderItem={(item) => <List.Item>{item}</List.Item>}
-          />
+          <Card
+            size="small"
+            type="inner"
+            title={notesTitle}
+            bodyStyle={{ display: 'flex', flexDirection: 'column', gap: token.marginXS }}
+          >
+            {notes.map((item) => (
+              <Typography.Text key={item} type="secondary">
+                • {item}
+              </Typography.Text>
+            ))}
+          </Card>
         )}
       </Space>
+
       <Modal
         open={passwordModalOpen}
         title={modalCopy.title}
@@ -137,12 +171,28 @@ const ScoreCardContent = ({
         destroyOnClose
       >
         <Typography.Paragraph>{modalCopy.description(certificateFileName)}</Typography.Paragraph>
-        <Input.Password
-          placeholder={modalCopy.placeholder}
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          autoFocus
-        />
+        <Typography.Paragraph>
+          <Typography.Text style={{ display: 'block', marginBottom: token.marginXS }}>
+            {modalCopy.placeholder}
+          </Typography.Text>
+          <Input.Password
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder={modalCopy.placeholder}
+          />
+        </Typography.Paragraph>
+      </Modal>
+
+      <Modal
+        open={unsignedModalOpen}
+        title={unsignedModalCopy.title}
+        onCancel={handleUnsignedClose}
+        onOk={confirmUnsignedExport}
+        okText={unsignedModalCopy.confirm}
+        cancelText={unsignedModalCopy.cancel}
+        confirmLoading={submitting || exporting}
+      >
+        <Typography.Paragraph>{unsignedModalCopy.description}</Typography.Paragraph>
       </Modal>
     </Card>
   )

@@ -60,7 +60,8 @@ const QuestionnaireStepperContent = ({
         style={{
           background: token.colorFillTertiary,
           padding: token.paddingSM,
-          borderRadius: token.borderRadiusLG
+          borderRadius: token.borderRadiusLG,
+          overflowX: 'auto'
         }}
       >
         <Steps
@@ -69,6 +70,7 @@ const QuestionnaireStepperContent = ({
           current={currentStep}
           onChange={handleStepChange}
           items={steps.map((step) => ({ ...step }))}
+          style={{ width: 'max-content', minWidth: '100%' }}
         />
       </div>
       {validationErrors.length > 0 ? <Alert type="warning" message={copy.alert} showIcon /> : null}

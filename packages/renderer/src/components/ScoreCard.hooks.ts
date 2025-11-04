@@ -1,4 +1,3 @@
-import { message } from 'antd'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -20,11 +19,12 @@ export const useScoreCard = () => {
   const lastExport = useAppSelector(selectReportExport)
   const certificate = useAppSelector(selectCertificate)
   const products = useAppSelector(selectProducts)
-  const { exportReport, exporting } = useReportExporter()
+  const { exportReport, exportUnsignedReport, exporting } = useReportExporter()
   const { t } = useTranslation()
   const [passwordModalOpen, setPasswordModalOpen] = useState(false)
   const [password, setPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [unsignedModalOpen, setUnsignedModalOpen] = useState(false)
 
   useEffect(() => {
     if (score && products.length) {
@@ -45,14 +45,14 @@ export const useScoreCard = () => {
       return t('score.exportTooltipIncomplete')
     }
     if (!certificateLoaded) {
-      return t('score.exportTooltipCertificate')
+      return t('score.exportTooltipUnsigned')
     }
     return undefined
   }, [certificateLoaded, score, t])
 
   const handleExportClick = useCallback(() => {
     if (!certificateLoaded) {
-      message.warning(t('score.messages.certificateMissing'))
+      setUnsignedModalOpen(true)
       return
     }
     setPasswordModalOpen(true)
@@ -61,6 +61,10 @@ export const useScoreCard = () => {
   const handleModalClose = useCallback(() => {
     setPasswordModalOpen(false)
     setPassword('')
+  }, [])
+
+  const handleUnsignedClose = useCallback(() => {
+    setUnsignedModalOpen(false)
   }, [])
 
   const confirmExport = useCallback(async () => {
@@ -72,6 +76,15 @@ export const useScoreCard = () => {
       setPasswordModalOpen(false)
     }
   }, [exportReport, password])
+
+  const confirmUnsignedExport = useCallback(async () => {
+    setSubmitting(true)
+    const ok = await exportUnsignedReport()
+    setSubmitting(false)
+    if (ok) {
+      setUnsignedModalOpen(false)
+    }
+  }, [exportUnsignedReport])
 
   const statHighlights = useMemo(() => {
     if (!score) {
@@ -150,6 +163,12 @@ export const useScoreCard = () => {
       placeholder: t('score.modal.placeholder'),
       confirm: t('score.modal.confirm')
     },
+    unsignedModalCopy: {
+      title: t('score.modalUnsigned.title'),
+      description: t('score.modalUnsigned.description'),
+      confirm: t('score.modalUnsigned.confirm'),
+      cancel: t('score.modalUnsigned.cancel')
+    },
     passwordModalOpen,
     password,
     setPassword,
@@ -157,6 +176,9 @@ export const useScoreCard = () => {
     handleExportClick,
     handleModalClose,
     confirmExport,
+    unsignedModalOpen,
+    handleUnsignedClose,
+    confirmUnsignedExport,
     exporting,
     submitting,
     certificateFileName: certificate?.fileName ?? 'P12'

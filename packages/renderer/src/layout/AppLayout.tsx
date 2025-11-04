@@ -117,7 +117,9 @@ const AppLayout = ({ children }: AppLayoutProps) => {
             minHeight: '100vh',
             height: '100%',
             boxShadow: token.boxShadowSecondary,
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            position: 'sticky',
+            top: token.marginMD
           }}
         >
           <Space direction="vertical" size="large" style={{ width: '100%', height: '100%', display: 'flex' }}>
@@ -144,13 +146,10 @@ const AppLayout = ({ children }: AppLayoutProps) => {
         </Sider>
         <Layout
           style={{
-            background: token.colorBgContainer,
-            borderRadius: token.borderRadiusLG,
-            padding: token.paddingLG,
-            boxShadow: token.boxShadowSecondary,
+            background: 'transparent',
             display: 'flex',
             flexDirection: 'column',
-            gap: token.marginSM,
+            gap: token.marginXS,
             flex: 1,
             minHeight: 0
           }}
@@ -161,7 +160,14 @@ const AppLayout = ({ children }: AppLayoutProps) => {
             breadcrumbItems={breadcrumbItems}
             toggleLabel={collapsed ? t('layout.expand') : t('layout.collapse')}
           />
-          <Content style={{ padding: token.paddingMD, flex: 1, minHeight: 0, overflowY: 'auto', background: token.colorBgContainer, borderRadius: token.borderRadius }}>
+          <Content
+            style={{
+              padding: token.paddingMD,
+              flex: 1,
+              minHeight: 0,
+              overflowY: 'auto'
+            }}
+          >
             {children}
           </Content>
         </Layout>

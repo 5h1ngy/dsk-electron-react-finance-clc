@@ -19,7 +19,7 @@ const AppLayoutHeader = ({ collapsed, onToggle, breadcrumbItems, toggleLabel }: 
       style={{
         background: 'transparent',
         padding: 0,
-        marginBottom: token.marginMD
+        marginBottom: token.marginXS
       }}
     >
       <Flex align="center" justify="space-between">
@@ -31,7 +31,10 @@ const AppLayoutHeader = ({ collapsed, onToggle, breadcrumbItems, toggleLabel }: 
             aria-label={toggleLabel}
             style={{ width: 40, height: 40 }}
           />
-          <Breadcrumb items={breadcrumbItems} />
+          <Breadcrumb
+            items={breadcrumbItems}
+            style={{ display: 'flex', alignItems: 'center' }}
+          />
         </Space>
       </Flex>
     </Header>

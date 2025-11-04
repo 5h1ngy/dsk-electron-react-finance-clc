@@ -22,13 +22,17 @@ const ScoreCard = () => {
       recomputeLabel={data.recomputeLabel}
       notesTitle={data.notesTitle}
       modalCopy={data.modalCopy}
+      unsignedModalCopy={data.unsignedModalCopy}
       passwordModalOpen={data.passwordModalOpen}
+      unsignedModalOpen={data.unsignedModalOpen}
       password={data.password}
       setPassword={data.setPassword}
       handleRecompute={data.handleRecompute}
       handleExportClick={data.handleExportClick}
       handleModalClose={data.handleModalClose}
       confirmExport={data.confirmExport}
+      handleUnsignedClose={data.handleUnsignedClose}
+      confirmUnsignedExport={data.confirmUnsignedExport}
       exporting={data.exporting}
       submitting={data.submitting}
       certificateFileName={data.certificateFileName}

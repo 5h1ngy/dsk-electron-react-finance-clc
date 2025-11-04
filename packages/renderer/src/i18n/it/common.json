@@ -34,7 +34,6 @@
       "updated": "Aggiornato"
     },
     "actions": {
-      "loadDemo": "Carica demo (.demo/finance_tools.xlsx)",
       "upload": "Carica Excel"
     },
     "errors": {
@@ -180,7 +179,7 @@
     "recompute": "Ricalcola",
     "export": "Esporta PDF firmato",
     "exportTooltipIncomplete": "Completa tutte le risposte obbligatorie prima di esportare il PDF",
-    "exportTooltipCertificate": "Carica e verifica un certificato P12 per abilitare la firma",
+    "exportTooltipUnsigned": "Esporta senza firma digitale",
     "messages": {
       "certificateMissing": "Carica il certificato P12 nella scheda dedicata.",
       "missingAnswers": "Mancano alcune risposte obbligatorie"
@@ -199,6 +198,12 @@
       "description": "Inserisci la password per firmare il PDF con il certificato {{file}}.",
       "placeholder": "Password certificato",
       "confirm": "Firma ed esporta"
+    },
+    "modalUnsigned": {
+      "title": "Esporta senza firma",
+      "description": "Il PDF verrà esportato senza firma digitale né hash di verifica. Vuoi continuare?",
+      "confirm": "Procedi",
+      "cancel": "Annulla"
     }
   },
   "suggestedProducts": {

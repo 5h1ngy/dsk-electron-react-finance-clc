@@ -1,4 +1,4 @@
-import { Button, Col, Row, Space, Tabs } from 'antd'
+import { Button, Col, Row, Space, Tabs, theme } from 'antd'
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { InboxOutlined } from '@ant-design/icons'
@@ -15,6 +15,7 @@ const WorkbenchPageContent = () => {
   const { t } = useTranslation()
   const [searchParams, setSearchParams] = useSearchParams()
   const [importVisible, setImportVisible] = useState(false)
+  const { token } = theme.useToken()
 
   const activeKey = searchParams.get('tab') ?? 'questionnaire'
 
@@ -78,7 +79,8 @@ const WorkbenchPageContent = () => {
   return (
     <Tabs
       items={tabs}
-      tabBarGutter={16}
+      tabBarGutter={24}
+      tabBarStyle={{ marginBottom: token.marginSM }}
       style={{ width: '100%' }}
       destroyInactiveTabPane={false}
       activeKey={activeKey}

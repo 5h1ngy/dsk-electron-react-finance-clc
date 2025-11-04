@@ -1,4 +1,4 @@
-import { Typography } from 'antd'
+import { Space, Typography } from 'antd'
 
 import { useSectionCompletionCard } from '@renderer/components/SectionCompletionCard.hooks'
 import SectionCompletionCardContent from '@renderer/components/SectionCompletionCard.Content'
@@ -11,9 +11,10 @@ const SectionCompletionCard = () => {
   }
 
   return (
-    <div aria-label={title} style={{ width: '100%' }}>
+    <Space direction="vertical" size={4} style={{ width: '100%' }}>
+      <Typography.Text strong>{title}</Typography.Text>
       <SectionCompletionCardContent items={items} />
-    </div>
+    </Space>
   )
 }
 
