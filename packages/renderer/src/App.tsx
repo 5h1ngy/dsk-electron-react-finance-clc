@@ -7,18 +7,12 @@ import AppLayout from '@renderer/layout/AppLayout'
 import WorkbenchPage from '@renderer/pages/Workbench'
 import DiagnosticsPage from '@renderer/pages/Diagnostics'
 import { store } from '@renderer/store'
+import { appTheme } from '@renderer/theme'
 import '@renderer/i18n'
 
 const App = () => (
   <Provider store={store}>
-    <ConfigProvider
-      locale={itIT}
-      theme={{
-        token: {
-          colorPrimary: '#0ba5ec'
-        }
-      }}
-    >
+    <ConfigProvider locale={itIT} theme={appTheme}>
       <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <AppLayout>
           <Routes>

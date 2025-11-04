@@ -14,7 +14,7 @@ const SectionCompletionCard = () => {
   }
 
   return (
-    <Card title={title} size="small" style={{ height: '100%' }}>
+    <Card title={title} size="small">
       <List
         dataSource={items}
         renderItem={(item) => (

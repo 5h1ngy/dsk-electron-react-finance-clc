@@ -6,7 +6,7 @@ const SuggestedProductsCard = () => {
   const { title, emptyText, recommendations, formatRiskBand } = useSuggestedProductsCard()
 
   return (
-    <Card title={title} size="small" style={{ height: '100%' }}>
+    <Card title={title} size="small">
       {recommendations.length === 0 ? (
         <Empty description={emptyText} />
       ) : (

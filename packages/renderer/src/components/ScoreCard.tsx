@@ -12,12 +12,15 @@ import {
   Space,
   Statistic,
   Tooltip,
-  Typography
+  Typography,
+  theme
 } from 'antd'
 
 import { useScoreCard } from '@renderer/components/ScoreCard.hooks'
 
 const ScoreCard = () => {
+  const { token } = theme.useToken()
+
   const {
     title,
     emptyDescription,
@@ -77,36 +80,36 @@ const ScoreCard = () => {
         </Space>
       }
     >
-      <Progress type="dashboard" percent={score.score} strokeColor="#0ba5ec" />
-      <Divider />
-      <List size="small">
-        {statHighlights.map((item) => (
-          <List.Item key={item.title}>
-            <Statistic title={item.title} value={item.value} />
-          </List.Item>
-        ))}
-        {metaDetails.map((detail) => (
-          <List.Item key={detail}>
-            <Typography.Text type="secondary">{detail}</Typography.Text>
-          </List.Item>
-        ))}
-      </List>
-      {score.missingAnswers.length > 0 ? (
-        <Alert
-          type="warning"
-          showIcon
-          message={alertMessage}
-          description={missingAnswersDescription}
-          style={{ marginTop: 16 }}
-        />
-      ) : (
-        <List
-          header={<Typography.Text strong>{notesTitle}</Typography.Text>}
-          dataSource={notes}
-          style={{ marginTop: 16 }}
-          renderItem={(item) => <List.Item>{item}</List.Item>}
-        />
-      )}
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <Progress type="dashboard" percent={score.score} strokeColor={token.colorPrimary} />
+        <Divider style={{ margin: 0 }} />
+        <List size="small">
+          {statHighlights.map((item) => (
+            <List.Item key={item.title}>
+              <Statistic title={item.title} value={item.value} />
+            </List.Item>
+          ))}
+          {metaDetails.map((detail) => (
+            <List.Item key={detail}>
+              <Typography.Text type="secondary">{detail}</Typography.Text>
+            </List.Item>
+          ))}
+        </List>
+        {score.missingAnswers.length > 0 ? (
+          <Alert
+            type="warning"
+            showIcon
+            message={alertMessage}
+            description={missingAnswersDescription}
+          />
+        ) : (
+          <List
+            header={<Typography.Text strong>{notesTitle}</Typography.Text>}
+            dataSource={notes}
+            renderItem={(item) => <List.Item>{item}</List.Item>}
+          />
+        )}
+      </Space>
       <Modal
         open={passwordModalOpen}
         title={modalCopy.title}

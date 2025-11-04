@@ -1,5 +1,5 @@
 import { BankOutlined, ExperimentOutlined } from '@ant-design/icons'
-import { Layout, Menu, Space, Typography } from 'antd'
+import { Flex, Layout, Menu, Typography, theme } from 'antd'
 import type { ReactNode } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -18,6 +18,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   const location = useLocation()
   const { snapshot, loading, error, refresh } = useHealthStatus()
   const { t } = useTranslation()
+  const { token } = theme.useToken()
 
   const menuItems = [
     { key: '/', label: t('app.menu.workbench'), icon: <BankOutlined /> },
@@ -25,32 +26,23 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   ]
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 24,
-          paddingInline: 32,
-          background: '#041529'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 32, flex: 1, minWidth: 0 }}>
-          <Typography.Title level={4} style={{ color: '#fff', margin: 0 }}>
-            {t('app.title')}
-          </Typography.Title>
-          <Menu
-            theme="dark"
-            mode="horizontal"
-            selectedKeys={[location.pathname]}
-            items={menuItems}
-            onClick={({ key }) => navigate(String(key))}
-            style={{ borderBottom: 'none', background: 'transparent', flex: 1, minWidth: 0 }}
-            overflowedIndicator={null}
-          />
-        </div>
-        <Space>
+    <Layout style={{ minHeight: '100vh', background: token.colorBgLayout }}>
+      <Header>
+        <Flex align="center" justify="space-between" gap="large">
+          <Flex align="center" gap="large" style={{ flex: 1, minWidth: 0 }}>
+            <Typography.Title level={4} style={{ margin: 0 }}>
+              {t('app.title')}
+            </Typography.Title>
+            <Menu
+              theme="dark"
+              mode="horizontal"
+              selectedKeys={[location.pathname]}
+              items={menuItems}
+              onClick={({ key }) => navigate(String(key))}
+              style={{ flex: 1, minWidth: 0 }}
+              overflowedIndicator={null}
+            />
+          </Flex>
           <HealthStatusTag
             snapshot={snapshot}
             loading={loading}
@@ -58,9 +50,9 @@ const AppLayout = ({ children }: AppLayoutProps) => {
             onRefresh={refresh}
             tone="dark"
           />
-        </Space>
+        </Flex>
       </Header>
-      <Content style={{ padding: 24, overflow: 'auto' }}>{children}</Content>
+      <Content style={{ padding: token.paddingLG, overflow: 'auto' }}>{children}</Content>
     </Layout>
   )
 }
