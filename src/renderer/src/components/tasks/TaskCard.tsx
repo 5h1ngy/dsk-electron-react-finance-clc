@@ -1,7 +1,11 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { useDrag, useDrop } from 'react-dnd';
-import { Task, TaskPriority } from '../../store/slices/tasksSlice';
+<<<<<<< HEAD
+import { Task, TaskPriority } from '../../store/tasks/tasksSlice';
+=======
+import { Task, TaskPriority } from '../../store/tasksSlice/tasksSlice';
+>>>>>>> cd65bdc (refactor(store): ♻️ remove auth/notes slices and add tasks/ui/users state)
 import { format } from 'date-fns';
 import { 
   CalendarOutlined,

@@ -1,6 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Project } from '../../store/slices/projectsSlice';
+<<<<<<< HEAD
+import { Project } from '../../store/projects/projectsSlice';
+=======
+import { Project } from '../../store/projectsSlice/projectsSlice';
+>>>>>>> cd65bdc (refactor(store): ♻️ remove auth/notes slices and add tasks/ui/users state)
 import { format } from 'date-fns';
 import { TagOutlined } from '@ant-design/icons';
 

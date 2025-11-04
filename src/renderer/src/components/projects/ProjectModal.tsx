@@ -3,7 +3,11 @@ import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Project } from '../../store/slices/projectsSlice';
+<<<<<<< HEAD
+import { Project } from '../../store/projects/projectsSlice';
+=======
+import { Project } from '../../store/projectsSlice/projectsSlice';
+>>>>>>> cd65bdc (refactor(store): ♻️ remove auth/notes slices and add tasks/ui/users state)
 import TagSelector from '../common/TagSelector';
 import { CloseOutlined } from '@ant-design/icons';
 

@@ -2,7 +2,11 @@ import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { useDrop } from 'react-dnd';
 import TaskCard from './TaskCard';
-import { Task, TaskStatus } from '../../store/slices/tasksSlice';
+<<<<<<< HEAD
+import { Task, TaskStatus } from '../../store/tasks/tasksSlice';
+=======
+import { Task, TaskStatus } from '../../store/tasksSlice/tasksSlice';
+>>>>>>> cd65bdc (refactor(store): ♻️ remove auth/notes slices and add tasks/ui/users state)
 import { PlusOutlined } from '@ant-design/icons';
 
 interface TaskColumnProps {
