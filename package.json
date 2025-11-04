@@ -39,7 +39,8 @@
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win portable",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "version:set": "node scripts/update-version.mjs"
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",

@@ -1,4 +1,4 @@
-# DSK Finance CLC
+Ôªø# DSK Finance CLC
 
 [![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](#release-automation) [![Node.js](https://img.shields.io/badge/node-%E2%89%A518-339933?logo=nodedotjs&logoColor=white)](#prerequisiti) [![Electron](https://img.shields.io/badge/electron-38.3.0-47848f?logo=electron&logoColor=white)](#stack-tecnico) [![React](https://img.shields.io/badge/react-19-61dafb?logo=react&logoColor=20232a)](#stack-tecnico) [![License](https://img.shields.io/badge/license-MIT-ffcc00)](#licenza)
 
@@ -26,7 +26,7 @@
 ---
 
 ## Panoramica
-**DSK Finance CLC (Client Lifecycle Companion)** Ë un'app Electron totalmente *self-contained*. Il progetto Ë strutturato per funzionare in filiale senza connettivit‡: tutti i motori (questionario, scoring, firma) sono inclusi nell'eseguibile portable di Windows.
+**DSK Finance CLC (Client Lifecycle Companion)** √® un'app Electron totalmente *self-contained*. Il progetto √® strutturato per funzionare in filiale senza connettivit√†: tutti i motori (questionario, scoring, firma) sono inclusi nell'eseguibile portable di Windows.
 
 Obiettivi chiave:
 - Digitalizzare il questionario MiFID importando file Excel/PDF forniti dal cliente.
@@ -38,24 +38,24 @@ Obiettivi chiave:
 ---
 
 ## Caratteristiche principali
-- **Motore questionario dinamico** ñ schema JSON validato con Zod + React Hook Form; progress sugli step e blocchi in caso di risposte incoerenti.
-- **Import multipli** ñ Parser dedicati per workbook Excel (richieste e universo prodotti) e PDF strutturati, testati negli *engines*.
-- **Motore scoring e suggerimenti** ñ Matching tra profilo e categorie di rischio con mapping modulare.
-- **Firma digitale integrata** ñ `node-signpdf`, generazione hash SHA-256, gestione certificati e password in memoria.
-- **UX coerente** ñ Ant Design 5, layout responsive full screen, card informative (Questionnaire, Score, Suggested Products, Certificate).
-- **Hardening Electron** ñ `contextIsolation`, preload minimo tipizzato, logger centralizzato con filtro DevTools, blocco richieste non autorizzate.
-- **Test coperti** ñ Oltre 100 test Jest per engines, servizi main, IPC, hooks e componenti renderer.
+- **Motore questionario dinamico** ‚Äì schema JSON validato con Zod + React Hook Form; progress sugli step e blocchi in caso di risposte incoerenti.
+- **Import multipli** ‚Äì Parser dedicati per workbook Excel (richieste e universo prodotti) e PDF strutturati, testati negli *engines*.
+- **Motore scoring e suggerimenti** ‚Äì Matching tra profilo e categorie di rischio con mapping modulare.
+- **Firma digitale integrata** ‚Äì `node-signpdf`, generazione hash SHA-256, gestione certificati e password in memoria.
+- **UX coerente** ‚Äì Ant Design 5, layout responsive full screen, card informative (Questionnaire, Score, Suggested Products, Certificate).
+- **Hardening Electron** ‚Äì `contextIsolation`, preload minimo tipizzato, logger centralizzato con filtro DevTools, blocco richieste non autorizzate.
+- **Test coperti** ‚Äì Oltre 100 test Jest per engines, servizi main, IPC, hooks e componenti renderer.
 
 ---
 
 ## Stack tecnico
 | Layer        | Tecnologie |
 |--------------|------------|
-| Main process | Electron 38 ∑ TypeScript strict ∑ logger custom ∑ IPC `health`/`report` |
+| Main process | Electron 38 ¬∑ TypeScript strict ¬∑ logger custom ¬∑ IPC `health`/`report` |
 | Preload      | ContextBridge isolato con API tipizzate (`window.api.health/report`) |
-| Renderer     | React 19 ∑ Ant Design 5 ∑ Redux Toolkit ∑ React Hook Form ∑ React Router 6 |
+| Renderer     | React 19 ¬∑ Ant Design 5 ¬∑ Redux Toolkit ¬∑ React Hook Form ¬∑ React Router 6 |
 | Engines      | Moduli standalone per questionnaire, scoring, importers, mapping, signature, report |
-| Tooling      | electron-vite ∑ Jest 29 ∑ ESLint 9 ∑ Prettier 3 ∑ Husky + Commitlint |
+| Tooling      | electron-vite ¬∑ Jest 29 ¬∑ ESLint 9 ¬∑ Prettier 3 ¬∑ Husky + Commitlint |
 
 ---
 
@@ -64,7 +64,7 @@ Obiettivi chiave:
 packages/
   main/       -> bootstrap Electron, logger, security, IPC, window manager
   preload/    -> bridge sicuro tra renderer e main (health/report)
-  renderer/   -> shell React/Redux, pagine Profilation ∑ Products ∑ Settings
+  renderer/   -> shell React/Redux, pagine Profilation ¬∑ Products ¬∑ Settings
 engines/      -> motori riutilizzabili (import, mapping, questionnaire, report, signature)
 resources/    -> icone e assets per il packaging
 assets/       -> screenshot e materiale marketing
@@ -82,7 +82,7 @@ Diagramma dei flussi principali:
 ## Prerequisiti
 - Node.js >= 18
 - npm >= 10
-- Windows 10/11 (la build ufficiale Ë portable Windows)
+- Windows 10/11 (la build ufficiale √® portable Windows)
 - Facoltativo: certificato `.p12/.pfx` per testare la firma digitale
 
 ---
@@ -90,7 +90,7 @@ Diagramma dei flussi principali:
 ## Setup & comandi
 ```bash
 npm install           # una tantum
-npm run dev           # avvia electron-vite in modalit‡ development
+npm run dev           # avvia electron-vite in modalit√† development
 npm run start         # anteprima (renderer bundlato)
 npm run build         # compila main/preload/renderer
 npm run build:win     # build Windows portable (electron-builder)
@@ -103,6 +103,7 @@ npm run test          # Jest (node + jsdom)
 | `npm run format` | Prettier 3 |
 | `npm run typecheck` | TypeScript sia per main che per renderer |
 | `npm run test:watch` | Esecuzione Jest in watch mode |
+| `npm run version:set -- <x.y.z>` | Aggiorna versione su package/env/README |
 
 ---
 
@@ -157,6 +158,14 @@ Variabili chiave:
   3. Creazione release con tag `v<version>` e changelog differenziale
   4. Upload asset: portable `.exe` + archivio sorgenti
 
+Per sincronizzare la versione dell'applicativo usa:
+
+```bash
+npm run version:set -- 0.1.1
+```
+
+Il comando aggiorna `package.json`, i profili in `env/` e il badge riportato in questo README.
+
 ---
 
 ## Roadmap
@@ -183,4 +192,4 @@ Rilasciato sotto licenza [MIT](LICENSE.md).
 
 ---
 
-Made with ?? by **DSK Digital Lab**.
+Made with ‚ù§Ô∏è by **DSK Digital Lab**.
