@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2025 DSK Digital Lab
+Copyright (c) 2025 5h1ngy
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
