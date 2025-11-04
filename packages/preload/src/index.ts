@@ -4,6 +4,7 @@ import { reportApi } from '@preload/api/report'
 import type { EnvironmentApi, PreloadApi } from '@preload/types'
 import { env } from '@main/config/env'
 
+debugger;
 const api: PreloadApi = Object.freeze({
   health: healthApi,
   report: reportApi,
@@ -11,6 +12,11 @@ const api: PreloadApi = Object.freeze({
     appVersion: env.appVersion,
     enableDevtools: env.enableDevtools
   }
+})
+
+console.info('[Preload] Environment exposed to renderer', {
+  appVersion: env.appVersion,
+  enableDevtools: env.enableDevtools
 })
 
 if (process.contextIsolated) {
