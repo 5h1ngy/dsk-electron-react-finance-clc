@@ -161,7 +161,9 @@ const AppLayout = ({ children }: AppLayoutProps) => {
             breadcrumbItems={breadcrumbItems}
             toggleLabel={collapsed ? t('layout.expand') : t('layout.collapse')}
           />
-          <Content style={{ padding: 0, flex: 1, minHeight: 0, overflowY: 'auto' }}>{children}</Content>
+          <Content style={{ padding: token.paddingMD, flex: 1, minHeight: 0, overflowY: 'auto', background: token.colorBgContainer, borderRadius: token.borderRadius }}>
+            {children}
+          </Content>
         </Layout>
       </Layout>
     </Layout>

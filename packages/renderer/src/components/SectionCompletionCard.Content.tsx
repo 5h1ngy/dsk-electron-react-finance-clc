@@ -10,8 +10,8 @@ const SectionCompletionCardContent = ({ items }: SectionCompletionCardContentPro
   return (
     <Space
       align="center"
-      size={token.marginSM}
-      style={{ width: '100%', justifyContent: 'space-between', flexWrap: 'wrap' }}
+      size={token.marginXS}
+      style={{ width: '100%', justifyContent: 'space-around', flexWrap: 'wrap' }}
     >
       {items.map((item) => (
         <Space key={item.title} direction="vertical" size={4} align="center">
