@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 
@@ -77,7 +77,9 @@ describe('EnvConfig', () => {
 
   it('loads .env.development by default when NODE_ENV=development', () => {
     const directory = mkdtempSync(join(tmpdir(), 'env-config-dev-'))
-    const envPath = join(directory, '.env.development')
+    const envDir = join(directory, 'env')
+    const envPath = join(envDir, '.env.development')
+    mkdirSync(envDir, { recursive: true })
     writeFileSync(envPath, 'LOG_LEVEL=debug\nENABLE_DEVTOOLS=false\nAPP_VERSION=1.2.3')
 
     const originalCwd = process.cwd()
@@ -98,8 +100,13 @@ describe('EnvConfig', () => {
 
   it('prefers .env.production when NODE_ENV=production', () => {
     const directory = mkdtempSync(join(tmpdir(), 'env-config-prod-'))
-    writeFileSync(join(directory, '.env.production'), 'ENABLE_DEVTOOLS=false\nAPP_VERSION=4.5.6')
-    writeFileSync(join(directory, '.env.development'), 'ENABLE_DEVTOOLS=true\nAPP_VERSION=should-not-be-used')
+    const envDir = join(directory, 'env')
+    mkdirSync(envDir, { recursive: true })
+    writeFileSync(join(envDir, '.env.production'), 'ENABLE_DEVTOOLS=false\nAPP_VERSION=4.5.6')
+    writeFileSync(
+      join(envDir, '.env.development'),
+      'ENABLE_DEVTOOLS=true\nAPP_VERSION=should-not-be-used'
+    )
 
     const originalCwd = process.cwd()
     process.chdir(directory)

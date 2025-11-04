@@ -102,20 +102,22 @@ export class EnvConfig {
     }
 
     const cwd = process.cwd()
+    const envDir = join(cwd, 'env')
     const normalizedEnv = process.env.NODE_ENV?.toLowerCase()
 
     const candidates: string[] = []
     if (normalizedEnv === 'production') {
-      candidates.push(join(cwd, '.env.production'))
+      candidates.push(join(envDir, '.env.production'))
     } else if (normalizedEnv === 'development') {
-      candidates.push(join(cwd, '.env.development'))
+      candidates.push(join(envDir, '.env.development'))
     } else if (normalizedEnv) {
-      candidates.push(join(cwd, `.env.${normalizedEnv}`))
-      candidates.push(join(cwd, '.env.development'))
+      candidates.push(join(envDir, `.env.${normalizedEnv}`))
+      candidates.push(join(envDir, '.env.development'))
     } else {
-      candidates.push(join(cwd, '.env.development'))
+      candidates.push(join(envDir, '.env.development'))
     }
 
+    candidates.push(join(envDir, '.env'))
     candidates.push(join(cwd, '.env'))
 
     return candidates.find((candidate) => existsSync(candidate))
