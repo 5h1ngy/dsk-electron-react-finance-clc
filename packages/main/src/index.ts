@@ -5,6 +5,7 @@ import { registerSecurityHooks } from '@main/services/security'
 import { registerHealthIpc } from '@main/ipc/health'
 import { registerReportIpc } from '@main/ipc/report'
 import { mainWindowManager, MainWindowManager } from '@main/windowManager'
+import { loadReduxDevtoolsExtension } from '@main/extensions/devtools'
 
 export interface MainProcessDependencies {
   appRef: typeof app
@@ -70,6 +71,7 @@ export class MainProcessApplication {
     this.deps.registerSecurityHooks()
     this.deps.registerHealthIpc()
     this.deps.registerReportIpc()
+    await loadReduxDevtoolsExtension()
 
     this.mainWindow = await this.deps.windowManager.createMainWindow()
     this.deps.logger.success('Main window created', 'Window')
