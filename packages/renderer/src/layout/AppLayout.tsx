@@ -1,4 +1,4 @@
-import { AppstoreOutlined, BankOutlined, SettingOutlined } from '@ant-design/icons'
+﻿import { AppstoreOutlined, BankOutlined, SettingOutlined } from '@ant-design/icons'
 import { Layout, Menu, Typography, theme } from 'antd'
 import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import AppLayoutHeader from '@renderer/layout/AppLayout.Header'
+import type { EnvironmentApi } from '@preload/types'
 
 const { Sider, Content } = Layout
 
@@ -44,9 +45,16 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   }, [location.pathname])
 
   const tabKey = new URLSearchParams(location.search).get('tab') ?? 'questionnaire'
-  const environment = window.api?.environment
-  const showVersionBadge = Boolean(environment?.enableDevtools)
-  const versionText = environment?.appVersion ? `v${environment.appVersion}` : undefined
+  const rendererWindow = window as typeof window & {
+    environment?: EnvironmentApi
+    api?: { environment?: EnvironmentApi }
+  }
+  const environmentInfo =
+    rendererWindow.environment ?? rendererWindow.api?.environment ?? undefined
+
+  const showVersionBadge = Boolean(environmentInfo?.enableDevtools)
+  const versionText = environmentInfo?.appVersion ? `v${environmentInfo.appVersion}` : undefined
+  debugger
 
   const breadcrumbItems = useMemo(() => {
     const segments = location.pathname.split('/').filter(Boolean)
@@ -239,3 +247,4 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 }
 
 export default AppLayout
+

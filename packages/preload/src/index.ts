@@ -1,7 +1,7 @@
 import { contextBridge } from 'electron'
 import { healthApi } from '@preload/api/health'
 import { reportApi } from '@preload/api/report'
-import type { PreloadApi } from '@preload/types'
+import type { EnvironmentApi, PreloadApi } from '@preload/types'
 import { env } from '@main/config/env'
 
 const api: PreloadApi = Object.freeze({
@@ -16,9 +16,15 @@ const api: PreloadApi = Object.freeze({
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('api', api)
+    contextBridge.exposeInMainWorld('environment', api.environment)
   } catch (error) {
     console.error('Failed to expose preload API', error)
   }
 } else {
-  ;(window as unknown as { api: PreloadApi }).api = api
+  const legacyWindow = window as unknown as {
+    api: PreloadApi
+    environment: EnvironmentApi
+  }
+  legacyWindow.api = api
+  legacyWindow.environment = api.environment
 }
