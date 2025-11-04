@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Select, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-<<<<<<< HEAD
-import { TaskStatus, TaskPriority, TaskFilter } from '../../store/tasks/tasksSlice';
-=======
-import { TaskStatus, TaskPriority, TaskFilter } from '../../store/tasksSlice/tasksSlice';
->>>>>>> cd65bdc (refactor(store): ♻️ remove auth/notes slices and add tasks/ui/users state)
+
+import { rootActions } from '@renderer/store';
+import { TaskFilter, TaskPriority, TaskStatus } from '@renderer/store/tasks/types';
 
 interface TaskFilterBarProps {
   filters: TaskFilter;
