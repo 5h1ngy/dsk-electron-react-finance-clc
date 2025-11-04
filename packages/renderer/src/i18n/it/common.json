@@ -2,13 +2,37 @@
   "app": {
     "title": "Offline Risk Suite",
     "menu": {
-      "workbench": "Workbench",
-      "diagnostics": "Diagnostics"
+      "workbench": "Profilazione utente",
+      "diagnostics": "Diagnostics",
+      "products": "Prodotti"
     }
+  },
+  "layout": {
+    "collapse": "Comprimi menu",
+    "expand": "Espandi menu"
   },
   "common": {
     "notAvailable": "N/D",
     "none": "Nessun dato disponibile"
+  },
+  "profilation": {
+    "tabs": {
+      "questionnaire": "Questionario",
+      "suggestions": "Strumenti proposti",
+      "risk": "Profilo rischio",
+      "settings": "Impostazioni"
+    }
+  },
+  "products": {
+    "title": "Catalogo prodotti",
+    "table": {
+      "name": "Strumento",
+      "category": "Categoria",
+      "risk": "Profilo rischio",
+      "aum": "AUM (M€)",
+      "yield": "Rendimento YTD",
+      "updated": "Aggiornato"
+    }
   },
   "health": {
     "status": {

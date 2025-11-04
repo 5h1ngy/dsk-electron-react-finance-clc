@@ -6,6 +6,7 @@ import { Provider } from 'react-redux'
 import AppLayout from '@renderer/layout/AppLayout'
 import WorkbenchPage from '@renderer/pages/Workbench'
 import DiagnosticsPage from '@renderer/pages/Diagnostics'
+import ProductsPage from '@renderer/pages/Products'
 import { store } from '@renderer/store'
 import { appTheme } from '@renderer/theme'
 import '@renderer/i18n'
@@ -18,6 +19,7 @@ const App = () => (
           <Routes>
             <Route index element={<WorkbenchPage />} />
             <Route path="/diagnostics" element={<DiagnosticsPage />} />
+            <Route path="/prodotti" element={<ProductsPage />} />
             <Route path="*" element={<WorkbenchPage />} />
           </Routes>
         </AppLayout>
