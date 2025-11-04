@@ -177,16 +177,23 @@ const AppLayout = ({ children }: AppLayoutProps) => {
                   <div
                     style={{
                       marginTop: 'auto',
-                      background: token.colorFillTertiary,
+                      background: token.colorFillQuaternary,
                       borderRadius: token.borderRadiusLG,
                       padding: token.paddingSM,
-                      textAlign: collapsed ? 'center' : 'left'
+                      textAlign: 'center',
+                      minHeight: 48,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: `1px solid ${token.colorBorderSecondary}`
                     }}
                   >
                     <Typography.Text
                       style={{
-                        color: token.colorTextSecondary,
-                        fontSize: token.fontSizeSM
+                        color: token.colorText,
+                        fontSize: token.fontSizeSM,
+                        fontWeight: 600,
+                        letterSpacing: 0.5
                       }}
                     >
                       {versionText}
