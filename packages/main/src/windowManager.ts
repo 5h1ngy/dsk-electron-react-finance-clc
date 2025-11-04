@@ -61,6 +61,7 @@ export class MainWindowManager {
   private registerReadyHandler(window: BrowserWindow): void {
     window.on('ready-to-show', () => {
       this.logger.debug('Main window ready to show', 'Window')
+      window.maximize()
       window.show()
     })
 

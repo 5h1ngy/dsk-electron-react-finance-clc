@@ -15,14 +15,13 @@ export class EnvConfig {
     this.config = config
   }
 
-  static readonly DEFAULT_ENV_PATH = join(process.cwd(), '.env')
-
   /**
    * Loads environment variables from disk (if present) and returns a typed view.
    */
-  static load(envPath: string = EnvConfig.DEFAULT_ENV_PATH): EnvConfig {
-    if (existsSync(envPath)) {
-      dotenv.config({ path: envPath })
+  static load(envPath?: string): EnvConfig {
+    const resolvedPath = EnvConfig.resolveEnvPath(envPath)
+    if (resolvedPath) {
+      dotenv.config({ path: resolvedPath })
     }
     return new EnvConfig({
       logLevel: EnvConfig.parseLogLevel(process.env.LOG_LEVEL),
@@ -95,6 +94,31 @@ export class EnvConfig {
       return normalized
     }
     return process.env.npm_package_version ?? '0.0.0-dev'
+  }
+
+  private static resolveEnvPath(explicit?: string): string | undefined {
+    if (explicit && existsSync(explicit)) {
+      return explicit
+    }
+
+    const cwd = process.cwd()
+    const normalizedEnv = process.env.NODE_ENV?.toLowerCase()
+
+    const candidates: string[] = []
+    if (normalizedEnv === 'production') {
+      candidates.push(join(cwd, '.env.production'))
+    } else if (normalizedEnv === 'development') {
+      candidates.push(join(cwd, '.env.development'))
+    } else if (normalizedEnv) {
+      candidates.push(join(cwd, `.env.${normalizedEnv}`))
+      candidates.push(join(cwd, '.env.development'))
+    } else {
+      candidates.push(join(cwd, '.env.development'))
+    }
+
+    candidates.push(join(cwd, '.env'))
+
+    return candidates.find((candidate) => existsSync(candidate))
   }
 }
 

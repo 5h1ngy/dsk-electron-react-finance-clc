@@ -74,4 +74,45 @@ describe('EnvConfig', () => {
     const config = EnvConfig.load(join(tmpdir(), 'missing.env'))
     expect(config.appVersion).toBe('9.9.9')
   })
+
+  it('loads .env.development by default when NODE_ENV=development', () => {
+    const directory = mkdtempSync(join(tmpdir(), 'env-config-dev-'))
+    const envPath = join(directory, '.env.development')
+    writeFileSync(envPath, 'LOG_LEVEL=debug\nENABLE_DEVTOOLS=false\nAPP_VERSION=1.2.3')
+
+    const originalCwd = process.cwd()
+    process.chdir(directory)
+    process.env.NODE_ENV = 'development'
+    delete process.env.LOG_LEVEL
+
+    try {
+      const config = EnvConfig.load()
+      expect(config.logLevel).toBe('debug')
+      expect(config.enableDevtools).toBe(false)
+      expect(config.appVersion).toBe('1.2.3')
+    } finally {
+      process.chdir(originalCwd)
+      rmSync(directory, { recursive: true, force: true })
+    }
+  })
+
+  it('prefers .env.production when NODE_ENV=production', () => {
+    const directory = mkdtempSync(join(tmpdir(), 'env-config-prod-'))
+    writeFileSync(join(directory, '.env.production'), 'ENABLE_DEVTOOLS=false\nAPP_VERSION=4.5.6')
+    writeFileSync(join(directory, '.env.development'), 'ENABLE_DEVTOOLS=true\nAPP_VERSION=should-not-be-used')
+
+    const originalCwd = process.cwd()
+    process.chdir(directory)
+    process.env.NODE_ENV = 'production'
+    delete process.env.APP_VERSION
+
+    try {
+      const config = EnvConfig.load()
+      expect(config.enableDevtools).toBe(false)
+      expect(config.appVersion).toBe('4.5.6')
+    } finally {
+      process.chdir(originalCwd)
+      rmSync(directory, { recursive: true, force: true })
+    }
+  })
 })
