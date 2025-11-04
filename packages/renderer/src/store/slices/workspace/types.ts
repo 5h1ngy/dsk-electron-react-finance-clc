@@ -17,7 +17,7 @@ export interface PdfImportMeta {
   pages: number
 }
 
-import type { CertificateSummary } from '@renderer/domain/signature/types'
+import type { CertificateSummary } from '@engines/signature/types'
 
 export interface ReportExportMeta {
   fileName: string

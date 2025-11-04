@@ -7,6 +7,7 @@ import AppLayout from '@renderer/layout/AppLayout'
 import WorkbenchPage from '@renderer/pages/Workbench'
 import DiagnosticsPage from '@renderer/pages/Diagnostics'
 import { store } from '@renderer/store'
+import '@renderer/i18n'
 
 const App = () => (
   <Provider store={store}>
@@ -18,7 +19,7 @@ const App = () => (
         }
       }}
     >
-      <HashRouter>
+      <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <AppLayout>
           <Routes>
             <Route index element={<WorkbenchPage />} />
@@ -32,4 +33,3 @@ const App = () => (
 )
 
 export default App
-

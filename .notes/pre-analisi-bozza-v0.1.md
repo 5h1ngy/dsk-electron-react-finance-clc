@@ -27,9 +27,7 @@ Dunque qui di sotto troviamo le features suddivise per blocchi
 `Elaborazione dati e visualizzazione intermedia`
 
 - casi iniziali:
-  
   - abbiamo un excel con delle domande che vengono parsate
-  
   - abbiamo un inserimento manuale tramite step form delle stesso domande presenti sull'excel.
 
 - successivamente vi e' uno step intermedio dove viene calcolata la classe di rischio con un numero da 0 a 100. Numero non intero. Tale classe ha una volatilita' associata.
@@ -39,11 +37,8 @@ Dunque qui di sotto troviamo le features suddivise per blocchi
 - Dopo vi e' un altro step dove viene preso in input un altro excel con le linee di investimento, la quale viene associata alla classe di rischio precedentemente calcolata.
 
 - Nell'ultimo step viene interpolato il tutto:
-  
   - dati del cliente
-  
   - classe di rischio
-  
   - portafoglio consigliato
 
 - Nella fase finale viene generato il pdf con i dati interpolati correttamente. In piu viene generato un secondo pdf con la copia di tutte le domande compilate dall'utente.
@@ -60,13 +55,13 @@ Di seguito le tecnologie adottate per tale prodotto:
 
 - Electron: sviluppo cross-platform senza riscrivere il codice
 
-- Vitejs: bundler da interpolare con electron. 
+- Vitejs: bundler da interpolare con electron.
 
-*Eseguire un fork dal progetto: dsk-electron-react-project-manager, per velocizzare le tempistiche di bootstrap*
+_Eseguire un fork dal progetto: dsk-electron-react-project-manager, per velocizzare le tempistiche di bootstrap_
 
 - React: libreria pe virtualizzare il DOM e costruire la UI
 
-- Ant-Design: libreria grafica (*da cambiare con quella proprietaria nella fase di estensione del prodotto*)
+- Ant-Design: libreria grafica (_da cambiare con quella proprietaria nella fase di estensione del prodotto_)
 
 - React-Hook-Form: Creazione delle form interattive
 

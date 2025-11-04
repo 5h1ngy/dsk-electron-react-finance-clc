@@ -14,10 +14,7 @@ export const selectQuestionnaireStatus = createSelector(
   (state) => state.schemaStatus
 )
 
-export const selectResponses = createSelector(
-  selectQuestionnaireState,
-  (state) => state.responses
-)
+export const selectResponses = createSelector(selectQuestionnaireState, (state) => state.responses)
 
 export const selectQuestionnaireScore = createSelector(
   selectQuestionnaireState,
@@ -33,8 +30,7 @@ export const selectAnsweredProgress = createSelector(selectQuestionnaireState, (
     return { completed: 0, required: 0 }
   }
   const totalRequired = state.schema.sections.reduce(
-    (acc, section) =>
-      acc + section.questions.filter((question) => question.required).length,
+    (acc, section) => acc + section.questions.filter((question) => question.required).length,
     0
   )
   const answeredRequired = state.schema.sections.reduce((acc, section) => {

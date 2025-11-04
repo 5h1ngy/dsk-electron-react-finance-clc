@@ -1,15 +1,28 @@
+import type { CallbackResponse, OnBeforeRequestListenerDetails } from 'electron'
+
 import {
   buildContentSecurityPolicy,
   createNetworkBlockerHandler,
   shouldAllowRequest
 } from '@main/services/security'
 
+const createDetails = (url: string): OnBeforeRequestListenerDetails => ({
+  id: 1,
+  url,
+  method: 'GET',
+  resourceType: 'xhr',
+  timestamp: Date.now(),
+  webContentsId: 1,
+  referrer: '',
+  uploadData: []
+})
+
 const invokeHandler = async (
   handler: ReturnType<typeof createNetworkBlockerHandler>,
   url: string
-): Promise<{ cancel?: boolean }> => {
+): Promise<CallbackResponse> => {
   return await new Promise((resolve) => {
-    handler({ id: 1, url } as any, (result) => resolve(result))
+    handler(createDetails(url), (result) => resolve(result))
   })
 }
 
@@ -53,4 +66,3 @@ describe('buildContentSecurityPolicy', () => {
     expect(csp).not.toContain('ws://127.0.0.1:*')
   })
 })
-

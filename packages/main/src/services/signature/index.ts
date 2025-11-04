@@ -59,9 +59,7 @@ export interface SignedReport {
   certificate: CertificateDetails
 }
 
-const formatDistinguishedName = (
-  attributes: forge.pki.CertificateField['attributes']
-): string =>
+const formatDistinguishedName = (attributes: forge.pki.CertificateField[]): string =>
   attributes
     .map((attribute) => `${attribute.shortName ?? attribute.name}=${attribute.value}`)
     .join(', ')
@@ -73,10 +71,7 @@ const computeThumbprint = (certificate: forge.pki.Certificate): string => {
   return digest.digest().toHex().toUpperCase()
 }
 
-const extractCertificateDetails = (
-  base64: string,
-  password: string
-): CertificateDetails => {
+const extractCertificateDetails = (base64: string, password: string): CertificateDetails => {
   const der = forge.util.decode64(base64)
   const asn1 = forge.asn1.fromDer(der)
   const p12 = forge.pkcs12.pkcs12FromAsn1(asn1, password)

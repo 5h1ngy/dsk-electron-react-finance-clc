@@ -2,8 +2,8 @@ import type {
   QuestionnaireResponses,
   QuestionnaireSchema,
   QuestionnaireResponseValue
-} from '@renderer/domain/questionnaire'
-import type { RiskScoreResult } from '@renderer/domain/scoring'
+} from '@engines/questionnaire'
+import type { RiskScoreResult } from '@engines/scoring'
 
 export interface QuestionnaireState {
   schema?: QuestionnaireSchema

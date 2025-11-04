@@ -165,13 +165,9 @@ Il software gira **offline** su desktop (**Windows** fase 1). L’utente:
 - **UI (React + Ant Design → tema proprietario)**: stepper, form, validazioni.
 
 - **Core dominio**:
-  
   - **Motore scoring** (funzioni pure; pesi/regole **TBD**).
-  
   - **Motore idoneità** (regole, esclusioni, motivazioni **TBD**).
-  
   - **Motore mappatura** classe→strumenti/linee (tabella regole **TBD**).
-  
   - **Parser/validator** Excel/PDF/JSON (Zod o eq.).
 
 - **Adapter I/O**: import Excel/PDF, export PDF + **firma/hash**.

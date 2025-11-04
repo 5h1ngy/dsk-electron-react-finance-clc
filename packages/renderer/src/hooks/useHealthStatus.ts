@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { HealthSnapshot } from '@main/ipc/health'
 
@@ -13,6 +14,7 @@ export const useHealthStatus = (): HealthState => {
   const [snapshot, setSnapshot] = useState<HealthSnapshot | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { t } = useTranslation()
 
   const refresh = useCallback(async () => {
     setLoading(true)
@@ -25,11 +27,11 @@ export const useHealthStatus = (): HealthState => {
         setError(response.message)
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Impossibile contattare il main process')
+      setError(err instanceof Error ? err.message : t('errors.health'))
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => {
     void refresh()

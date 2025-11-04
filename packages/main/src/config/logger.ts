@@ -74,9 +74,7 @@ export class AppLogger {
     const mappedLevel = this.mapConsoleLevel(level)
     const formatted = `${COLORS.renderer}${message}${RESET}`
     const rendererContext = sourceId ? `renderer:${sourceId}${line ? `:${line}` : ''}` : undefined
-    this.write(
-      `${this.formatLine(mappedLevel, formatted, rendererContext)}`
-    )
+    this.write(`${this.formatLine(mappedLevel, formatted, rendererContext)}`)
   }
 
   private log(level: LogLevel, message: string, context?: string, error?: unknown): void {
@@ -164,7 +162,10 @@ export const shouldSuppressDevtoolsMessage = (sourceId: string, message: string)
 
   if (isDevtools && isAutofillNoise) {
     if (!autoFillWarningLogged) {
-      defaultLogger.debug('Suppressed verbose devtools Autofill noise. DevTools remains functional.', 'DevTools')
+      defaultLogger.debug(
+        'Suppressed verbose devtools Autofill noise. DevTools remains functional.',
+        'DevTools'
+      )
       autoFillWarningLogged = true
     }
     return true
@@ -172,3 +173,43 @@ export const shouldSuppressDevtoolsMessage = (sourceId: string, message: string)
 
   return false
 }
+
+const AUTOFILL_STDERR_PATTERNS = [
+  'Request Autofill.enable failed',
+  'Request Autofill.setAddresses failed'
+]
+let stderrPatched = false
+
+const suppressChromiumAutofillNoise = () => {
+  if (stderrPatched) {
+    return
+  }
+  const originalWrite = process.stderr.write.bind(process.stderr)
+  const filteredWrite: typeof process.stderr.write = (
+    chunk: string | Buffer,
+    encoding?: BufferEncoding | ((error?: Error | null) => void),
+    callback?: (error?: Error | null) => void
+  ): boolean => {
+    const bufferEncoding = typeof encoding === 'string' ? encoding : undefined
+    const done = typeof encoding === 'function' ? encoding : callback
+    const message = typeof chunk === 'string' ? chunk : chunk.toString(bufferEncoding)
+    if (AUTOFILL_STDERR_PATTERNS.some((pattern) => message.includes(pattern))) {
+      if (!autoFillWarningLogged) {
+        defaultLogger.debug(
+          'Suppressed verbose devtools Autofill noise. DevTools remains functional.',
+          'DevTools'
+        )
+        autoFillWarningLogged = true
+      }
+      if (typeof done === 'function') {
+        done()
+      }
+      return true
+    }
+    return originalWrite(chunk, bufferEncoding, callback)
+  }
+  process.stderr.write = filteredWrite
+  stderrPatched = true
+}
+
+suppressChromiumAutofillNoise()

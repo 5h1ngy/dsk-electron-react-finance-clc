@@ -1,10 +1,30 @@
 {
-  "name": "react-ts",
+  "name": "dsk-finance-clc",
   "version": "0.1.0",
-  "description": "An Electron application with React and TypeScript",
+  "description": "DSK Finance CLC è un workbench offline per profilazione rischio, import questionari e firma digitale basato su Electron + React.",
   "main": "./out/main/index.js",
-  "author": "example.com",
-  "homepage": "https://electron-vite.org",
+  "author": "DSK Digital Lab",
+  "homepage": "https://github.com/dsk-lab/dsk-finance-clc",
+  "license": "UNLICENSED",
+  "topics": [
+    "electron",
+    "react",
+    "typescript",
+    "redux-toolkit",
+    "finance",
+    "risk-profiling",
+    "pdf-signing",
+    "offline-first",
+    "vite",
+    "digital-signature"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dsk-lab/dsk-finance-clc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dsk-lab/dsk-finance-clc/issues"
+  },
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint --cache .",
@@ -29,6 +49,7 @@
     "@reduxjs/toolkit": "^2.3.0",
     "antd": "^5.27.5",
     "dotenv": "^16.4.5",
+    "i18next": "^25.6.0",
     "node-forge": "^1.3.1",
     "node-signpdf": "^3.0.0",
     "pdf-lib": "^1.17.1",
@@ -36,6 +57,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.65.0",
+    "react-i18next": "^16.2.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.30.1",
     "xlsx": "^0.18.5",
@@ -45,6 +67,8 @@
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
     "@electron-toolkit/eslint-config-ts": "^3.1.0",
     "@electron-toolkit/tsconfig": "^2.0.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^22.12.0",
     "@types/node-forge": "^1.3.14",

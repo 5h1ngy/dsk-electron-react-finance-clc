@@ -4,6 +4,8 @@
         "electron.vite.config.*",
         "packages/main/src/**/*",
         "packages/preload/src/**/*",
+        "packages/engines/**/*.ts",
+        "packages/engines/**/*.tsx",
         "types/**/*.d.ts"
     ],
     "compilerOptions":  {
@@ -18,8 +20,14 @@
             "@main/*":  [
                 "packages/main/src/*"
             ],
+            "@engines/*": [
+                "packages/engines/*"
+            ],
             "@preload/*":  [
                 "packages/preload/src/*"
+            ],
+            "@renderer/*": [
+                "packages/renderer/src/*"
             ]
         }
     }

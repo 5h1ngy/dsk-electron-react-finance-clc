@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-import { calculateRiskScore } from '@renderer/domain/scoring'
+import { calculateRiskScore } from '@engines/scoring'
 import type {
   QuestionnaireResponseValue,
   QuestionnaireResponses,
   QuestionnaireSchema
-} from '@renderer/domain/questionnaire'
-import { loadQuestionnaireSchema } from '@renderer/data/questionnaire'
+} from '@engines/questionnaire'
+import { loadQuestionnaireSchema } from '@renderer/config/questionnaire'
 import type { QuestionnaireState } from '@renderer/store/slices/questionnaire/types'
 
 const initialState: QuestionnaireState = {
@@ -71,10 +71,6 @@ const questionnaireSlice = createSlice({
   }
 })
 
-export const {
-  setResponse,
-  applyBulkResponses,
-  resetQuestionnaire,
-  computeQuestionnaireScore
-} = questionnaireSlice.actions
+export const { setResponse, applyBulkResponses, resetQuestionnaire, computeQuestionnaireScore } =
+  questionnaireSlice.actions
 export const questionnaireReducer = questionnaireSlice.reducer
