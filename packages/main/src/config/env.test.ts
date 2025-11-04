@@ -4,26 +4,36 @@ import { tmpdir } from 'node:os'
 
 import { EnvConfig } from '@main/config/env'
 
-const resetLogLevel = (value: string | undefined): void => {
+type EnvKey = 'LOG_LEVEL' | 'ENABLE_DEVTOOLS' | 'APP_VERSION' | 'NODE_ENV' | 'npm_package_version'
+
+const resetEnvVar = (key: EnvKey, value: string | undefined): void => {
   if (value === undefined) {
-    delete process.env.LOG_LEVEL
+    delete process.env[key]
   } else {
-    process.env.LOG_LEVEL = value
+    process.env[key] = value
   }
 }
 
 describe('EnvConfig', () => {
-  const originalLogLevel = process.env.LOG_LEVEL
+  const originalEnv: Record<EnvKey, string | undefined> = {
+    LOG_LEVEL: process.env.LOG_LEVEL,
+    ENABLE_DEVTOOLS: process.env.ENABLE_DEVTOOLS,
+    APP_VERSION: process.env.APP_VERSION,
+    NODE_ENV: process.env.NODE_ENV,
+    npm_package_version: process.env.npm_package_version
+  }
 
   afterEach(() => {
-    resetLogLevel(originalLogLevel)
+    (Object.keys(originalEnv) as EnvKey[]).forEach((key) => {
+      resetEnvVar(key, originalEnv[key])
+    })
   })
 
   it('reads log level from a custom env file', () => {
     const directory = mkdtempSync(join(tmpdir(), 'env-config-'))
     const path = join(directory, '.env')
     writeFileSync(path, 'LOG_LEVEL=warn')
-    resetLogLevel(undefined)
+    resetEnvVar('LOG_LEVEL', undefined)
 
     try {
       const config = EnvConfig.load(path)
@@ -37,5 +47,31 @@ describe('EnvConfig', () => {
     process.env.LOG_LEVEL = 'unsupported'
     const config = EnvConfig.load(join(tmpdir(), 'missing.env'))
     expect(config.logLevel).toBe('info')
+  })
+
+  it('parses ENABLE_DEVTOOLS flag', () => {
+    process.env.ENABLE_DEVTOOLS = 'false'
+    const config = EnvConfig.load(join(tmpdir(), 'missing.env'))
+    expect(config.enableDevtools).toBe(false)
+  })
+
+  it('defaults enableDevtools based on NODE_ENV', () => {
+    process.env.NODE_ENV = 'production'
+    delete process.env.ENABLE_DEVTOOLS
+    const config = EnvConfig.load(join(tmpdir(), 'missing.env'))
+    expect(config.enableDevtools).toBe(false)
+  })
+
+  it('uses APP_VERSION when provided', () => {
+    process.env.APP_VERSION = '2.4.6'
+    const config = EnvConfig.load(join(tmpdir(), 'missing.env'))
+    expect(config.appVersion).toBe('2.4.6')
+  })
+
+  it('falls back to npm_package_version when APP_VERSION is missing', () => {
+    delete process.env.APP_VERSION
+    process.env.npm_package_version = '9.9.9'
+    const config = EnvConfig.load(join(tmpdir(), 'missing.env'))
+    expect(config.appVersion).toBe('9.9.9')
   })
 })

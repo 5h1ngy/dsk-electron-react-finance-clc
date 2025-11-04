@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron'
 
 import { logger } from '@main/config/logger'
+import { env } from '@main/config/env'
 import { registerSecurityHooks } from '@main/services/security'
 import { registerHealthIpc } from '@main/ipc/health'
 import { registerReportIpc } from '@main/ipc/report'
@@ -112,5 +113,11 @@ const application = new MainProcessApplication({
 })
 
 if (process.env.NODE_ENV !== 'test') {
+  logger.info(`Starting DSK Finance CLC v${env.appVersion}`, 'Bootstrap')
+  if (env.enableDevtools) {
+    logger.debug('Developer tools are enabled for this session', 'Bootstrap')
+  } else {
+    logger.debug('Developer tools are disabled for this session', 'Bootstrap')
+  }
   application.bootstrap()
 }

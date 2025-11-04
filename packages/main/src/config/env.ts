@@ -25,7 +25,12 @@ export class EnvConfig {
       dotenv.config({ path: envPath })
     }
     return new EnvConfig({
-      logLevel: EnvConfig.parseLogLevel(process.env.LOG_LEVEL)
+      logLevel: EnvConfig.parseLogLevel(process.env.LOG_LEVEL),
+      enableDevtools: EnvConfig.parseBoolean(
+        process.env.ENABLE_DEVTOOLS,
+        process.env.NODE_ENV !== 'production'
+      ),
+      appVersion: EnvConfig.parseAppVersion(process.env.APP_VERSION)
     })
   }
 
@@ -38,6 +43,14 @@ export class EnvConfig {
 
   get logLevel(): LogLevelSetting {
     return this.config.logLevel
+  }
+
+  get enableDevtools(): boolean {
+    return this.config.enableDevtools
+  }
+
+  get appVersion(): string {
+    return this.config.appVersion
   }
 
   /**
@@ -56,6 +69,32 @@ export class EnvConfig {
       default:
         return 'info'
     }
+  }
+
+  private static parseBoolean(value: string | undefined, fallback: boolean): boolean {
+    if (value === undefined) {
+      return fallback
+    }
+
+    const normalized = value.trim().toLowerCase()
+
+    if (['true', '1', 'yes', 'y', 'on'].includes(normalized)) {
+      return true
+    }
+
+    if (['false', '0', 'no', 'n', 'off'].includes(normalized)) {
+      return false
+    }
+
+    return fallback
+  }
+
+  private static parseAppVersion(value?: string): string {
+    const normalized = value?.trim()
+    if (normalized) {
+      return normalized
+    }
+    return process.env.npm_package_version ?? '0.0.0-dev'
   }
 }
 

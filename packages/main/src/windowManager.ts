@@ -2,6 +2,7 @@ import { BrowserWindow } from 'electron'
 import { join } from 'node:path'
 
 import { logger, shouldSuppressDevtoolsMessage } from '@main/config/logger'
+import { env } from '@main/config/env'
 
 export const MAIN_WINDOW_OPTIONS: Electron.BrowserWindowConstructorOptions = {
   width: 1280,
@@ -69,7 +70,7 @@ export class MainWindowManager {
   }
 
   private registerDevtoolsHooks(window: BrowserWindow): void {
-    if (!this.isDev()) {
+    if (!this.isDev() || !env.enableDevtools) {
       return
     }
 
