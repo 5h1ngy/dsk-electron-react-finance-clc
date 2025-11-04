@@ -155,7 +155,7 @@ Variabili chiave:
 - Step principali:
   1. Installazione dipendenze
   2. Build portable Windows
-  3. Creazione release con tag `v<version>` e changelog differenziale
+  3. Creazione release con tag `v<version>` (senza descrizione allegata)
   4. Upload asset: portable `.exe` + archivio sorgenti
 
 Per sincronizzare la versione dell'applicativo usa:
@@ -193,3 +193,4 @@ Rilasciato sotto licenza [MIT](LICENSE.md).
 ---
 
 Made with ❤️ by **DSK Digital Lab**.
+

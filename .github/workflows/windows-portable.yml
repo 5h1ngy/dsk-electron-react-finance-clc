@@ -33,25 +33,6 @@ jobs:
         run: echo "VERSION=$(node -p \"require('./package.json').version\")" >> $GITHUB_ENV
         shell: bash
 
-      - name: Generate changelog
-        id: changelog
-        run: |
-          git fetch --tags --force
-          PREVIOUS_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-          if [ -z "$PREVIOUS_TAG" ]; then
-            RANGE=""
-          else
-            RANGE="${PREVIOUS_TAG}..HEAD"
-          fi
-          LOG=$(git log --pretty=format:'- %s' $RANGE)
-          if [ -z "$LOG" ]; then
-            LOG="- No changes since last release"
-          fi
-          echo "log<<EOF" >> $GITHUB_OUTPUT
-          echo "$LOG" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-        shell: bash
-
       - name: Build Windows portable package
         run: npm run build:win
         shell: bash
@@ -77,7 +58,6 @@ jobs:
         with:
           tag_name: v${{ env.VERSION }}
           release_name: DSK Finance CLC v${{ env.VERSION }}
-          body: ${{ steps.changelog.outputs.log }}
           draft: false
           prerelease: false
 
