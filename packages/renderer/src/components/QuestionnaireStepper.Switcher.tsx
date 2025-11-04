@@ -47,7 +47,7 @@ const QuestionnaireStepperSwitcher = ({ model }: QuestionnaireStepperSwitcherPro
 
   const renderSteps = (withOverflow = false) => (
     <Steps
-      type="navigation"
+
       size="small"
       current={currentStep}
       onChange={(index) => {

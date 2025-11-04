@@ -1,5 +1,5 @@
-import { Button, Col, Row, Space, Tabs, theme } from 'antd'
-import { useState, useMemo } from 'react'
+import { Button, Col, Modal, Row, Space, Tabs, Grid, theme } from 'antd'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { InboxOutlined } from '@ant-design/icons'
 import { useSearchParams } from 'react-router-dom'
@@ -17,8 +17,16 @@ const ProfilationPageContent = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [importVisible, setImportVisible] = useState(false)
   const { token } = theme.useToken()
+  const screens = Grid.useBreakpoint()
   const marginXS = token.marginXS
   const questionnaireModel = useQuestionnaireStepper()
+  const importAsModal = !screens.lg
+
+  useEffect(() => {
+    if (importAsModal) {
+      setImportVisible(false)
+    }
+  }, [importAsModal])
 
   const activeKey = searchParams.get('tab') ?? 'questionnaire'
 
@@ -31,6 +39,14 @@ const ProfilationPageContent = () => {
     }
   }
 
+  const handleImportToggle = useCallback(() => {
+    if (importAsModal) {
+      setImportVisible(true)
+      return
+    }
+    setImportVisible((prev) => !prev)
+  }, [importAsModal])
+
   const tabs = useMemo(() => [
     {
       key: 'questionnaire',
@@ -38,29 +54,29 @@ const ProfilationPageContent = () => {
       children: (
         <Space direction="vertical" size="middle" style={{ width: '100%', marginTop: marginXS }}>
           <Row gutter={[16, 16]} align="middle" wrap style={{ width: '100%' }}>
+            <Col xs={24} lg={6} style={{ display: 'flex', justifyContent: 'flex-start' }}>
+              <Button
+                icon={<InboxOutlined />}
+                onClick={handleImportToggle}
+                type={importVisible && !importAsModal ? 'default' : 'primary'}
+                style={{ width: '100%', maxWidth: 220 }}
+              >
+                {importVisible && !importAsModal
+                  ? t('demoUpload.actions.close')
+                  : t('demoUpload.actions.open')}
+              </Button>
+            </Col>
             <Col xs={24} lg={18} style={{ minWidth: 0 }}>
               <div style={{ overflowX: 'auto', paddingBottom: token.paddingXXS }}>
                 <QuestionnaireStepperSwitcher model={questionnaireModel} />
               </div>
             </Col>
-            <Col xs={24} lg={6} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Button
-                icon={<InboxOutlined />}
-                onClick={() => setImportVisible((prev) => !prev)}
-                type={importVisible ? 'default' : 'primary'}
-                style={{ width: '100%', maxWidth: 220 }}
-              >
-                {importVisible
-                  ? t('demoUpload.actions.close')
-                  : t('demoUpload.actions.open')}
-              </Button>
-            </Col>
           </Row>
           <Row gutter={[16, 16]} align="stretch">
-            <Col xs={24} xl={importVisible ? 14 : 24}>
+            <Col xs={24} xl={!importAsModal && importVisible ? 14 : 24}>
               <QuestionnaireStepper model={questionnaireModel} />
             </Col>
-            {importVisible ? (
+            {!importAsModal && importVisible ? (
               <Col xs={24} xl={10}>
                 <DemoUploadCard />
               </Col>
@@ -84,18 +100,33 @@ const ProfilationPageContent = () => {
       label: t('profilation.tabs.settings'),
       children: <CertificateCard />
     }
-  ], [importVisible, marginXS, questionnaireModel, t])
+  ], [handleImportToggle, importAsModal, importVisible, marginXS, questionnaireModel, t])
 
   return (
-    <Tabs
-      items={tabs}
-      tabBarGutter={24}
-      tabBarStyle={{ marginBottom: token.marginSM }}
-      style={{ width: '100%' }}
-      destroyInactiveTabPane={false}
-      activeKey={activeKey}
-      onChange={handleTabChange}
-    />
+    <>
+      <Tabs
+        items={tabs}
+        tabBarGutter={24}
+        tabBarStyle={{ marginBottom: token.marginSM }}
+        style={{ width: '100%' }}
+        destroyInactiveTabPane={false}
+        activeKey={activeKey}
+        onChange={handleTabChange}
+      />
+      <Modal
+        open={importAsModal && importVisible}
+        footer={null}
+        onCancel={() => setImportVisible(false)}
+        title={t('demoUpload.title')}
+        centered
+        width="100%"
+        style={{ top: 12 }}
+        bodyStyle={{ padding: token.paddingLG }}
+        destroyOnClose
+      >
+        <DemoUploadCard />
+      </Modal>
+    </>
   )
 }
 
