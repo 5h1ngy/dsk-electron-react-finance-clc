@@ -8,6 +8,8 @@ export interface ThemeColors {
 export interface ThemeSettingsContextValue {
   colors: ThemeColors
   setColors: (next: ThemeColors) => void
+  mode: 'light' | 'dark'
+  setMode: (next: 'light' | 'dark') => void
 }
 
 export const ThemeSettingsContext = createContext<ThemeSettingsContextValue | undefined>(undefined)

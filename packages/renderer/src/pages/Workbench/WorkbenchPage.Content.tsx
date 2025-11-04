@@ -1,7 +1,8 @@
 import { Button, Col, Row, Space, Tabs } from 'antd'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { InboxOutlined } from '@ant-design/icons'
+import { useSearchParams } from 'react-router-dom'
 
 import CertificateCard from '@renderer/components/CertificateCard'
 import DemoUploadCard from '@renderer/components/DemoUploadCard'
@@ -12,24 +13,38 @@ import SuggestedProductsCard from '@renderer/components/SuggestedProductsCard'
 
 const WorkbenchPageContent = () => {
   const { t } = useTranslation()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [importVisible, setImportVisible] = useState(false)
 
-  const tabs = [
+  const activeKey = searchParams.get('tab') ?? 'questionnaire'
+
+  const handleTabChange = (key: string) => {
+    if (key === 'questionnaire') {
+      searchParams.delete('tab')
+      setSearchParams(searchParams, { replace: true })
+    } else {
+      setSearchParams({ tab: key }, { replace: true })
+    }
+  }
+
+  const tabs = useMemo(() => [
     {
       key: 'questionnaire',
       label: t('profilation.tabs.questionnaire'),
       children: (
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           <SectionCompletionCard />
-          <Button
-            icon={<InboxOutlined />}
-            onClick={() => setImportVisible((prev) => !prev)}
-            type={importVisible ? 'default' : 'primary'}
-          >
-            {importVisible
-              ? t('demoUpload.actions.close')
-              : t('demoUpload.actions.open')}
-          </Button>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button
+              icon={<InboxOutlined />}
+              onClick={() => setImportVisible((prev) => !prev)}
+              type={importVisible ? 'default' : 'primary'}
+            >
+              {importVisible
+                ? t('demoUpload.actions.close')
+                : t('demoUpload.actions.open')}
+            </Button>
+          </div>
           <Row gutter={[16, 16]} align="stretch">
             <Col xs={24} xl={importVisible ? 14 : 24}>
               <QuestionnaireStepper />
@@ -58,7 +73,7 @@ const WorkbenchPageContent = () => {
       label: t('profilation.tabs.settings'),
       children: <CertificateCard />
     }
-  ]
+  ], [importVisible, t])
 
   return (
     <Tabs
@@ -66,6 +81,8 @@ const WorkbenchPageContent = () => {
       tabBarGutter={16}
       style={{ width: '100%' }}
       destroyInactiveTabPane={false}
+      activeKey={activeKey}
+      onChange={handleTabChange}
     />
   )
 }

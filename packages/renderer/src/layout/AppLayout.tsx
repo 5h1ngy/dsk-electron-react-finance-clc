@@ -38,50 +38,71 @@ const AppLayout = ({ children }: AppLayoutProps) => {
     return [`/${first ?? ''}`]
   }, [location.pathname])
 
+  const tabKey = new URLSearchParams(location.search).get('tab') ?? 'questionnaire'
+
   const breadcrumbItems = useMemo(() => {
-    const mapping: Record<string, string> = {
-      '/': t('app.menu.workbench'),
-      '/prodotti': t('app.menu.products'),
-      '/impostazioni': t('app.menu.settings')
+    const rootItem = {
+      title: (
+        <Typography.Title level={4} style={{ margin: 0 }}>
+          {t('app.menu.workbench')}
+        </Typography.Title>
+      ),
+      onClick: () => {
+        if (location.pathname !== '/' || tabKey !== 'questionnaire') {
+          navigate('/')
+        }
+      }
     }
 
     if (location.pathname === '/') {
-      return [
-        {
-          title: mapping['/'],
-          onClick: () => navigate('/')
-        }
-      ]
+      const tabMap: Record<string, string> = {
+        questionnaire: t('profilation.tabs.questionnaire'),
+        suggestions: t('profilation.tabs.suggestions'),
+        risk: t('profilation.tabs.risk'),
+        settings: t('profilation.tabs.settings')
+      }
+
+      if (tabKey !== 'questionnaire' && tabMap[tabKey]) {
+        return [
+          rootItem,
+          {
+            title: <Typography.Text>{tabMap[tabKey]}</Typography.Text>,
+            onClick: () => navigate(tabKey === 'questionnaire' ? '/' : `/?tab=${tabKey}`)
+          }
+        ]
+      }
+
+      return [rootItem]
     }
 
-    const segments = location.pathname.split('/').filter(Boolean)
-    const items = [
+    const pageMap: Record<string, { label: string; href: string }> = {
+      '/prodotti': { label: t('app.menu.products'), href: '/prodotti' },
+      '/impostazioni': { label: t('app.menu.settings'), href: '/impostazioni' }
+    }
+    const entry = pageMap[location.pathname]
+
+    if (!entry) {
+      return [rootItem]
+    }
+
+    return [
+      rootItem,
       {
-        title: mapping['/'],
-        onClick: () => navigate('/')
+        title: <Typography.Text>{entry.label}</Typography.Text>,
+        onClick: () => navigate(entry.href)
       }
     ]
-    let path = ''
-    segments.forEach((segment) => {
-      path += `/${segment}`
-      if (mapping[path]) {
-        items.push({
-          title: mapping[path],
-          onClick: () => navigate(path)
-        })
-      }
-    })
-    return items
-  }, [location.pathname, navigate, t])
+  }, [location.pathname, navigate, tabKey, t])
 
   return (
-    <Layout style={{ minHeight: '100vh', background: token.colorBgLayout }}>
+    <Layout style={{ minHeight: '100vh', background: token.colorBgLayout, overflow: 'hidden' }}>
       <Layout
         style={{
           display: 'flex',
-          gap: token.marginLG,
-          padding: token.marginLG,
-          background: 'transparent'
+          gap: token.marginMD,
+          padding: token.marginMD,
+          background: 'transparent',
+          minHeight: '100vh'
         }}
       >
         <Sider
@@ -99,11 +120,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
             transition: 'all 0.3s ease'
           }}
         >
-          <Space
-            direction="vertical"
-            size="large"
-            style={{ width: '100%' }}
-          >
+          <Space direction="vertical" size="large" style={{ width: '100%', height: '100%', display: 'flex' }}>
             <div
               style={{
                 padding: token.paddingSM,
@@ -121,7 +138,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
               selectedKeys={selectedKeys}
               items={menuItems}
               onClick={({ key }) => navigate(key)}
-              style={{ border: 'none' }}
+              style={{ border: 'none', flex: 1 }}
             />
           </Space>
         </Sider>
@@ -133,7 +150,9 @@ const AppLayout = ({ children }: AppLayoutProps) => {
             boxShadow: token.boxShadowSecondary,
             display: 'flex',
             flexDirection: 'column',
-            gap: token.marginMD
+            gap: token.marginSM,
+            flex: 1,
+            minHeight: 0
           }}
         >
           <AppLayoutHeader
@@ -142,7 +161,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
             breadcrumbItems={breadcrumbItems}
             toggleLabel={collapsed ? t('layout.expand') : t('layout.collapse')}
           />
-          <Content style={{ padding: 0, overflow: 'auto' }}>{children}</Content>
+          <Content style={{ padding: 0, flex: 1, minHeight: 0, overflowY: 'auto' }}>{children}</Content>
         </Layout>
       </Layout>
     </Layout>

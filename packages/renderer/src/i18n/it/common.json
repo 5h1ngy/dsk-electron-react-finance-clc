@@ -32,14 +32,29 @@
       "aum": "AUM (M€)",
       "yield": "Rendimento YTD",
       "updated": "Aggiornato"
-    }
+    },
+    "actions": {
+      "loadDemo": "Carica demo (.demo/finance_tools.xlsx)",
+      "upload": "Carica Excel"
+    },
+    "errors": {
+      "load": "Impossibile leggere il file strumenti"
+    },
+    "empty": "Nessun prodotto disponibile"
   },
   "settings": {
     "title": "Impostazioni",
     "appearance": {
       "title": "Aspetto grafico",
+      "mode": "Tema",
+      "dark": "Tema scuro",
+      "light": "Tema chiaro",
+      "darkShort": "Dark",
+      "lightShort": "Light",
       "primary": "Colore primario",
+      "primaryHint": "Il colore primario è definito dal tema dell'interfaccia",
       "secondary": "Colore secondario",
+      "secondaryPalette": "Palette colore secondario",
       "reset": "Ripristina colori"
     }
   },

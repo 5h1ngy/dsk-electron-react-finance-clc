@@ -1,5 +1,5 @@
 import { Controller, type Control, type FieldErrors } from 'react-hook-form'
-import { Alert, Button, InputNumber, Radio, Space, Steps, Typography } from 'antd'
+import { Alert, Button, Card, InputNumber, Radio, Space, Steps, Typography, theme } from 'antd'
 
 import type { QuestionnaireResponses } from '@engines/questionnaire'
 
@@ -51,66 +51,84 @@ const QuestionnaireStepperContent = ({
   steps,
   section,
   isLastStep
-}: QuestionnaireStepperContentProps) => (
-  <Space direction="vertical" size="large" style={{ width: '100%' }}>
-    <Steps current={currentStep} onChange={handleStepChange} responsive items={steps} />
-    {validationErrors.length > 0 ? <Alert type="warning" message={copy.alert} showIcon /> : null}
-    <Space direction="vertical" size="large">
-      {section.questions.map((question) => (
-        <Space key={question.id} direction="vertical" size={8}>
-          <Space align="baseline">
-            <Typography.Text strong>{question.label}</Typography.Text>
-            {question.required ? <Typography.Text type="danger">*</Typography.Text> : null}
-          </Space>
-          <Controller
-            name={question.id}
-            control={control}
-            render={({ field }) =>
-              question.type === 'single_choice' ? (
-                <Radio.Group
-                  {...field}
-                  optionType="button"
-                  buttonStyle="solid"
-                  style={{ width: '100%' }}
-                >
-                  {(question.options ?? []).map((option) => (
-                    <Radio.Button key={option} value={option} style={{ flex: 1, textAlign: 'center' }}>
-                      {option}
-                    </Radio.Button>
-                  ))}
-                </Radio.Group>
-              ) : (
-                <InputNumber
-                  {...field}
-                  value={field.value ?? undefined}
-                  onChange={(value) => field.onChange(value === null ? undefined : value)}
-                  style={{ width: '100%' }}
-                  min={question.min}
-                  max={question.max}
-                  addonAfter={question.unit}
-                  step={question.type === 'percentage' ? 1 : 0.5}
-                />
-              )
-            }
-          />
-          {errors[question.id]?.message ? (
-            <Typography.Text type="danger" style={{ fontSize: 12 }}>
-              {String(errors[question.id]?.message)}
-            </Typography.Text>
-          ) : null}
-        </Space>
-      ))}
+}: QuestionnaireStepperContentProps) => {
+  const { token } = theme.useToken()
+
+  return (
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <div
+        style={{
+          background: token.colorFillTertiary,
+          padding: token.paddingSM,
+          borderRadius: token.borderRadiusLG
+        }}
+      >
+        <Steps
+          type="navigation"
+          size="small"
+          current={currentStep}
+          onChange={handleStepChange}
+          items={steps.map((step) => ({ ...step }))}
+        />
+      </div>
+      {validationErrors.length > 0 ? <Alert type="warning" message={copy.alert} showIcon /> : null}
+      <Space direction="vertical" size="middle">
+        {section.questions.map((question) => (
+          <Card key={question.id} size="small" bodyStyle={{ display: 'flex', flexDirection: 'column', gap: token.marginXS }}>
+            <Space align="baseline">
+              <Typography.Text strong>{question.label}</Typography.Text>
+              {question.required ? <Typography.Text type="danger">*</Typography.Text> : null}
+            </Space>
+            <Controller
+              name={question.id}
+              control={control}
+              render={({ field }) =>
+                question.type === 'single_choice' ? (
+                  <Radio.Group
+                    {...field}
+                    optionType="button"
+                    buttonStyle="solid"
+                    style={{ width: '100%' }}
+                  >
+                    {(question.options ?? []).map((option) => (
+                      <Radio.Button key={option} value={option} style={{ flex: 1, textAlign: 'center' }}>
+                        {option}
+                      </Radio.Button>
+                    ))}
+                  </Radio.Group>
+                ) : (
+                  <InputNumber
+                    {...field}
+                    value={field.value ?? undefined}
+                    onChange={(value) => field.onChange(value === null ? undefined : value)}
+                    style={{ width: '100%' }}
+                    min={question.min}
+                    max={question.max}
+                    addonAfter={question.unit}
+                    step={question.type === 'percentage' ? 1 : 0.5}
+                  />
+                )
+              }
+            />
+            {errors[question.id]?.message ? (
+              <Typography.Text type="danger" style={{ fontSize: 12 }}>
+                {String(errors[question.id]?.message)}
+              </Typography.Text>
+            ) : null}
+          </Card>
+        ))}
+      </Space>
+      <Alert type="info" message={copy.info} showIcon />
+      <Space>
+        <Button onClick={handleBack} disabled={currentStep === 0}>
+          {copy.nav.back}
+        </Button>
+        <Button type="primary" onClick={handleNext}>
+          {isLastStep ? copy.nav.finish : copy.nav.next}
+        </Button>
+      </Space>
     </Space>
-    <Alert type="info" message={copy.info} showIcon />
-    <Space>
-      <Button onClick={handleBack} disabled={currentStep === 0}>
-        {copy.nav.back}
-      </Button>
-      <Button type="primary" onClick={handleNext}>
-        {isLastStep ? copy.nav.finish : copy.nav.next}
-      </Button>
-    </Space>
-  </Space>
-)
+  )
+}
 
 export default QuestionnaireStepperContent
