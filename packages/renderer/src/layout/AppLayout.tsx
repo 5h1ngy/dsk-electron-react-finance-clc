@@ -162,7 +162,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
           />
           <Content
             style={{
-              padding: token.paddingMD,
+              padding: `${token.paddingSM}px ${token.paddingMD}px ${token.paddingMD}px`,
               flex: 1,
               minHeight: 0,
               overflowY: 'auto'
