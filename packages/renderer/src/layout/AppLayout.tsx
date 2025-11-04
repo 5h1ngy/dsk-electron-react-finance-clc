@@ -1,5 +1,5 @@
 import { AppstoreOutlined, BankOutlined, SettingOutlined } from '@ant-design/icons'
-import { Layout, Menu, Space, Typography, theme } from 'antd'
+import { Layout, Menu, Typography, theme } from 'antd'
 import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -115,19 +115,28 @@ const AppLayout = ({ children }: AppLayoutProps) => {
           trigger={null}
           onBreakpoint={(broken) => setCollapsed(broken)}
           style={{
-            background: token.colorBgContainer,
-            borderRadius: token.borderRadiusLG,
-            padding: siderPadding,
-            height: `calc(100vh - ${containerPaddingY * 2}px)`,
-            boxShadow: token.boxShadowSecondary,
-            transition: 'all 0.3s ease',
+            background: 'transparent',
             position: 'sticky',
-            top: containerPaddingY,
-            alignSelf: 'flex-start',
-            overflow: 'auto'
+            top: 0,
+            height: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden'
           }}
         >
-          <Space direction="vertical" size="large" style={{ width: '100%', height: '100%', display: 'flex' }}>
+          <div
+            style={{
+              margin: `${containerPaddingY}px ${containerPaddingX / 2}px ${containerPaddingY}px ${containerPaddingX / 2}px`,
+              background: token.colorBgContainer,
+              borderRadius: token.borderRadiusLG,
+              padding: siderPadding,
+              boxShadow: token.boxShadowSecondary,
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden'
+            }}
+          >
             <div
               style={{
                 padding: token.paddingSM,
@@ -145,9 +154,9 @@ const AppLayout = ({ children }: AppLayoutProps) => {
               selectedKeys={selectedKeys}
               items={menuItems}
               onClick={({ key }) => navigate(key)}
-              style={{ border: 'none', flex: 1 }}
+              style={{ border: 'none', flex: 1, overflowY: 'auto', marginTop: token.marginMD }}
             />
-          </Space>
+          </div>
         </Sider>
         <Layout
           style={{
