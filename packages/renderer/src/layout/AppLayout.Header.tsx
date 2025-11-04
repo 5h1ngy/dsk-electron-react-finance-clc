@@ -36,8 +36,7 @@ const AppLayoutHeader = ({ collapsed, onToggle, breadcrumbItems, toggleLabel }: 
               height: 44,
               display: 'inline-flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: token.boxShadowSecondary
+              justifyContent: 'center'
             }}
           />
           <Breadcrumb

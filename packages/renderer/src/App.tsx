@@ -20,6 +20,22 @@ import {
 import { ThemeSettingsContext, type ThemeColors } from '@renderer/theme/context'
 import '@renderer/i18n'
 
+const hexToRgba = (hex: string, alpha: number) => {
+  const normalized = hex.replace('#', '')
+  const hexValue =
+    normalized.length === 3
+      ? normalized
+          .split('')
+          .map((char) => char + char)
+          .join('')
+      : normalized.padEnd(6, '0')
+  const bigint = parseInt(hexValue.slice(0, 6), 16)
+  const r = (bigint >> 16) & 255
+  const g = (bigint >> 8) & 255
+  const b = bigint & 255
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
 const App = () => {
   const [secondary, setSecondary] = useState<string>(DEFAULT_SECONDARY)
   const [mode, setMode] = useState<'light' | 'dark'>('light')
@@ -79,6 +95,37 @@ const App = () => {
               mode === 'dark'
                 ? 'rgba(56, 189, 248, 0.16)'
                 : 'rgba(11, 165, 236, 0.08)'
+          },
+          Tabs: {
+            ...(appTheme.components?.Tabs ?? {}),
+            inkBarColor: colors.secondary,
+            itemSelectedColor: colors.secondary,
+            itemHoverColor: colors.secondary,
+            itemActiveColor: colors.secondary
+          },
+          Steps: {
+            ...(appTheme.components?.Steps ?? {}),
+            colorPrimary: colors.secondary,
+            colorPrimaryBorder: colors.secondary,
+            colorText: textColor,
+            colorTextDescription: textColor,
+            colorWait: mode === 'dark' ? '#334155' : '#cbd5f5'
+          },
+          Progress: {
+            ...(appTheme.components?.Progress ?? {}),
+            defaultColor: colors.secondary,
+            remainingColor: mode === 'dark' ? '#1f2937' : '#e2e8f0'
+          },
+          Tag: {
+            ...(appTheme.components?.Tag ?? {}),
+            defaultColor: colors.secondary,
+            defaultBg: hexToRgba(colors.secondary, 0.12),
+            defaultBorderColor: hexToRgba(colors.secondary, 0.25)
+          },
+          Switch: {
+            ...(appTheme.components?.Switch ?? {}),
+            colorPrimary: colors.secondary,
+            colorPrimaryHover: colors.secondary
           }
         },
         algorithm: [mode === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm]
