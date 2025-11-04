@@ -2,10 +2,13 @@ import { Alert, Button, Empty, Space, Table, Tag, Upload, Typography, theme } fr
 import type { UploadProps } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { UploadOutlined } from '@ant-design/icons'
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { parseFinanceWorkbook } from '@engines/importers/financeWorkbook'
+import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
+import { selectProducts, setProductUniverse } from '@renderer/store/slices/productUniverse'
+import { selectFinanceImport, setFinanceImport } from '@renderer/store/slices/workspace'
 
 interface ProductRow {
   key: string
@@ -20,7 +23,9 @@ interface ProductRow {
 const ProductsPageContent = () => {
   const { t } = useTranslation()
   const { token } = theme.useToken()
-  const [data, setData] = useState<ProductRow[]>([])
+  const dispatch = useAppDispatch()
+  const products = useAppSelector(selectProducts)
+  const financeImport = useAppSelector(selectFinanceImport)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -78,26 +83,41 @@ const ProductsPageContent = () => {
     ]
   }, [t])
 
-  const hydrateData = useCallback((rows: ProductRow[]) => {
-    setData(rows)
-    setError(null)
-  }, [])
+  const rows = useMemo<ProductRow[]>(() => {
+    if (!products.length) {
+      return []
+    }
+    return products.map((product, index) => ({
+      key: `${product.name}-${index}`,
+      name: product.name,
+      category: product.category,
+      risk: product.riskBand,
+      aum: Math.round(150 + index * 120 + Math.random() * 80),
+      yield: Number((2 + Math.random() * 6).toFixed(2)),
+      updated: financeImport?.importedAt
+        ? new Date(financeImport.importedAt).toLocaleDateString()
+        : new Date().toLocaleDateString()
+    }))
+  }, [financeImport?.importedAt, products])
 
   const handleUpload: UploadProps['beforeUpload'] = async (file) => {
     try {
       setLoading(true)
       setError(null)
       const summary = await parseFinanceWorkbook(file)
-      hydrateData(
-        summary.products.map((product, index) => ({
-          key: `${index}`,
-          name: product.name,
-          category: product.category,
-          risk: product.riskBand,
-          aum: Math.round(150 + index * 120 + Math.random() * 80),
-          yield: Number((2 + Math.random() * 6).toFixed(2)),
-          updated: new Date().toLocaleDateString()
-        }))
+      dispatch(
+        setProductUniverse({
+          products: summary.products,
+          categories: summary.categories
+        })
+      )
+      dispatch(
+        setFinanceImport({
+          fileName: file.name,
+          importedAt: new Date().toISOString(),
+          instruments: summary.instruments,
+          categories: summary.categories
+        })
       )
     } catch (e) {
       setError(e instanceof Error ? e.message : t('products.errors.load'))
@@ -120,10 +140,10 @@ const ProductsPageContent = () => {
         </Upload>
       </Space>
       {error ? <Alert type="error" message={error} showIcon /> : null}
-      {data.length > 0 ? (
+      {rows.length > 0 ? (
         <Table
           columns={columns}
-          dataSource={data}
+          dataSource={rows}
           loading={loading}
           pagination={{ pageSize: 10, showSizeChanger: false }}
           rowKey="key"
