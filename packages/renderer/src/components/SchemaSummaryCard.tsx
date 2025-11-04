@@ -1,6 +1,7 @@
-import { Card, List, Statistic, Typography } from 'antd'
+import { Card, Typography } from 'antd'
 
 import { useSchemaSummaryCard } from '@renderer/components/SchemaSummaryCard.hooks'
+import SchemaSummaryCardContent from '@renderer/components/SchemaSummaryCard.Content'
 
 const SchemaSummaryCard = () => {
   const { title, isLoading, hasSchema, stats, labels, emptyText } = useSchemaSummaryCard()
@@ -17,21 +18,7 @@ const SchemaSummaryCard = () => {
     )
   }
 
-  return (
-    <Card title={title} size="small" bordered>
-      <List size="small">
-        <List.Item>
-          <Statistic title={labels.version} value={stats.version} />
-        </List.Item>
-        <List.Item>
-          <Statistic title={labels.sections} value={stats.sections} />
-        </List.Item>
-        <List.Item>
-          <Statistic title={labels.questions} value={stats.questions} />
-        </List.Item>
-      </List>
-    </Card>
-  )
+  return <SchemaSummaryCardContent title={title} labels={labels} stats={stats} />
 }
 
 export default SchemaSummaryCard

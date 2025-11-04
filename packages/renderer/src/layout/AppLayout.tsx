@@ -1,13 +1,13 @@
 import { BankOutlined, ExperimentOutlined } from '@ant-design/icons'
-import { Flex, Layout, Menu, Typography, theme } from 'antd'
+import { Layout, theme } from 'antd'
 import type { ReactNode } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
-import { HealthStatusTag } from '@renderer/components/HealthStatus'
 import { useHealthStatus } from '@renderer/hooks/useHealthStatus'
+import AppLayoutHeader from '@renderer/layout/AppLayout.Header'
 
-const { Header, Content } = Layout
+const { Content } = Layout
 
 interface AppLayoutProps {
   children: ReactNode
@@ -27,31 +27,13 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 
   return (
     <Layout style={{ minHeight: '100vh', background: token.colorBgLayout }}>
-      <Header>
-        <Flex align="center" justify="space-between" gap="large">
-          <Flex align="center" gap="large" style={{ flex: 1, minWidth: 0 }}>
-            <Typography.Title level={4} style={{ margin: 0 }}>
-              {t('app.title')}
-            </Typography.Title>
-            <Menu
-              theme="dark"
-              mode="horizontal"
-              selectedKeys={[location.pathname]}
-              items={menuItems}
-              onClick={({ key }) => navigate(String(key))}
-              style={{ flex: 1, minWidth: 0 }}
-              overflowedIndicator={null}
-            />
-          </Flex>
-          <HealthStatusTag
-            snapshot={snapshot}
-            loading={loading}
-            error={error}
-            onRefresh={refresh}
-            tone="dark"
-          />
-        </Flex>
-      </Header>
+      <AppLayoutHeader
+        title={t('app.title')}
+        menuItems={menuItems}
+        selectedKey={location.pathname}
+        onNavigate={(key) => navigate(key)}
+        health={{ snapshot, loading, error, onRefresh: refresh }}
+      />
       <Content style={{ padding: token.paddingLG, overflow: 'auto' }}>{children}</Content>
     </Layout>
   )
