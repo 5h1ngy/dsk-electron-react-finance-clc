@@ -1,36 +1,20 @@
-import { Card, List, Progress, Typography, Tooltip } from 'antd'
+import { Space, Typography } from 'antd'
 
 import { useSectionCompletionCard } from '@renderer/components/SectionCompletionCard.hooks'
+import SectionCompletionCardContent from '@renderer/components/SectionCompletionCard.Content'
 
 const SectionCompletionCard = () => {
   const { title, emptyText, hasSchema, items } = useSectionCompletionCard()
 
   if (!hasSchema) {
-    return (
-      <Card title={title} size="small">
-        <Typography.Text type="secondary">{emptyText}</Typography.Text>
-      </Card>
-    )
+    return <Typography.Text type="secondary">{emptyText}</Typography.Text>
   }
 
   return (
-    <Card title={title} size="small" style={{ height: '100%' }}>
-      <List
-        dataSource={items}
-        renderItem={(item) => (
-          <List.Item>
-            <List.Item.Meta
-              title={item.title}
-              description={
-                <Tooltip title={`${item.percent}%`}>
-                  <Progress percent={item.percent} size="small" showInfo />
-                </Tooltip>
-              }
-            />
-          </List.Item>
-        )}
-      />
-    </Card>
+    <Space direction="vertical" size={4} style={{ width: '100%' }}>
+      <Typography.Text strong>{title}</Typography.Text>
+      <SectionCompletionCardContent items={items} />
+    </Space>
   )
 }
 

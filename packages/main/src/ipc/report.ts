@@ -19,10 +19,11 @@ interface CertificatePayload {
 export interface ReportExportPayload {
   pdfBase64: string
   suggestedName: string
-  certificate: CertificatePayload
+  certificate?: CertificatePayload
   metadata: ReportMetadataPayload
   includeManifest?: boolean
   includeHashFile?: boolean
+  skipSignature?: boolean
 }
 
 export interface ReportExportResponse {
@@ -67,11 +68,21 @@ export const registerReportIpc = (): void => {
           return { ok: true, cancelled: true }
         }
 
+        const pdfBuffer = Buffer.from(payload.pdfBase64, 'base64')
+
+        if (payload.skipSignature) {
+          await writeFile(filePath, pdfBuffer)
+          logger.success(`PDF esportato senza firma in ${filePath}`, 'Report')
+          return {
+            ok: true,
+            savedAt: new Date().toISOString()
+          }
+        }
+
         if (!payload.certificate?.base64 || !payload.certificate.password) {
           return { ok: false, message: 'Certificato P12 non fornito.' }
         }
 
-        const pdfBuffer = Buffer.from(payload.pdfBase64, 'base64')
         const { pdf, hash, manifest } = signReport({
           pdfBuffer,
           certificateBase64: payload.certificate.base64,

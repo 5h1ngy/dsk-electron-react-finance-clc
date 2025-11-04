@@ -1,13 +1,13 @@
-import { BankOutlined, ExperimentOutlined } from '@ant-design/icons'
-import { Layout, Menu, Space, Typography } from 'antd'
+import { AppstoreOutlined, BankOutlined, SettingOutlined } from '@ant-design/icons'
+import { Layout, Menu, Space, Typography, theme } from 'antd'
 import type { ReactNode } from 'react'
+import { useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
-import { HealthStatusTag } from '@renderer/components/HealthStatus'
-import { useHealthStatus } from '@renderer/hooks/useHealthStatus'
+import AppLayoutHeader from '@renderer/layout/AppLayout.Header'
 
-const { Header, Content } = Layout
+const { Sider, Content } = Layout
 
 interface AppLayoutProps {
   children: ReactNode
@@ -16,51 +16,162 @@ interface AppLayoutProps {
 const AppLayout = ({ children }: AppLayoutProps) => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { snapshot, loading, error, refresh } = useHealthStatus()
   const { t } = useTranslation()
+  const { token } = theme.useToken()
+  const [collapsed, setCollapsed] = useState(false)
+  const siderPadding = collapsed ? token.paddingSM : token.paddingLG
 
-  const menuItems = [
-    { key: '/', label: t('app.menu.workbench'), icon: <BankOutlined /> },
-    { key: '/diagnostics', label: t('app.menu.diagnostics'), icon: <ExperimentOutlined /> }
-  ]
+  const menuItems = useMemo(
+    () => [
+      { key: '/', label: t('app.menu.workbench'), icon: <BankOutlined /> },
+      { key: '/prodotti', label: t('app.menu.products'), icon: <AppstoreOutlined /> },
+      { key: '/impostazioni', label: t('app.menu.settings'), icon: <SettingOutlined /> }
+    ],
+    [t]
+  )
+
+  const selectedKeys = useMemo(() => {
+    if (location.pathname === '/') {
+      return ['/']
+    }
+    const [first] = location.pathname.split('/').filter(Boolean)
+    return [`/${first ?? ''}`]
+  }, [location.pathname])
+
+  const tabKey = new URLSearchParams(location.search).get('tab') ?? 'questionnaire'
+
+  const breadcrumbItems = useMemo(() => {
+    const rootItem = {
+      title: (
+        <Typography.Title level={4} style={{ margin: 0 }}>
+          {t('app.menu.workbench')}
+        </Typography.Title>
+      ),
+      onClick: () => {
+        if (location.pathname !== '/' || tabKey !== 'questionnaire') {
+          navigate('/')
+        }
+      }
+    }
+
+    if (location.pathname === '/') {
+      const tabMap: Record<string, string> = {
+        questionnaire: t('profilation.tabs.questionnaire'),
+        suggestions: t('profilation.tabs.suggestions'),
+        risk: t('profilation.tabs.risk'),
+        settings: t('profilation.tabs.settings')
+      }
+
+      if (tabKey !== 'questionnaire' && tabMap[tabKey]) {
+        return [
+          rootItem,
+          {
+            title: <Typography.Text>{tabMap[tabKey]}</Typography.Text>,
+            onClick: () => navigate(tabKey === 'questionnaire' ? '/' : `/?tab=${tabKey}`)
+          }
+        ]
+      }
+
+      return [rootItem]
+    }
+
+    const pageMap: Record<string, { label: string; href: string }> = {
+      '/prodotti': { label: t('app.menu.products'), href: '/prodotti' },
+      '/impostazioni': { label: t('app.menu.settings'), href: '/impostazioni' }
+    }
+    const entry = pageMap[location.pathname]
+
+    if (!entry) {
+      return [rootItem]
+    }
+
+    return [
+      rootItem,
+      {
+        title: <Typography.Text>{entry.label}</Typography.Text>,
+        onClick: () => navigate(entry.href)
+      }
+    ]
+  }, [location.pathname, navigate, tabKey, t])
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Header
+    <Layout style={{ minHeight: '100vh', background: token.colorBgLayout, overflow: 'hidden' }}>
+      <Layout
         style={{
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 24,
-          paddingInline: 32,
-          background: '#041529'
+          gap: token.marginMD,
+          padding: token.marginMD,
+          background: 'transparent',
+          minHeight: '100vh'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 32, flex: 1, minWidth: 0 }}>
-          <Typography.Title level={4} style={{ color: '#fff', margin: 0 }}>
-            {t('app.title')}
-          </Typography.Title>
-          <Menu
-            theme="dark"
-            mode="horizontal"
-            selectedKeys={[location.pathname]}
-            items={menuItems}
-            onClick={({ key }) => navigate(String(key))}
-            style={{ borderBottom: 'none', background: 'transparent', flex: 1, minWidth: 0 }}
-            overflowedIndicator={null}
+        <Sider
+          width={260}
+          collapsedWidth={92}
+          collapsed={collapsed}
+          trigger={null}
+          style={{
+            background: token.colorBgContainer,
+            borderRadius: token.borderRadiusLG,
+            padding: siderPadding,
+            minHeight: '100vh',
+            height: '100%',
+            boxShadow: token.boxShadowSecondary,
+            transition: 'all 0.3s ease',
+            position: 'sticky',
+            top: token.marginMD
+          }}
+        >
+          <Space direction="vertical" size="large" style={{ width: '100%', height: '100%', display: 'flex' }}>
+            <div
+              style={{
+                padding: token.paddingSM,
+                borderRadius: token.borderRadiusLG,
+                background: token.colorFillTertiary,
+                textAlign: collapsed ? 'center' : 'left'
+              }}
+            >
+              <Typography.Title level={collapsed ? 5 : 4} style={{ margin: 0 }}>
+                {collapsed ? 'DSK' : t('app.title')}
+              </Typography.Title>
+            </div>
+            <Menu
+              mode="inline"
+              selectedKeys={selectedKeys}
+              items={menuItems}
+              onClick={({ key }) => navigate(key)}
+              style={{ border: 'none', flex: 1 }}
+            />
+          </Space>
+        </Sider>
+        <Layout
+          style={{
+            background: 'transparent',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: token.marginXS,
+            flex: 1,
+            minHeight: 0
+          }}
+        >
+          <AppLayoutHeader
+            collapsed={collapsed}
+            onToggle={() => setCollapsed((prev) => !prev)}
+            breadcrumbItems={breadcrumbItems}
+            toggleLabel={collapsed ? t('layout.expand') : t('layout.collapse')}
           />
-        </div>
-        <Space>
-          <HealthStatusTag
-            snapshot={snapshot}
-            loading={loading}
-            error={error}
-            onRefresh={refresh}
-            tone="dark"
-          />
-        </Space>
-      </Header>
-      <Content style={{ padding: 24, overflow: 'auto' }}>{children}</Content>
+          <Content
+            style={{
+              padding: token.paddingMD,
+              flex: 1,
+              minHeight: 0,
+              overflowY: 'auto'
+            }}
+          >
+            {children}
+          </Content>
+        </Layout>
+      </Layout>
     </Layout>
   )
 }

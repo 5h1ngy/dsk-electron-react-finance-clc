@@ -6,9 +6,14 @@ jest.mock('@renderer/pages/Workbench', () => ({
   default: () => <div>WorkbenchPage</div>
 }))
 
-jest.mock('@renderer/pages/Diagnostics', () => ({
+jest.mock('@renderer/pages/Products', () => ({
   __esModule: true,
-  default: () => <div>DiagnosticsPage</div>
+  default: () => <div>ProductsPage</div>
+}))
+
+jest.mock('@renderer/pages/Settings', () => ({
+  __esModule: true,
+  default: () => <div>SettingsPage</div>
 }))
 
 jest.mock('@renderer/layout/AppLayout', () => ({

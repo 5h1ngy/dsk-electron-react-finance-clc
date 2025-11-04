@@ -37,13 +37,22 @@ const baseHookValue = {
     placeholder: 'score.modal.placeholder',
     confirm: 'score.modal.confirm'
   },
+  unsignedModalCopy: {
+    title: 'score.modalUnsigned.title',
+    description: 'score.modalUnsigned.description',
+    confirm: 'score.modalUnsigned.confirm',
+    cancel: 'score.modalUnsigned.cancel'
+  },
   passwordModalOpen: false,
+  unsignedModalOpen: false,
   password: '',
   setPassword: jest.fn(),
   handleRecompute: jest.fn(),
   handleExportClick: jest.fn(),
   handleModalClose: jest.fn(),
   confirmExport: jest.fn(),
+  handleUnsignedClose: jest.fn(),
+  confirmUnsignedExport: jest.fn(),
   exporting: false,
   submitting: false,
   certificateFileName: 'cert.p12'

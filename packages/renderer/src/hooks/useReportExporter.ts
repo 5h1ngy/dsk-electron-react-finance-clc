@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { SCORING_ENGINE_VERSION } from '@renderer/config/versions'
-import { extractCertificateSummary, type CertificateSummary } from '@engines/signature'
+import { extractCertificateSummary } from '@engines/signature'
 import { generateRiskReport } from '@engines/report'
 import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
 import {
@@ -32,17 +32,14 @@ export const useReportExporter = () => {
   const { t } = useTranslation()
 
   const buildMetadata = useCallback(
-    (summary: CertificateSummary) => ({
+    () => ({
       schemaVersion: schema?.schemaVersion ?? 'unknown',
       scoringVersion: SCORING_ENGINE_VERSION,
       questionnaireTitle: schema?.title ?? 'unknown',
       generatedAt: new Date().toISOString(),
       riskClass: score?.riskClass ?? 'N/A',
       riskScore: score?.score ?? 0,
-      volatility: score?.volatilityBand ?? 'N/A',
-      certificateSubject: summary.subject,
-      certificateIssuer: summary.issuer,
-      certificateSerial: summary.serialNumber
+      volatility: score?.volatilityBand ?? 'N/A'
     }),
     [schema?.schemaVersion, schema?.title, score?.riskClass, score?.score, score?.volatilityBand]
   )
@@ -65,6 +62,7 @@ export const useReportExporter = () => {
       try {
         const bytes = await generateRiskReport({ schema, responses, score })
         const base64 = toBase64(bytes)
+        const metadata = buildMetadata()
         const certificateSummary = extractCertificateSummary(certificate.base64, password)
         const suggestedName = `risk-report-${new Date().toISOString().split('T')[0]}.pdf`
         const response = await window.api.report.exportPdf({
@@ -75,7 +73,7 @@ export const useReportExporter = () => {
             password,
             fileName: certificate.fileName
           },
-          metadata: buildMetadata(certificateSummary),
+          metadata,
           includeManifest: true,
           includeHashFile: true
         })
@@ -108,5 +106,44 @@ export const useReportExporter = () => {
     [buildMetadata, certificate, dispatch, responses, schema, score, t]
   )
 
-  return { exportReport, exporting }
+  const exportUnsignedReport = useCallback(async (): Promise<boolean> => {
+    if (!schema || !score) {
+      message.warning(t('report.messages.missingData'))
+      return false
+    }
+    setExporting(true)
+    try {
+      const bytes = await generateRiskReport({ schema, responses, score })
+      const base64 = toBase64(bytes)
+      const suggestedName = `risk-report-${new Date().toISOString().split('T')[0]}-unsigned.pdf`
+      const response = await window.api.report.exportPdf({
+        pdfBase64: base64,
+        suggestedName,
+        metadata: buildMetadata(),
+        skipSignature: true
+      })
+      if (!response.ok) {
+        message.error(response.message ?? t('report.messages.exportError'))
+        return false
+      }
+      if (response.cancelled) {
+        return false
+      }
+      dispatch(
+        setReportExport({
+          fileName: suggestedName,
+          exportedAt: response.savedAt ?? new Date().toISOString()
+        })
+      )
+      message.success(t('report.messages.success'))
+      return true
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : t('report.messages.unexpected'))
+      return false
+    } finally {
+      setExporting(false)
+    }
+  }, [buildMetadata, dispatch, responses, schema, score, t])
+
+  return { exportReport, exportUnsignedReport, exporting }
 }

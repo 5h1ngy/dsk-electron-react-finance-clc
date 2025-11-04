@@ -1,5 +1,5 @@
 import { ClockCircleOutlined, ReloadOutlined } from '@ant-design/icons'
-import { Button, Space, Tag, Tooltip, Typography } from 'antd'
+import { Button, Space, Tag, Tooltip, Typography, theme } from 'antd'
 import { useTranslation } from 'react-i18next'
 
 import type { HealthSnapshot } from '@main/ipc/health'
@@ -12,29 +12,6 @@ interface StatusTagProps {
   tone?: 'light' | 'dark'
 }
 
-const tonePalette = {
-  light: {
-    tagSuccess: { backgroundColor: '#f0fff4', color: '#15803d' },
-    tagError: { backgroundColor: '#fef2f2', color: '#b91c1c' },
-    text: '#475467',
-    refresh: '#475467'
-  },
-  dark: {
-    tagSuccess: {
-      backgroundColor: 'rgba(34,197,94,0.12)',
-      color: '#e4ffe5',
-      border: 'none' as const
-    },
-    tagError: {
-      backgroundColor: 'rgba(248,113,113,0.16)',
-      color: '#ffe2e5',
-      border: 'none' as const
-    },
-    text: '#e2e8f0',
-    refresh: '#e2e8f0'
-  }
-}
-
 const HealthStatusTag = ({
   snapshot,
   loading,
@@ -43,7 +20,33 @@ const HealthStatusTag = ({
   tone = 'light'
 }: StatusTagProps) => {
   const { t } = useTranslation()
-  const palette = tonePalette[tone]
+  const { token } = theme.useToken()
+
+  const darkSuccessBg = token.colorSuccessBgHover ?? token.colorSuccessBg
+  const darkErrorBg = token.colorErrorBgHover ?? token.colorErrorBg
+
+  const palette =
+    tone === 'dark'
+      ? {
+          tagSuccess: {
+            backgroundColor: darkSuccessBg,
+            color: token.colorWhite,
+            border: 'none' as const
+          },
+          tagError: {
+            backgroundColor: darkErrorBg,
+            color: token.colorWhite,
+            border: 'none' as const
+          },
+          text: token.colorTextLightSolid,
+          refresh: token.colorTextLightSolid
+        }
+      : {
+          tagSuccess: { backgroundColor: token.colorSuccessBg, color: token.colorSuccessText },
+          tagError: { backgroundColor: token.colorErrorBg, color: token.colorErrorText },
+          text: token.colorTextSecondary,
+          refresh: token.colorTextSecondary
+        }
 
   if (error) {
     return (
