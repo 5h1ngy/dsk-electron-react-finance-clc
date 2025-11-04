@@ -20,6 +20,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   const { token } = theme.useToken()
   const [collapsed, setCollapsed] = useState(false)
   const siderPadding = collapsed ? token.paddingSM : token.paddingLG
+  const containerPadding = token.marginMD
 
   const menuItems = useMemo(
     () => [
@@ -99,27 +100,30 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       <Layout
         style={{
           display: 'flex',
-          gap: token.marginMD,
-          padding: token.marginMD,
+          gap: containerPadding,
+          padding: containerPadding,
           background: 'transparent',
           minHeight: '100vh'
         }}
       >
         <Sider
+          breakpoint="lg"
           width={260}
           collapsedWidth={92}
           collapsed={collapsed}
           trigger={null}
+          onBreakpoint={(broken) => setCollapsed(broken)}
           style={{
             background: token.colorBgContainer,
             borderRadius: token.borderRadiusLG,
             padding: siderPadding,
-            height: 'max-content',
+            height: `calc(100vh - ${containerPadding * 2}px)`,
             boxShadow: token.boxShadowSecondary,
             transition: 'all 0.3s ease',
             position: 'sticky',
-            top: token.marginMD,
-            alignSelf: 'flex-start'
+            top: containerPadding,
+            alignSelf: 'flex-start',
+            overflow: 'auto'
           }}
         >
           <Space direction="vertical" size="large" style={{ width: '100%', height: '100%', display: 'flex' }}>
