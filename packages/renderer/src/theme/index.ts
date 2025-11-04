@@ -2,13 +2,11 @@ import type { ThemeConfig } from 'antd'
 
 type TokenOverrides = Record<string, string | number>
 
-export const LIGHT_PRIMARY = '#0ba5ec'
-export const DARK_PRIMARY = '#38bdf8'
-export const DEFAULT_SECONDARY = '#10b981'
+export const DEFAULT_ACCENT = '#10b981'
 
 export const LIGHT_TOKENS: TokenOverrides = {
-  colorPrimary: LIGHT_PRIMARY,
-  colorInfo: LIGHT_PRIMARY,
+  colorPrimary: DEFAULT_ACCENT,
+  colorInfo: DEFAULT_ACCENT,
   colorBgLayout: '#f5f7fa',
   colorBgContainer: '#ffffff',
   colorFillTertiary: '#e7f5ff',
@@ -26,8 +24,8 @@ export const LIGHT_TOKENS: TokenOverrides = {
 }
 
 export const DARK_TOKENS: TokenOverrides = {
-  colorPrimary: DARK_PRIMARY,
-  colorInfo: DARK_PRIMARY,
+  colorPrimary: DEFAULT_ACCENT,
+  colorInfo: DEFAULT_ACCENT,
   colorBgLayout: '#0f172a',
   colorBgContainer: '#1e293b',
   colorFillTertiary: '#16213b',
@@ -53,8 +51,8 @@ export const appTheme: ThemeConfig = {
       headerPadding: '0 32px'
     },
     Menu: {
-      itemSelectedColor: LIGHT_PRIMARY,
-      horizontalItemHoverColor: LIGHT_PRIMARY
+      itemSelectedColor: DEFAULT_ACCENT,
+      horizontalItemHoverColor: DEFAULT_ACCENT
     },
     Button: {
       borderRadius: 999,

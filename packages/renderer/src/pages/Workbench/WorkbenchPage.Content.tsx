@@ -7,8 +7,9 @@ import { useSearchParams } from 'react-router-dom'
 import CertificateCard from '@renderer/components/CertificateCard'
 import DemoUploadCard from '@renderer/components/DemoUploadCard'
 import QuestionnaireStepper from '@renderer/components/QuestionnaireStepper'
+import QuestionnaireStepperSwitcher from '@renderer/components/QuestionnaireStepper.Switcher'
+import { useQuestionnaireStepper } from '@renderer/components/QuestionnaireStepper.hooks'
 import ScoreCard from '@renderer/components/ScoreCard'
-import SectionCompletionCard from '@renderer/components/SectionCompletionCard'
 import SuggestedProductsCard from '@renderer/components/SuggestedProductsCard'
 
 const WorkbenchPageContent = () => {
@@ -17,6 +18,7 @@ const WorkbenchPageContent = () => {
   const [importVisible, setImportVisible] = useState(false)
   const { token } = theme.useToken()
   const marginXS = token.marginXS
+  const questionnaireModel = useQuestionnaireStepper()
 
   const activeKey = searchParams.get('tab') ?? 'questionnaire'
 
@@ -35,7 +37,7 @@ const WorkbenchPageContent = () => {
       label: t('profilation.tabs.questionnaire'),
       children: (
         <Space direction="vertical" size="middle" style={{ width: '100%', marginTop: marginXS }}>
-          <SectionCompletionCard />
+          <QuestionnaireStepperSwitcher model={questionnaireModel} />
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button
               icon={<InboxOutlined />}
@@ -49,7 +51,7 @@ const WorkbenchPageContent = () => {
           </div>
           <Row gutter={[16, 16]} align="stretch">
             <Col xs={24} xl={importVisible ? 14 : 24}>
-              <QuestionnaireStepper />
+              <QuestionnaireStepper model={questionnaireModel} />
             </Col>
             {importVisible ? (
               <Col xs={24} xl={10}>
@@ -75,7 +77,7 @@ const WorkbenchPageContent = () => {
       label: t('profilation.tabs.settings'),
       children: <CertificateCard />
     }
-  ], [importVisible, marginXS, t])
+  ], [importVisible, marginXS, questionnaireModel, t])
 
   return (
     <Tabs

@@ -1,5 +1,5 @@
 import { Controller, type Control, type FieldErrors } from 'react-hook-form'
-import { Alert, Button, Card, InputNumber, Radio, Space, Steps, Typography, theme } from 'antd'
+import { Alert, Button, Card, InputNumber, Radio, Space, Typography, theme } from 'antd'
 
 import type { QuestionnaireResponses } from '@engines/questionnaire'
 
@@ -32,9 +32,7 @@ interface QuestionnaireStepperContentProps {
   validationErrors: string[]
   handleNext: () => void
   handleBack: () => void
-  handleStepChange: (value: number) => void
   currentStep: number
-  steps: Array<{ key: string; title: string; disabled?: boolean }>
   section: Section
   isLastStep: boolean
 }
@@ -46,9 +44,7 @@ const QuestionnaireStepperContent = ({
   validationErrors,
   handleNext,
   handleBack,
-  handleStepChange,
   currentStep,
-  steps,
   section,
   isLastStep
 }: QuestionnaireStepperContentProps) => {
@@ -56,23 +52,6 @@ const QuestionnaireStepperContent = ({
 
   return (
     <Space direction="vertical" size="large" style={{ width: '100%' }}>
-      <div
-        style={{
-          background: token.colorFillTertiary,
-          padding: token.paddingSM,
-          borderRadius: token.borderRadiusLG,
-          overflowX: 'auto'
-        }}
-      >
-        <Steps
-          type="navigation"
-          size="small"
-          current={currentStep}
-          onChange={handleStepChange}
-          items={steps.map((step) => ({ ...step }))}
-          style={{ width: 'max-content', minWidth: '100%' }}
-        />
-      </div>
       {validationErrors.length > 0 ? <Alert type="warning" message={copy.alert} showIcon /> : null}
       <Space direction="vertical" size="middle">
         {section.questions.map((question) => (

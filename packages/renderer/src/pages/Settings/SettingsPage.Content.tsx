@@ -2,7 +2,7 @@ import { Button, Card, Form, Space, Switch, Typography } from 'antd'
 import { useTranslation } from 'react-i18next'
 
 import { useThemeSettings } from '@renderer/theme/context'
-import { DEFAULT_SECONDARY, LIGHT_PRIMARY } from '@renderer/theme'
+import { DEFAULT_ACCENT } from '@renderer/theme'
 
 const SECONDARY_OPTIONS = ['#10b981', '#f97316', '#6366f1', '#ec4899', '#14b8a6']
 
@@ -12,7 +12,7 @@ const SettingsPageContent = () => {
 
   const handleReset = () => {
     setMode('light')
-    setColors({ primary: LIGHT_PRIMARY, secondary: DEFAULT_SECONDARY })
+    setColors({ primary: DEFAULT_ACCENT, secondary: DEFAULT_ACCENT })
   }
 
   return (

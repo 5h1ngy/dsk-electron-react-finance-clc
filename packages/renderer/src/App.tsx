@@ -9,14 +9,7 @@ import WorkbenchPage from '@renderer/pages/Workbench'
 import ProductsPage from '@renderer/pages/Products'
 import SettingsPage from '@renderer/pages/Settings'
 import { store } from '@renderer/store'
-import {
-  appTheme,
-  DARK_PRIMARY,
-  DARK_TOKENS,
-  DEFAULT_SECONDARY,
-  LIGHT_PRIMARY,
-  LIGHT_TOKENS
-} from '@renderer/theme'
+import { appTheme, DARK_TOKENS, DEFAULT_ACCENT, LIGHT_TOKENS } from '@renderer/theme'
 import { ThemeSettingsContext, type ThemeColors } from '@renderer/theme/context'
 import '@renderer/i18n'
 
@@ -37,19 +30,25 @@ const hexToRgba = (hex: string, alpha: number) => {
 }
 
 const App = () => {
-  const [secondary, setSecondary] = useState<string>(DEFAULT_SECONDARY)
+  const [accent, setAccent] = useState<string>(DEFAULT_ACCENT)
   const [mode, setMode] = useState<'light' | 'dark'>('light')
 
   const colors = useMemo<ThemeColors>(
     () => ({
-      primary: mode === 'dark' ? DARK_PRIMARY : LIGHT_PRIMARY,
-      secondary
+      primary: accent,
+      secondary: accent
     }),
-    [mode, secondary]
+    [accent]
   )
 
   const setColors = useCallback((next: ThemeColors) => {
-    setSecondary(next.secondary)
+    if (next.secondary) {
+      setAccent(next.secondary)
+      return
+    }
+    if (next.primary) {
+      setAccent(next.primary)
+    }
   }, [])
 
   const themeConfig = useMemo(
@@ -66,22 +65,18 @@ const App = () => {
         ...appTheme,
         token: {
           ...baseTokens,
-          colorPrimary: colors.primary,
-          colorInfo: colors.primary,
-          colorSuccess: colors.secondary,
-          colorSecondary: colors.secondary
+          colorPrimary: accent,
+          colorInfo: accent,
+          colorSecondary: accent
         },
         components: {
           ...appTheme.components,
           Menu: {
             ...(appTheme.components?.Menu ?? {}),
-            itemSelectedColor: colors.primary,
-            horizontalItemHoverColor: colors.primary,
-            itemSelectedBg:
-              mode === 'dark'
-                ? 'rgba(56, 189, 248, 0.18)'
-                : 'rgba(11, 165, 236, 0.12)',
-            itemHoverColor: colors.primary,
+            itemSelectedColor: accent,
+            horizontalItemHoverColor: accent,
+            itemSelectedBg: hexToRgba(accent, mode === 'dark' ? 0.3 : 0.18),
+            itemHoverColor: accent,
             itemColor: textColor,
             itemBg: 'transparent'
           },
@@ -98,40 +93,40 @@ const App = () => {
           },
           Tabs: {
             ...(appTheme.components?.Tabs ?? {}),
-            inkBarColor: colors.secondary,
-            itemSelectedColor: colors.secondary,
-            itemHoverColor: colors.secondary,
-            itemActiveColor: colors.secondary
+            inkBarColor: accent,
+            itemSelectedColor: accent,
+            itemHoverColor: accent,
+            itemActiveColor: accent
           },
           Steps: {
             ...(appTheme.components?.Steps ?? {}),
-            colorPrimary: colors.secondary,
-            colorPrimaryBorder: colors.secondary,
+            colorPrimary: accent,
+            colorPrimaryBorder: accent,
             colorText: textColor,
             colorTextDescription: textColor,
             colorWait: mode === 'dark' ? '#334155' : '#cbd5f5'
           },
           Progress: {
             ...(appTheme.components?.Progress ?? {}),
-            defaultColor: colors.secondary,
+            defaultColor: accent,
             remainingColor: mode === 'dark' ? '#1f2937' : '#e2e8f0'
           },
           Tag: {
             ...(appTheme.components?.Tag ?? {}),
-            defaultColor: colors.secondary,
-            defaultBg: hexToRgba(colors.secondary, 0.12),
-            defaultBorderColor: hexToRgba(colors.secondary, 0.25)
+            defaultColor: accent,
+            defaultBg: hexToRgba(accent, 0.12),
+            defaultBorderColor: hexToRgba(accent, 0.25)
           },
           Switch: {
             ...(appTheme.components?.Switch ?? {}),
-            colorPrimary: colors.secondary,
-            colorPrimaryHover: colors.secondary
+            colorPrimary: accent,
+            colorPrimaryHover: accent
           }
         },
         algorithm: [mode === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm]
       }
     },
-    [colors, mode]
+    [accent, mode]
   )
 
   return (
