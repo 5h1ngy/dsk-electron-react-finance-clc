@@ -20,7 +20,8 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   const { token } = theme.useToken()
   const [collapsed, setCollapsed] = useState(false)
   const siderPadding = collapsed ? token.paddingSM : token.paddingLG
-  const containerPadding = token.marginMD
+  const containerPaddingX = token.marginMD
+  const containerPaddingY = token.marginSM
 
   const menuItems = useMemo(
     () => [
@@ -100,8 +101,8 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       <Layout
         style={{
           display: 'flex',
-          gap: containerPadding,
-          padding: containerPadding,
+          gap: containerPaddingX,
+          padding: `${containerPaddingY}px ${containerPaddingX}`,
           background: 'transparent',
           minHeight: '100vh'
         }}
@@ -117,11 +118,11 @@ const AppLayout = ({ children }: AppLayoutProps) => {
             background: token.colorBgContainer,
             borderRadius: token.borderRadiusLG,
             padding: siderPadding,
-            height: `calc(100vh - ${containerPadding * 2}px)`,
+            height: `calc(100vh - ${containerPaddingY * 2}px)`,
             boxShadow: token.boxShadowSecondary,
             transition: 'all 0.3s ease',
             position: 'sticky',
-            top: containerPadding,
+            top: containerPaddingY,
             alignSelf: 'flex-start',
             overflow: 'auto'
           }}
@@ -166,7 +167,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
           />
           <Content
             style={{
-              padding: `${token.paddingSM}px ${token.paddingMD}px ${token.paddingMD}px`,
+              padding: `${token.paddingXS}px ${token.paddingMD}px ${token.paddingMD}px`,
               flex: 1,
               minHeight: 0,
               overflowY: 'auto'

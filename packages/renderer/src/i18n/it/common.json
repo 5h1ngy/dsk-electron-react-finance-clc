@@ -39,7 +39,8 @@
     "errors": {
       "load": "Impossibile leggere il file strumenti"
     },
-    "empty": "Nessun prodotto disponibile"
+    "empty": "Nessun prodotto disponibile",
+    "emptyDetail": "Carica il file Excel per popolare il catalogo strumenti (.xlsx)."
   },
   "settings": {
     "title": "Impostazioni",

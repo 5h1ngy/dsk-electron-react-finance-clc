@@ -16,6 +16,7 @@ const WorkbenchPageContent = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [importVisible, setImportVisible] = useState(false)
   const { token } = theme.useToken()
+  const marginXS = token.marginXS
 
   const activeKey = searchParams.get('tab') ?? 'questionnaire'
 
@@ -33,7 +34,7 @@ const WorkbenchPageContent = () => {
       key: 'questionnaire',
       label: t('profilation.tabs.questionnaire'),
       children: (
-        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <Space direction="vertical" size="middle" style={{ width: '100%', marginTop: marginXS }}>
           <SectionCompletionCard />
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button
@@ -74,7 +75,7 @@ const WorkbenchPageContent = () => {
       label: t('profilation.tabs.settings'),
       children: <CertificateCard />
     }
-  ], [importVisible, t])
+  ], [importVisible, marginXS, t])
 
   return (
     <Tabs
