@@ -44,6 +44,9 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   }, [location.pathname])
 
   const tabKey = new URLSearchParams(location.search).get('tab') ?? 'questionnaire'
+  const environment = window.api?.environment
+  const showVersionBadge = Boolean(environment?.enableDevtools)
+  const versionText = environment?.appVersion ? `v${environment.appVersion}` : undefined
 
   const breadcrumbItems = useMemo(() => {
     const segments = location.pathname.split('/').filter(Boolean)
@@ -149,13 +152,40 @@ const AppLayout = ({ children }: AppLayoutProps) => {
                   {collapsed ? 'DSK' : t('app.title')}
                 </Typography.Title>
               </div>
-              <Menu
-                mode="inline"
-                selectedKeys={selectedKeys}
-                items={menuItems}
-                onClick={({ key }) => navigate(key)}
-                style={{ border: 'none', flex: 1, overflowY: 'auto', marginTop: token.marginMD }}
-              />
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flex: 1,
+                  minHeight: 0,
+                  overflow: 'hidden'
+                }}
+              >
+                <Menu
+                  mode="inline"
+                  selectedKeys={selectedKeys}
+                  items={menuItems}
+                  onClick={({ key }) => navigate(key)}
+                  style={{
+                    border: 'none',
+                    flex: 1,
+                    overflowY: 'auto',
+                    marginTop: token.marginMD
+                  }}
+                />
+                {showVersionBadge && versionText && (
+                  <Typography.Text
+                    style={{
+                      marginTop: token.marginMD,
+                      color: token.colorTextSecondary,
+                      textAlign: collapsed ? 'center' : 'left',
+                      fontSize: token.fontSizeSM
+                    }}
+                  >
+                    {versionText}
+                  </Typography.Text>
+                )}
+              </div>
             </div>
           </div>
         </Sider>
