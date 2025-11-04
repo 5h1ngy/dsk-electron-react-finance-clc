@@ -6,7 +6,11 @@ import { useTranslation } from 'react-i18next'
 import { parseFinanceWorkbook } from '@engines/importers/financeWorkbook'
 import { parseQuestionnairePdf } from '@engines/importers/pdfQuestionnaire'
 import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
-import { applyBulkResponses, selectQuestionnaireSchema } from '@renderer/store/slices/questionnaire'
+import {
+  applyBulkResponses,
+  computeQuestionnaireScore,
+  selectQuestionnaireSchema
+} from '@renderer/store/slices/questionnaire'
 import {
   selectFinanceImport,
   selectPdfImport,
@@ -72,6 +76,7 @@ export const useDemoUploadCard = () => {
       )
       message.success(t('demoUpload.messages.pdfSuccess'))
       setStatus({ type: 'success', message: t('demoUpload.status.pdfSuccess') })
+      dispatch(computeQuestionnaireScore())
     } catch (error) {
       const fallback = t('demoUpload.status.pdfError')
       const messageText = error instanceof Error ? error.message : fallback

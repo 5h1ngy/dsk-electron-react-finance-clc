@@ -25,11 +25,20 @@ const AppLayoutHeader = ({ collapsed, onToggle, breadcrumbItems, toggleLabel }: 
       <Flex align="center" justify="space-between">
         <Space align="center" size="middle">
           <Button
-            type="text"
+            type="default"
+            size="large"
+            shape="circle"
             onClick={onToggle}
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             aria-label={toggleLabel}
-            style={{ width: 40, height: 40 }}
+            style={{
+              width: 44,
+              height: 44,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: token.boxShadowSecondary
+            }}
           />
           <Breadcrumb
             items={breadcrumbItems}

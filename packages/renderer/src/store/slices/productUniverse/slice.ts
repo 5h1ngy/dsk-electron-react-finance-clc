@@ -24,6 +24,7 @@ const productUniverseSlice = createSlice({
     ) => {
       state.products = action.payload.products
       state.categories = action.payload.categories
+      state.recommendations = []
     },
     setRecommendations: (state, action: PayloadAction<ProductRecommendation[]>) => {
       state.recommendations = action.payload

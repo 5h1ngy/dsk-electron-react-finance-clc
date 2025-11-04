@@ -24,8 +24,17 @@ const ProductsPageContent = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const columns: ColumnsType<ProductRow> = useMemo(
-    () => [
+  const columns: ColumnsType<ProductRow> = useMemo(() => {
+    const currencyFormatter = new Intl.NumberFormat('it-IT', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    })
+    const yieldFormatter = new Intl.NumberFormat('it-IT', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })
+
+    return [
       {
         title: t('products.table.name'),
         dataIndex: 'name',
@@ -37,7 +46,7 @@ const ProductsPageContent = () => {
         title: t('products.table.category'),
         dataIndex: 'category',
         key: 'category',
-        width: 180
+        width: 200
       },
       {
         title: t('products.table.risk'),
@@ -51,14 +60,14 @@ const ProductsPageContent = () => {
         dataIndex: 'aum',
         key: 'aum',
         width: 160,
-        render: (value: number) => `${value.toLocaleString('it-IT')}€`
+        render: (value: number) => `${currencyFormatter.format(value)} €`
       },
       {
         title: t('products.table.yield'),
         dataIndex: 'yield',
         key: 'yield',
         width: 160,
-        render: (value: number) => `${value.toFixed(2)}%`
+        render: (value: number) => `${yieldFormatter.format(value)}%`
       },
       {
         title: t('products.table.updated'),
@@ -66,9 +75,8 @@ const ProductsPageContent = () => {
         key: 'updated',
         width: 160
       }
-    ],
-    [t]
-  )
+    ]
+  }, [t])
 
   const hydrateData = useCallback((rows: ProductRow[]) => {
     setData(rows)
@@ -106,7 +114,7 @@ const ProductsPageContent = () => {
           {t('products.title')}
         </Typography.Title>
         <Upload beforeUpload={handleUpload} showUploadList={false} accept=".xlsx,.xls">
-          <Button icon={<UploadOutlined />} loading={loading}>
+          <Button type="primary" icon={<UploadOutlined />} loading={loading}>
             {t('products.actions.upload')}
           </Button>
         </Upload>
@@ -118,10 +126,15 @@ const ProductsPageContent = () => {
           dataSource={data}
           loading={loading}
           pagination={{ pageSize: 10, showSizeChanger: false }}
-          scroll={{ x: 900 }}
+          rowKey="key"
+          scroll={{ x: 'max-content' }}
         />
       ) : (
-        <Empty description={t('products.empty')}>
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={t('products.empty')}
+          style={{ padding: token.paddingLG }}
+        >
           <Typography.Paragraph type="secondary" style={{ maxWidth: 360, textAlign: 'center' }}>
             {t('products.emptyDetail')}
           </Typography.Paragraph>
