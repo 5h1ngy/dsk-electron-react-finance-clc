@@ -54,7 +54,7 @@ const QuestionnaireStepperSwitcher = ({ model }: QuestionnaireStepperSwitcherPro
       style={{
         width: '100%',
         minWidth: withOverflow ? undefined : '100%',
-        background: token.colorBgContainer,
+        background: 'transparent',
         borderRadius: token.borderRadiusLG,
         padding: `${token.paddingXS}px ${token.paddingMD}px`
       }}
