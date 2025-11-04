@@ -2,21 +2,43 @@ import { contextBridge } from 'electron'
 import { healthApi } from '@preload/api/health'
 import { reportApi } from '@preload/api/report'
 import type { EnvironmentApi, PreloadApi } from '@preload/types'
-import { env } from '@main/config/env'
 
-debugger;
+const parseBoolean = (value: string | undefined, fallback: boolean): boolean => {
+  if (value === undefined) {
+    return fallback
+  }
+  const normalized = value.trim().toLowerCase()
+  if (['true', '1', 'yes', 'y', 'on'].includes(normalized)) {
+    return true
+  }
+  if (['false', '0', 'no', 'n', 'off'].includes(normalized)) {
+    return false
+  }
+  return fallback
+}
+
+const appVersion =
+  process.env.APP_VERSION?.trim() ||
+  process.env.npm_package_version?.trim() ||
+  '0.0.0-dev'
+
+const enableDevtools = parseBoolean(
+  process.env.ENABLE_DEVTOOLS,
+  process.env.NODE_ENV !== 'production'
+)
+
 const api: PreloadApi = Object.freeze({
   health: healthApi,
   report: reportApi,
   environment: {
-    appVersion: env.appVersion,
-    enableDevtools: env.enableDevtools
+    appVersion,
+    enableDevtools
   }
 })
 
 console.info('[Preload] Environment exposed to renderer', {
-  appVersion: env.appVersion,
-  enableDevtools: env.enableDevtools
+  appVersion,
+  enableDevtools
 })
 
 if (process.contextIsolated) {
