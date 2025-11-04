@@ -1,57 +1,32 @@
-import React, { useEffect, createElement } from 'react';
-import { Navigate, Outlet, Route, Routes } from "react-router-dom";
-import { HashRouter } from 'react-router-dom';
+import { useEffect } from 'react';
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
 
+import { Dispatch } from '@renderer/store';
+import { restoreUser } from '@renderer/store/slices/authSlice';
 import { ThemeProvider } from '@renderer/styles/ThemeProvider';
-import withSlice, { Bind } from '@renderer/hocs/withSlice';
-import withPublicRoute from '@renderer/hocs/withPublicRoute';
-import withProtectedRoute from '@renderer/hocs/withProtectedRoute';
-import AuthLayout from '@renderer/components/layouts/AuthLayout';
-import MainLayout from '@renderer/components/layouts/MainLayout';
-import loginRoute from '@renderer/pages/Login';
-import registerRoute from '@renderer/pages/Register';
-import dashboardRoute from '@renderer/pages/Dashboard';
-// import projectsRoute from '@renderer/pages/Projects';
-// import tasksRoute from '@renderer/pages/TaskBoard';
-// import notesRoute from '@renderer/pages/Notes';
-// import statisticsRoute from '@renderer/pages/Statistics';
-// import settingsRoute from '@renderer/pages/Settings';
-import notFoundRoute from '@renderer/pages/NotFound/NotFound.component';
-import { AppContainer } from '@renderer/App.style';
+import { routes } from '@renderer/pages/routes';
 
-const App: React.FC<Bind> = (props: Bind) => {
-  const publicAuthLayout = createElement(withPublicRoute(AuthLayout, { redirect: "/dashboard" }))
-  const privateAuthLayout = createElement(withProtectedRoute(MainLayout, { redirect: '/login', children: <Outlet /> }))
+const AppContainer = styled.div`
+  height: 100%;
+  width: 100%;
+`;
+
+const App: React.FC = () => {
+  const dispatch = useDispatch<Dispatch>();
 
   useEffect(() => {
-    props.actions.authActions.restoreUser()
-  }, []);
+    dispatch(restoreUser());
+  }, [dispatch]);
 
   return (
     <ThemeProvider>
       <AppContainer>
-        <HashRouter>
-          <Routes>
-            <Route path="/" element={publicAuthLayout}>
-              <Route index element={<Navigate to="/login" replace />} />
-              <Route path="login" {...loginRoute} />
-              <Route path="register" {...registerRoute} />
-            </Route>
-            <Route path="/" element={privateAuthLayout}>
-              <Route index element={<Navigate to="/dashboard" replace />} />
-              <Route path="dashboard" {...dashboardRoute} />
-              {/* <Route path="projects/:projectId" {...projectsRoute} />
-              <Route path="projects/:projectId/tasks" {...tasksRoute} />
-              <Route path="notes" {...notesRoute} />
-              <Route path="statistics" {...statisticsRoute} />
-              <Route path="settings" {...settingsRoute} /> */}
-              <Route path="*" {...notFoundRoute} />
-            </Route>
-          </Routes>
-        </HashRouter>
+        <RouterProvider router={createBrowserRouter(routes)} />
       </AppContainer>
     </ThemeProvider>
   );
 };
 
-export default withSlice(App);
+export default App;
