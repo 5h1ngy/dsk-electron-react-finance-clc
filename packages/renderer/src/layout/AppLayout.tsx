@@ -174,16 +174,24 @@ const AppLayout = ({ children }: AppLayoutProps) => {
                   }}
                 />
                 {showVersionBadge && versionText && (
-                  <Typography.Text
+                  <div
                     style={{
-                      marginTop: token.marginMD,
-                      color: token.colorTextSecondary,
-                      textAlign: collapsed ? 'center' : 'left',
-                      fontSize: token.fontSizeSM
+                      marginTop: 'auto',
+                      background: token.colorFillTertiary,
+                      borderRadius: token.borderRadiusLG,
+                      padding: token.paddingSM,
+                      textAlign: collapsed ? 'center' : 'left'
                     }}
                   >
-                    {versionText}
-                  </Typography.Text>
+                    <Typography.Text
+                      style={{
+                        color: token.colorTextSecondary,
+                        fontSize: token.fontSizeSM
+                      }}
+                    >
+                      {versionText}
+                    </Typography.Text>
+                  </div>
                 )}
               </div>
             </div>
