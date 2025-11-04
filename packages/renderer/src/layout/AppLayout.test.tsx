@@ -7,11 +7,11 @@ describe('AppLayout', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <AppLayout>
-          <div>Workbench</div>
+          <div>Profilation</div>
         </AppLayout>
       </MemoryRouter>
     )
 
-    expect(screen.getByText('Workbench')).toBeInTheDocument()
+    expect(screen.getByText('Profilation')).toBeInTheDocument()
   })
 })

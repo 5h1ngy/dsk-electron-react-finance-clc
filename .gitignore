@@ -5,3 +5,4 @@ out
 .eslintcache
 *.log*
 extensions/Redux-DevTools-Chrome-Web-Store.crx
+extensions/redux-devtools/_metadata/verified_contents.json

@@ -5,7 +5,7 @@ import itIT from 'antd/locale/it_IT'
 import { Provider } from 'react-redux'
 
 import AppLayout from '@renderer/layout/AppLayout'
-import WorkbenchPage from '@renderer/pages/Workbench'
+import ProfilationPage from '@renderer/pages/Profilation'
 import ProductsPage from '@renderer/pages/Products'
 import SettingsPage from '@renderer/pages/Settings'
 import { store } from '@renderer/store'
@@ -136,10 +136,10 @@ const App = () => {
           <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <AppLayout>
               <Routes>
-                <Route index element={<WorkbenchPage />} />
+                <Route index element={<ProfilationPage />} />
                 <Route path="/prodotti" element={<ProductsPage />} />
                 <Route path="/impostazioni" element={<SettingsPage />} />
-                <Route path="*" element={<WorkbenchPage />} />
+                <Route path="*" element={<ProfilationPage />} />
               </Routes>
             </AppLayout>
           </HashRouter>
