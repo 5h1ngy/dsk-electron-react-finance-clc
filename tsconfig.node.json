@@ -3,8 +3,7 @@
     "include":  [
         "electron.vite.config.*",
         "packages/main/src/**/*",
-        "packages/preload/src/**/*",
-        "seeding/**/*"
+        "packages/preload/src/**/*"
     ],
     "compilerOptions":  {
         "composite":  true,
@@ -14,8 +13,6 @@
         ],
         "strict":  true,
         "baseUrl":  ".",
-        "experimentalDecorators":  true,
-        "emitDecoratorMetadata":  true,
         "paths":  {
             "@main/*":  [
                 "packages/main/src/*"

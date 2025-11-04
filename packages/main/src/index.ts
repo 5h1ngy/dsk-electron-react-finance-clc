@@ -1,100 +1,16 @@
-import 'reflect-metadata'
-import type { Sequelize } from 'sequelize-typescript'
 import { app, BrowserWindow } from 'electron'
 
-import { registerSecurityHooks } from '@main/services/security'
-import { initializeDatabase } from '@main/config/database'
-import { resolveAppStoragePath } from '@main/config/storagePath'
 import { logger } from '@main/config/logger'
-import { SystemSetting } from '@main/models/SystemSetting'
-import { SESSION_TIMEOUT_MINUTES } from '@main/services/auth/constants'
-import { appContext, mainWindowManager, MainWindowManager } from '@main/appContext'
-import { AuthIpcRegistrar } from '@main/ipc/auth'
-import { ProjectIpcRegistrar } from '@main/ipc/project'
-import { TaskIpcRegistrar } from '@main/ipc/task'
-import { HealthIpcRegistrar } from '@main/ipc/health'
-import { IpcChannelRegistrar, ipcChannelRegistrar } from '@main/ipc/utils'
-
-const SESSION_TIMEOUT_SETTING_KEY = 'auth.sessionTimeoutMinutes'
-const SESSION_CLEANUP_INTERVAL_MS = 5 * 60 * 1000
-
-interface SessionLifecycleOptions {
-  sessionManager: typeof appContext.sessionManager
-  logger: Pick<typeof logger, 'info' | 'warn' | 'debug'>
-  systemSettingModel: typeof SystemSetting
-  env?: NodeJS.ProcessEnv
-  settingKey: string
-  defaultTimeoutMinutes: number
-  cleanupIntervalMs: number
-}
-
-class SessionLifecycleManager {
-  private cleanupTimer: NodeJS.Timeout | null = null
-  private readonly env: NodeJS.ProcessEnv
-
-  constructor(private readonly options: SessionLifecycleOptions) {
-    this.env = options.env ?? process.env
-  }
-
-  async configure(): Promise<void> {
-    const fallback = Number(this.env.SESSION_TIMEOUT_MINUTES ?? this.options.defaultTimeoutMinutes)
-    let timeout =
-      Number.isFinite(fallback) && fallback > 0 ? fallback : this.options.defaultTimeoutMinutes
-
-    try {
-      const setting = await this.options.systemSettingModel.findByPk(this.options.settingKey)
-      if (setting?.value) {
-        const parsed = Number(setting.value)
-        if (Number.isFinite(parsed) && parsed > 0) {
-          timeout = parsed
-        } else {
-          this.options.logger.warn(
-            `Session timeout setting value invalid (${setting.value}); using ${timeout} minutes`,
-            'Auth'
-          )
-        }
-      }
-    } catch (error) {
-      this.options.logger.warn('Failed to load session timeout setting; using default value', 'Auth', error)
-    }
-
-    this.options.sessionManager.setTimeoutMinutes(timeout)
-    this.options.logger.info(`Session timeout configured to ${timeout} minutes`, 'Auth')
-  }
-
-  start(): void {
-    if (this.cleanupTimer) {
-      return
-    }
-
-    this.cleanupTimer = setInterval(() => {
-      const removed = this.options.sessionManager.cleanupExpired()
-      if (removed > 0) {
-        this.options.logger.debug(`Expired sessions cleaned: ${removed}`, 'Auth')
-      }
-    }, this.options.cleanupIntervalMs)
-    this.cleanupTimer.unref?.()
-  }
-
-  stop(): void {
-    if (!this.cleanupTimer) {
-      return
-    }
-    clearInterval(this.cleanupTimer)
-    this.cleanupTimer = null
-  }
-}
+import { registerSecurityHooks } from '@main/services/security'
+import { registerHealthIpc } from '@main/ipc/health'
+import { mainWindowManager, MainWindowManager } from '@main/windowManager'
 
 interface MainProcessDependencies {
-  app: typeof app
+  appRef: typeof app
   logger: typeof logger
   windowManager: MainWindowManager
-  context: typeof appContext
-  resolveStoragePath: typeof resolveAppStoragePath
-  initializeDatabase: typeof initializeDatabase
   registerSecurityHooks: () => void
-  sessionLifecycle: SessionLifecycleManager
-  ipcRegistrar: IpcChannelRegistrar
+  registerHealthIpc: () => void
 }
 
 class MainProcessApplication {
@@ -104,35 +20,18 @@ class MainProcessApplication {
 
   bootstrap(): void {
     this.enforceSingleInstance()
-    this.registerAppEvents()
     this.registerProcessEvents()
+    this.registerAppEvents()
   }
 
   private enforceSingleInstance(): void {
-    const gotLock = this.deps.app.requestSingleInstanceLock()
+    const gotLock = this.deps.appRef.requestSingleInstanceLock()
     if (gotLock) {
       return
     }
     this.deps.logger.warn('Second application instance detected. Quitting current launch.', 'Bootstrap')
-    this.deps.app.quit()
+    this.deps.appRef.quit()
     process.exit(0)
-  }
-
-  private registerAppEvents(): void {
-    this.deps.app.disableHardwareAcceleration()
-    this.deps.logger.debug('Hardware acceleration disabled', 'Bootstrap')
-
-    this.deps.app.on('second-instance', () => this.focusExistingWindow())
-    this.deps.app.on('window-all-closed', () => this.handleAllWindowsClosed())
-    this.deps.app.on('before-quit', () => this.deps.sessionLifecycle.stop())
-
-    this.deps.app
-      .whenReady()
-      .then(() => this.onReady())
-      .catch((error) => {
-        this.deps.logger.error('Failed to start application', 'Bootstrap', error)
-        this.deps.app.quit()
-      })
   }
 
   private registerProcessEvents(): void {
@@ -142,6 +41,36 @@ class MainProcessApplication {
 
     process.on('unhandledRejection', (reason) => {
       this.deps.logger.error('Unhandled promise rejection', 'Process', reason)
+    })
+  }
+
+  private registerAppEvents(): void {
+    this.deps.appRef.disableHardwareAcceleration()
+    this.deps.logger.debug('Hardware acceleration disabled', 'Bootstrap')
+
+    this.deps.appRef.on('second-instance', () => this.focusExistingWindow())
+    this.deps.appRef.on('window-all-closed', () => this.handleAllWindowsClosed())
+
+    this.deps.appRef
+      .whenReady()
+      .then(() => this.onReady())
+      .catch((error) => {
+        this.deps.logger.error('Failed to start application', 'Bootstrap', error)
+        this.deps.appRef.quit()
+      })
+  }
+
+  private async onReady(): Promise<void> {
+    this.deps.logger.info('Application ready. Applying security hardening.', 'Bootstrap')
+    this.deps.registerSecurityHooks()
+    this.deps.registerHealthIpc()
+
+    this.mainWindow = await this.deps.windowManager.createMainWindow()
+    this.deps.logger.success('Main window created', 'Window')
+
+    this.mainWindow.on('closed', () => {
+      this.deps.logger.info('Main window closed', 'Window')
+      this.mainWindow = null
     })
   }
 
@@ -160,93 +89,17 @@ class MainProcessApplication {
   private handleAllWindowsClosed(): void {
     if (process.platform !== 'darwin') {
       this.deps.logger.info('All windows closed. Quitting application.', 'Lifecycle')
-      this.deps.app.quit()
+      this.deps.appRef.quit()
     }
-  }
-
-  private async onReady(): Promise<void> {
-    this.deps.logger.info('Application ready. Applying security hardening.', 'Bootstrap')
-    this.deps.registerSecurityHooks()
-
-    const storagePath = this.deps.resolveStoragePath({
-      userDataDir: this.deps.app.getPath('userData')
-    })
-
-    const database = await this.deps.initializeDatabase({
-      resolveStoragePath: () => storagePath
-    })
-    this.deps.logger.success('Database connection established', 'Database')
-
-    this.deps.context.setDatabase(database)
-    this.deps.logger.debug('Application context initialized', 'Bootstrap')
-
-    this.registerIpcChannels(database)
-
-    await this.deps.sessionLifecycle.configure()
-    this.deps.sessionLifecycle.start()
-
-    this.mainWindow = await this.deps.windowManager.createMainWindow()
-    this.deps.logger.success('Main window created', 'Window')
-
-    this.mainWindow.on('closed', () => {
-      this.deps.logger.info('Main window closed', 'Window')
-      this.mainWindow = null
-    })
-  }
-
-  private registerIpcChannels(database: Sequelize): void {
-    new HealthIpcRegistrar({
-      sequelize: database,
-      appRef: this.deps.app,
-      registrar: this.deps.ipcRegistrar
-    }).register()
-    this.deps.logger.debug('Health IPC channel registered', 'IPC')
-
-    new AuthIpcRegistrar({
-      authService: this.deps.context.authService,
-      registrar: this.deps.ipcRegistrar
-    }).register()
-
-    const { projectService, taskService } = this.deps.context
-    if (!projectService || !taskService) {
-      throw new Error('Project and Task services must be initialized before registering IPC')
-    }
-
-    new ProjectIpcRegistrar({
-      authService: this.deps.context.authService,
-      projectService,
-      registrar: this.deps.ipcRegistrar
-    }).register()
-
-    new TaskIpcRegistrar({
-      authService: this.deps.context.authService,
-      taskService,
-      registrar: this.deps.ipcRegistrar
-    }).register()
-    this.deps.logger.debug('Auth, Project and Task IPC channels registered', 'IPC')
   }
 }
 
-const sessionLifecycle = new SessionLifecycleManager({
-  sessionManager: appContext.sessionManager,
-  logger,
-  systemSettingModel: SystemSetting,
-  env: process.env,
-  settingKey: SESSION_TIMEOUT_SETTING_KEY,
-  defaultTimeoutMinutes: SESSION_TIMEOUT_MINUTES,
-  cleanupIntervalMs: SESSION_CLEANUP_INTERVAL_MS
-})
-
 const application = new MainProcessApplication({
-  app,
+  appRef: app,
   logger,
   windowManager: mainWindowManager,
-  context: appContext,
-  resolveStoragePath: resolveAppStoragePath,
-  initializeDatabase,
   registerSecurityHooks,
-  sessionLifecycle,
-  ipcRegistrar: ipcChannelRegistrar
+  registerHealthIpc
 })
 
 application.bootstrap()
