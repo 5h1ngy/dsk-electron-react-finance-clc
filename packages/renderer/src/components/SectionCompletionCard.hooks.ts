@@ -30,6 +30,8 @@ export const useSectionCompletionCard = () => {
     title: t('sectionCompletion.title'),
     emptyText: t('sectionCompletion.empty'),
     hasSchema: Boolean(schema),
-    items
+    items,
+    currentIndex: items.findIndex((item) => item.percent < 100),
+    completedCount: items.filter((item) => item.percent === 100).length
   }
 }

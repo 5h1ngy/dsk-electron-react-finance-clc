@@ -15,7 +15,9 @@ describe('SectionCompletionCard', () => {
       title: 'sectionCompletion.title',
       emptyText: 'sectionCompletion.empty',
       hasSchema: true,
-      items: [{ title: 'Sezione 1', percent: 50 }]
+      items: [{ title: 'Sezione 1', percent: 50 }],
+      currentIndex: 0,
+      completedCount: 0
     })
 
     render(<SectionCompletionCard />)
@@ -28,7 +30,9 @@ describe('SectionCompletionCard', () => {
       title: 'sectionCompletion.title',
       emptyText: 'sectionCompletion.empty',
       hasSchema: false,
-      items: []
+      items: [],
+      currentIndex: 0,
+      completedCount: 0
     })
 
     render(<SectionCompletionCard />)
