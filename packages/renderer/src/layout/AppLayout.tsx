@@ -114,12 +114,12 @@ const AppLayout = ({ children }: AppLayoutProps) => {
             background: token.colorBgContainer,
             borderRadius: token.borderRadiusLG,
             padding: siderPadding,
-            minHeight: '100vh',
-            height: '100%',
+            height: 'max-content',
             boxShadow: token.boxShadowSecondary,
             transition: 'all 0.3s ease',
             position: 'sticky',
-            top: token.marginMD
+            top: token.marginMD,
+            alignSelf: 'flex-start'
           }}
         >
           <Space direction="vertical" size="large" style={{ width: '100%', height: '100%', display: 'flex' }}>
