@@ -16,13 +16,10 @@ const QuestionnaireStepperSwitcher = ({ model }: QuestionnaireStepperSwitcherPro
   const { sectionsProgress, currentStep, handleStepChange, steps } = model
   const [mobileOpen, setMobileOpen] = useState(false)
 
-  if (!sectionsProgress.length) {
-    return null
-  }
-
+  const hasSections = sectionsProgress.length > 0
   const isMobile = !screens.sm
   const isCompact = !isMobile && !screens.lg
-  const currentSection = sectionsProgress[currentStep]
+  const currentSection = hasSections ? sectionsProgress[currentStep] : undefined
 
   const menuItems = useMemo<MenuProps['items']>(
     () =>
@@ -47,7 +44,6 @@ const QuestionnaireStepperSwitcher = ({ model }: QuestionnaireStepperSwitcherPro
 
   const renderSteps = (withOverflow = false) => (
     <Steps
-
       size="small"
       current={currentStep}
       onChange={(index) => {
@@ -78,6 +74,10 @@ const QuestionnaireStepperSwitcher = ({ model }: QuestionnaireStepperSwitcherPro
       }))}
     />
   )
+
+  if (!hasSections) {
+    return null
+  }
 
   if (isMobile) {
     return (
