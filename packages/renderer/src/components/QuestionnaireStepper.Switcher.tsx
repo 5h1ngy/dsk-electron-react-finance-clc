@@ -1,21 +1,8 @@
 import { useMemo, useState } from 'react'
 
-import {
-  Button,
-  Dropdown,
-  Modal,
-  Space,
-  Steps,
-  Tooltip,
-  Grid,
-  theme
-} from 'antd'
+import { Button, Dropdown, Modal, Space, Steps, Tooltip, Grid, theme } from 'antd'
 import type { MenuProps } from 'antd'
-import {
-  CheckCircleFilled,
-  DownOutlined,
-  EllipsisOutlined
-} from '@ant-design/icons'
+import { CheckCircleFilled, EllipsisOutlined } from '@ant-design/icons'
 
 import type { QuestionnaireStepperModel } from '@renderer/components/QuestionnaireStepper'
 
@@ -100,13 +87,6 @@ const QuestionnaireStepperSwitcher = ({ model }: QuestionnaireStepperSwitcherPro
           size="large"
           type="default"
           onClick={() => setMobileOpen(true)}
-          icon={
-            currentSection?.percent === 100 ? (
-              <CheckCircleFilled style={{ color: token.colorSuccess }} />
-            ) : (
-              <EllipsisOutlined />
-            )
-          }
           style={{
             justifyContent: 'space-between',
             display: 'flex',
@@ -116,7 +96,6 @@ const QuestionnaireStepperSwitcher = ({ model }: QuestionnaireStepperSwitcherPro
           }}
         >
           <span style={{ flex: 1, textAlign: 'left' }}>{currentSection?.title}</span>
-          <DownOutlined />
         </Button>
         <Modal
           open={mobileOpen}
