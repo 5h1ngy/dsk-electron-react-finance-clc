@@ -1,5 +1,5 @@
 import { AppstoreOutlined, BankOutlined, SettingOutlined } from '@ant-design/icons'
-import { Layout, Menu, Space, Typography, theme } from 'antd'
+import { Layout, Menu, Typography, theme } from 'antd'
 import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -20,6 +20,11 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   const { token } = theme.useToken()
   const [collapsed, setCollapsed] = useState(false)
   const siderPadding = collapsed ? token.paddingSM : token.paddingLG
+  const containerPaddingX = token.marginMD
+  const containerPaddingY = token.marginSM
+  const siderSpacingX = containerPaddingX / 2
+  const stickyOffset = containerPaddingY
+  const stickyHeight = `calc(100vh - ${stickyOffset * 2}px)`
 
   const menuItems = useMemo(
     () => [
@@ -41,20 +46,28 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   const tabKey = new URLSearchParams(location.search).get('tab') ?? 'questionnaire'
 
   const breadcrumbItems = useMemo(() => {
-    const rootItem = {
-      title: (
-        <Typography.Title level={4} style={{ margin: 0 }}>
-          {t('app.menu.workbench')}
-        </Typography.Title>
-      ),
-      onClick: () => {
-        if (location.pathname !== '/' || tabKey !== 'questionnaire') {
-          navigate('/')
-        }
-      }
+    const segments = location.pathname.split('/').filter(Boolean)
+    const basePath = segments.length ? `/${segments[0]}` : '/'
+    const pageMap: Record<string, { label: string; href: string }> = {
+      '/': { label: t('app.menu.workbench'), href: '/' },
+      '/prodotti': { label: t('app.menu.products'), href: '/prodotti' },
+      '/impostazioni': { label: t('app.menu.settings'), href: '/impostazioni' }
     }
+    const currentPage = pageMap[basePath] ?? pageMap['/']
 
-    if (location.pathname === '/') {
+    const items = [
+      {
+        title: (
+          <Typography.Title level={4} style={{ margin: 0 }}>
+            {currentPage.label}
+          </Typography.Title>
+        ),
+        onClick:
+          location.pathname !== currentPage.href ? () => navigate(currentPage.href) : undefined
+      }
+    ]
+
+    if (currentPage.href === '/') {
       const tabMap: Record<string, string> = {
         questionnaire: t('profilation.tabs.questionnaire'),
         suggestions: t('profilation.tabs.suggestions'),
@@ -63,86 +76,88 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       }
 
       if (tabKey !== 'questionnaire' && tabMap[tabKey]) {
-        return [
-          rootItem,
-          {
-            title: <Typography.Text>{tabMap[tabKey]}</Typography.Text>,
-            onClick: () => navigate(tabKey === 'questionnaire' ? '/' : `/?tab=${tabKey}`)
-          }
-        ]
+        items.push({
+          title: <Typography.Text>{tabMap[tabKey]}</Typography.Text>,
+          onClick: () => navigate(tabKey === 'questionnaire' ? '/' : `/?tab=${tabKey}`)
+        })
       }
-
-      return [rootItem]
     }
 
-    const pageMap: Record<string, { label: string; href: string }> = {
-      '/prodotti': { label: t('app.menu.products'), href: '/prodotti' },
-      '/impostazioni': { label: t('app.menu.settings'), href: '/impostazioni' }
-    }
-    const entry = pageMap[location.pathname]
-
-    if (!entry) {
-      return [rootItem]
-    }
-
-    return [
-      rootItem,
-      {
-        title: <Typography.Text>{entry.label}</Typography.Text>,
-        onClick: () => navigate(entry.href)
-      }
-    ]
+    return items
   }, [location.pathname, navigate, tabKey, t])
 
   return (
-    <Layout style={{ minHeight: '100vh', background: token.colorBgLayout, overflow: 'hidden' }}>
+    <Layout style={{ height: '100vh', background: token.colorBgLayout, overflow: 'hidden' }}>
       <Layout
         style={{
           display: 'flex',
-          gap: token.marginMD,
-          padding: token.marginMD,
+          gap: containerPaddingX,
+          padding: `${containerPaddingY}px ${containerPaddingX}`,
           background: 'transparent',
-          minHeight: '100vh'
+          height: '100%'
         }}
       >
         <Sider
+          breakpoint="lg"
           width={260}
           collapsedWidth={92}
           collapsed={collapsed}
           trigger={null}
+          onBreakpoint={(broken) => setCollapsed(broken)}
           style={{
-            background: token.colorBgContainer,
-            borderRadius: token.borderRadiusLG,
-            padding: siderPadding,
-            minHeight: '100vh',
-            height: '100%',
-            boxShadow: token.boxShadowSecondary,
-            transition: 'all 0.3s ease',
-            position: 'sticky',
-            top: token.marginMD
+            background: 'transparent',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: `${containerPaddingY}px ${siderSpacingX}px`,
+            boxSizing: 'border-box',
+            overflow: 'visible'
           }}
         >
-          <Space direction="vertical" size="large" style={{ width: '100%', height: '100%', display: 'flex' }}>
+          <div
+            style={{
+              position: 'sticky',
+              top: stickyOffset,
+              height: stickyHeight,
+              minHeight: stickyHeight,
+              display: 'flex',
+              flexDirection: 'column',
+              zIndex: token.zIndexBase + 1
+            }}
+          >
             <div
               style={{
-                padding: token.paddingSM,
+                background: token.colorBgContainer,
                 borderRadius: token.borderRadiusLG,
-                background: token.colorFillTertiary,
-                textAlign: collapsed ? 'center' : 'left'
+                padding: siderPadding,
+                boxShadow: token.boxShadowSecondary,
+                flex: 1,
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden'
               }}
             >
-              <Typography.Title level={collapsed ? 5 : 4} style={{ margin: 0 }}>
-                {collapsed ? 'DSK' : t('app.title')}
-              </Typography.Title>
+              <div
+                style={{
+                  padding: token.paddingSM,
+                  borderRadius: token.borderRadiusLG,
+                  background: token.colorFillTertiary,
+                  textAlign: collapsed ? 'center' : 'left'
+                }}
+              >
+                <Typography.Title level={collapsed ? 5 : 4} style={{ margin: 0 }}>
+                  {collapsed ? 'DSK' : t('app.title')}
+                </Typography.Title>
+              </div>
+              <Menu
+                mode="inline"
+                selectedKeys={selectedKeys}
+                items={menuItems}
+                onClick={({ key }) => navigate(key)}
+                style={{ border: 'none', flex: 1, overflowY: 'auto', marginTop: token.marginMD }}
+              />
             </div>
-            <Menu
-              mode="inline"
-              selectedKeys={selectedKeys}
-              items={menuItems}
-              onClick={({ key }) => navigate(key)}
-              style={{ border: 'none', flex: 1 }}
-            />
-          </Space>
+          </div>
         </Sider>
         <Layout
           style={{
@@ -151,7 +166,9 @@ const AppLayout = ({ children }: AppLayoutProps) => {
             flexDirection: 'column',
             gap: token.marginXS,
             flex: 1,
-            minHeight: 0
+            minHeight: 0,
+            height: '100%',
+            overflow: 'hidden'
           }}
         >
           <AppLayoutHeader
@@ -162,7 +179,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
           />
           <Content
             style={{
-              padding: token.paddingMD,
+              padding: `${token.paddingXS}px ${token.paddingMD}px ${token.paddingMD}px`,
               flex: 1,
               minHeight: 0,
               overflowY: 'auto'

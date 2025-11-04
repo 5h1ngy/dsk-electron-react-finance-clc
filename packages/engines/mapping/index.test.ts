@@ -48,4 +48,19 @@ describe('mapProductsToProfile', () => {
 
     expect(recommendations).toHaveLength(2)
   })
+
+  it('permits risk classes as product labels up to the client tolerance', () => {
+    const products = [
+      { name: 'Stable Income', category: 'Obbligazionari', riskBand: 'Prudente' },
+      { name: 'Aggressive Growth', category: 'Azioni', riskBand: 'Dinamico' }
+    ]
+
+    const recommendations = mapProductsToProfile(
+      { ...baseScore, riskClass: 'Bilanciato' },
+      products
+    )
+
+    expect(recommendations).toHaveLength(1)
+    expect(recommendations[0].name).toBe('Stable Income')
+  })
 })

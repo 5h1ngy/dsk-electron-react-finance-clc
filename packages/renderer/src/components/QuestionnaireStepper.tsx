@@ -3,7 +3,13 @@ import QuestionnaireStepperContent from '@renderer/components/QuestionnaireStepp
 import QuestionnaireStepperHeader from '@renderer/components/QuestionnaireStepper.Header'
 import { Card } from 'antd'
 
-const QuestionnaireStepper = () => {
+export type QuestionnaireStepperModel = ReturnType<typeof useQuestionnaireStepper>
+
+interface QuestionnaireStepperProps {
+  model?: QuestionnaireStepperModel
+}
+
+const QuestionnaireStepper = ({ model }: QuestionnaireStepperProps = {}) => {
   const {
     copy,
     progress,
@@ -12,14 +18,12 @@ const QuestionnaireStepper = () => {
     validationErrors,
     handleNext,
     handleBack,
-    handleStepChange,
     handleReset,
     currentStep,
-    steps,
     section,
     isReady,
     isLastStep
-  } = useQuestionnaireStepper()
+  } = model ?? useQuestionnaireStepper()
 
   if (!isReady || !section) {
     return <Card loading title={copy.title} />
@@ -44,9 +48,7 @@ const QuestionnaireStepper = () => {
         validationErrors={validationErrors}
         handleNext={handleNext}
         handleBack={handleBack}
-        handleStepChange={handleStepChange}
         currentStep={currentStep}
-        steps={steps}
         section={section}
         isLastStep={isLastStep}
       />

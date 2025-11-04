@@ -1,10 +1,9 @@
-import { Button, Card, Form, Space, Switch, Tooltip, Typography } from 'antd'
+import { Button, Card, Form, Space, Switch, Typography } from 'antd'
 import { useTranslation } from 'react-i18next'
 
 import { useThemeSettings } from '@renderer/theme/context'
+import { DEFAULT_ACCENT } from '@renderer/theme'
 
-const DEFAULT_PRIMARY = '#0ba5ec'
-const DEFAULT_SECONDARY = '#10b981'
 const SECONDARY_OPTIONS = ['#10b981', '#f97316', '#6366f1', '#ec4899', '#14b8a6']
 
 const SettingsPageContent = () => {
@@ -13,7 +12,7 @@ const SettingsPageContent = () => {
 
   const handleReset = () => {
     setMode('light')
-    setColors({ primary: DEFAULT_PRIMARY, secondary: DEFAULT_SECONDARY })
+    setColors({ primary: DEFAULT_ACCENT, secondary: DEFAULT_ACCENT })
   }
 
   return (
@@ -31,30 +30,24 @@ const SettingsPageContent = () => {
               />
             </Space>
           </Form.Item>
-          <Form.Item label={t('settings.appearance.primary')}>
-            <Tooltip title={t('settings.appearance.primaryHint')}>
-              <Button
-                shape="round"
-                style={{ background: colors.primary, borderColor: colors.primary, color: '#fff' }}
-                disabled
-              >
-                {colors.primary}
-              </Button>
-            </Tooltip>
-          </Form.Item>
           <Form.Item label={t('settings.appearance.secondaryPalette')}>
             <Space size="middle" wrap>
               {SECONDARY_OPTIONS.map((option) => (
                 <Button
                   key={option}
                   shape="circle"
+                  type={colors.secondary === option ? 'primary' : 'default'}
                   style={{
                     width: 36,
                     height: 36,
                     background: option,
                     borderColor: option,
-                    boxShadow: colors.secondary === option ? '0 0 0 3px rgba(0,0,0,0.12)' : undefined
+                    boxShadow:
+                      colors.secondary === option
+                        ? '0 0 0 3px rgba(15, 23, 42, 0.18)'
+                        : '0 0 0 1px rgba(148, 163, 184, 0.25)'
                   }}
+                  aria-pressed={colors.secondary === option}
                   onClick={() => setColors({ primary: colors.primary, secondary: option })}
                 />
               ))}

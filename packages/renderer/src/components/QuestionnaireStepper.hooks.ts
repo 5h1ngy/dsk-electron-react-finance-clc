@@ -86,6 +86,23 @@ export const useQuestionnaireStepper = () => {
     return values
   }, [responses, section])
 
+  const sectionsProgress = useMemo(() => {
+    if (!schema) {
+      return []
+    }
+    return schema.sections.map((sectionItem) => {
+      const total = sectionItem.questions.length
+      const answered = sectionItem.questions.filter((question) =>
+        isValuePresent(responses[question.id])
+      ).length
+      return {
+        id: sectionItem.id,
+        title: sectionItem.label,
+        percent: total === 0 ? 0 : Math.round((answered / total) * 100)
+      }
+    })
+  }, [responses, schema])
+
   const {
     control,
     reset,
@@ -220,6 +237,7 @@ export const useQuestionnaireStepper = () => {
     section,
     isReady,
     schema,
-    isLastStep
+    isLastStep,
+    sectionsProgress
   }
 }

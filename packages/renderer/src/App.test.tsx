@@ -1,9 +1,9 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 
-jest.mock('@renderer/pages/Workbench', () => ({
+jest.mock('@renderer/pages/Profilation', () => ({
   __esModule: true,
-  default: () => <div>WorkbenchPage</div>
+  default: () => <div>ProfilationPage</div>
 }))
 
 jest.mock('@renderer/pages/Products', () => ({
@@ -27,6 +27,6 @@ describe('App', () => {
   it('renders the main layout with the default route', async () => {
     render(<App />)
 
-    expect(await screen.findByText('WorkbenchPage')).toBeInTheDocument()
+    expect(await screen.findByText('ProfilationPage')).toBeInTheDocument()
   })
 })
