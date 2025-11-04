@@ -1,11 +1,10 @@
-import { AppstoreOutlined, BankOutlined, ExperimentOutlined } from '@ant-design/icons'
+import { AppstoreOutlined, BankOutlined, SettingOutlined } from '@ant-design/icons'
 import { Layout, Menu, Space, Typography, theme } from 'antd'
 import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
-import { useHealthStatus } from '@renderer/hooks/useHealthStatus'
 import AppLayoutHeader from '@renderer/layout/AppLayout.Header'
 
 const { Sider, Content } = Layout
@@ -17,7 +16,6 @@ interface AppLayoutProps {
 const AppLayout = ({ children }: AppLayoutProps) => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { snapshot, loading, error, refresh } = useHealthStatus()
   const { t } = useTranslation()
   const { token } = theme.useToken()
   const [collapsed, setCollapsed] = useState(false)
@@ -26,8 +24,8 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   const menuItems = useMemo(
     () => [
       { key: '/', label: t('app.menu.workbench'), icon: <BankOutlined /> },
-      { key: '/diagnostics', label: t('app.menu.diagnostics'), icon: <ExperimentOutlined /> },
-      { key: '/prodotti', label: t('app.menu.products'), icon: <AppstoreOutlined /> }
+      { key: '/prodotti', label: t('app.menu.products'), icon: <AppstoreOutlined /> },
+      { key: '/impostazioni', label: t('app.menu.settings'), icon: <SettingOutlined /> }
     ],
     [t]
   )
@@ -43,8 +41,8 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   const breadcrumbItems = useMemo(() => {
     const mapping: Record<string, string> = {
       '/': t('app.menu.workbench'),
-      '/diagnostics': t('app.menu.diagnostics'),
-      '/prodotti': t('app.menu.products')
+      '/prodotti': t('app.menu.products'),
+      '/impostazioni': t('app.menu.settings')
     }
 
     if (location.pathname === '/') {
@@ -95,6 +93,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
             background: token.colorBgContainer,
             borderRadius: token.borderRadiusLG,
             padding: siderPadding,
+            minHeight: '100vh',
             height: '100%',
             boxShadow: token.boxShadowSecondary,
             transition: 'all 0.3s ease'
@@ -142,7 +141,6 @@ const AppLayout = ({ children }: AppLayoutProps) => {
             onToggle={() => setCollapsed((prev) => !prev)}
             breadcrumbItems={breadcrumbItems}
             toggleLabel={collapsed ? t('layout.expand') : t('layout.collapse')}
-            health={{ snapshot, loading, error, onRefresh: refresh }}
           />
           <Content style={{ padding: 0, overflow: 'auto' }}>{children}</Content>
         </Layout>

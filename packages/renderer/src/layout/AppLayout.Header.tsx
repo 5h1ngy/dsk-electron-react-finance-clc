@@ -2,9 +2,6 @@ import { Breadcrumb, Button, Flex, Layout, Space, theme } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import type { BreadcrumbProps } from 'antd'
 
-import { HealthStatusTag } from '@renderer/components/HealthStatus'
-import type { HealthSnapshot } from '@main/ipc/health'
-
 const { Header } = Layout
 
 interface AppLayoutHeaderProps {
@@ -12,15 +9,9 @@ interface AppLayoutHeaderProps {
   onToggle: () => void
   breadcrumbItems: BreadcrumbProps['items']
   toggleLabel: string
-  health: {
-    snapshot: HealthSnapshot | null
-    loading: boolean
-    error: string | null
-    onRefresh: () => void
-  }
 }
 
-const AppLayoutHeader = ({ collapsed, onToggle, breadcrumbItems, toggleLabel, health }: AppLayoutHeaderProps) => {
+const AppLayoutHeader = ({ collapsed, onToggle, breadcrumbItems, toggleLabel }: AppLayoutHeaderProps) => {
   const { token } = theme.useToken()
 
   return (
@@ -42,13 +33,6 @@ const AppLayoutHeader = ({ collapsed, onToggle, breadcrumbItems, toggleLabel, he
           />
           <Breadcrumb items={breadcrumbItems} />
         </Space>
-        <HealthStatusTag
-          snapshot={health.snapshot}
-          loading={health.loading}
-          error={health.error}
-          onRefresh={health.onRefresh}
-          tone="light"
-        />
       </Flex>
     </Header>
   )

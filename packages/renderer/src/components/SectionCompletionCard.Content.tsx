@@ -1,4 +1,4 @@
-import { Card, List, Progress, Tooltip } from 'antd'
+import { Card, Progress, Space, Typography } from 'antd'
 
 interface SectionCompletionCardContentProps {
   title: string
@@ -7,21 +7,18 @@ interface SectionCompletionCardContentProps {
 
 const SectionCompletionCardContent = ({ title, items }: SectionCompletionCardContentProps) => (
   <Card title={title} size="small">
-    <List
-      dataSource={items}
-      renderItem={(item) => (
-        <List.Item>
-          <List.Item.Meta
-            title={item.title}
-            description={
-              <Tooltip title={`${item.percent}%`}>
-                <Progress percent={item.percent} size="small" showInfo />
-              </Tooltip>
-            }
-          />
-        </List.Item>
-      )}
-    />
+    <Space
+      align="center"
+      size="large"
+      style={{ width: '100%', justifyContent: 'space-between', flexWrap: 'wrap' }}
+    >
+      {items.map((item) => (
+        <Space key={item.title} direction="vertical" size={6} align="center">
+          <Typography.Text strong>{item.title}</Typography.Text>
+          <Progress type="dashboard" percent={item.percent} size={80} strokeColor="#0ba5ec" />
+        </Space>
+      ))}
+    </Space>
   </Card>
 )
 

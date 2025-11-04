@@ -1,5 +1,5 @@
 import { FilePdfOutlined, InboxOutlined } from '@ant-design/icons'
-import { Card, List, Space, Typography, Upload } from 'antd'
+import { Alert, Card, Descriptions, Space, Tag, Typography, Upload } from 'antd'
 import type { UploadProps } from 'antd'
 
 const { Dragger } = Upload
@@ -9,46 +9,55 @@ interface DemoUploadCardContentProps {
     title: string
     description: string
     drop: {
-      questionnaire: { title: string; hint: string }
       products: { title: string; hint: string }
       pdf: { title: string; hint: string }
     }
-    listTitle: string
+    status: {
+      idle: string
+    }
+    labels: {
+      products: string
+      pdf: string
+    }
+    empty: {
+      products: string
+      pdf: string
+    }
   }
-  listItems: string[]
-  handleQuestionnaireUpload: UploadProps['beforeUpload']
+  status: { type: 'success' | 'error'; message: string } | null
   handleFinanceUpload: UploadProps['beforeUpload']
   handlePdfUpload: UploadProps['beforeUpload']
+  financeImport?: {
+    fileName: string
+    importedAt: string
+    instruments: number
+    categories: Array<{ name: string; count: number }>
+  }
+  pdfImport?: {
+    fileName: string
+    importedAt: string
+    pages: number
+  }
 }
 
 const DemoUploadCardContent = ({
   copy,
-  listItems,
-  handleQuestionnaireUpload,
+  status,
   handleFinanceUpload,
-  handlePdfUpload
+  handlePdfUpload,
+  financeImport,
+  pdfImport
 }: DemoUploadCardContentProps) => (
   <Card title={copy.title}>
     <Space direction="vertical" size="large" style={{ width: '100%' }}>
       <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
         {copy.description}
       </Typography.Paragraph>
-      <Dragger
-        multiple={false}
-        beforeUpload={handleQuestionnaireUpload}
-        accept=".xlsx,.xls"
-        showUploadList={false}
-      >
-        <Typography.Paragraph className="ant-upload-drag-icon" style={{ marginBottom: 0 }}>
-          <InboxOutlined />
-        </Typography.Paragraph>
-        <Typography.Paragraph className="ant-upload-text" style={{ marginBottom: 0 }}>
-          {copy.drop.questionnaire.title}
-        </Typography.Paragraph>
-        <Typography.Paragraph className="ant-upload-hint" style={{ marginBottom: 0 }}>
-          {copy.drop.questionnaire.hint}
-        </Typography.Paragraph>
-      </Dragger>
+      {status ? (
+        <Alert type={status.type} message={status.message} showIcon style={{ marginBottom: 0 }} />
+      ) : (
+        <Alert type="info" message={copy.status.idle} showIcon />
+      )}
       <Dragger
         multiple={false}
         beforeUpload={handleFinanceUpload}
@@ -76,12 +85,32 @@ const DemoUploadCardContent = ({
           {copy.drop.pdf.hint}
         </Typography.Paragraph>
       </Dragger>
-      <List
-        size="small"
-        header={<Typography.Text strong>{copy.listTitle}</Typography.Text>}
-        dataSource={listItems}
-        renderItem={(item) => <List.Item>{item}</List.Item>}
-      />
+      <Descriptions column={1} size="small" bordered>
+        <Descriptions.Item label={copy.labels.products}>
+          {financeImport ? (
+            <Space size="small">
+              <Tag color="processing">{financeImport.fileName}</Tag>
+              <Typography.Text type="secondary">
+                {new Date(financeImport.importedAt).toLocaleString()}
+              </Typography.Text>
+            </Space>
+          ) : (
+            <Typography.Text type="secondary">{copy.empty.products}</Typography.Text>
+          )}
+        </Descriptions.Item>
+        <Descriptions.Item label={copy.labels.pdf}>
+          {pdfImport ? (
+            <Space size="small">
+              <Tag color="success">{pdfImport.fileName}</Tag>
+              <Typography.Text type="secondary">
+                {new Date(pdfImport.importedAt).toLocaleString()}
+              </Typography.Text>
+            </Space>
+          ) : (
+            <Typography.Text type="secondary">{copy.empty.pdf}</Typography.Text>
+          )}
+        </Descriptions.Item>
+      </Descriptions>
     </Space>
   </Card>
 )

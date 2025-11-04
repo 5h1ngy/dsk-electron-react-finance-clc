@@ -3,8 +3,8 @@
     "title": "Offline Risk Suite",
     "menu": {
       "workbench": "Profilazione utente",
-      "diagnostics": "Diagnostics",
-      "products": "Prodotti"
+      "products": "Prodotti",
+      "settings": "Impostazioni"
     }
   },
   "layout": {
@@ -34,29 +34,23 @@
       "updated": "Aggiornato"
     }
   },
-  "health": {
-    "status": {
-      "offline": "Offline",
-      "loading": "Verifica stato...",
-      "healthy": "Operativo",
-      "version": "Versione {{version}}",
-      "retryAria": "Riprova controllo stato",
-      "refreshAria": "Aggiorna controllo stato"
-    },
-    "card": {
-      "title": "Health",
-      "refresh": "Aggiorna",
-      "waiting": "In attesa di risposta..."
+  "settings": {
+    "title": "Impostazioni",
+    "appearance": {
+      "title": "Aspetto grafico",
+      "primary": "Colore primario",
+      "secondary": "Colore secondario",
+      "reset": "Ripristina colori"
     }
   },
   "demoUpload": {
     "title": "Import manuale (demo)",
-    "description": "Trascina qui i file forniti (.demo) per precompilare il questionario oppure per caricare l'universo prodotti.",
+    "description": "Gestisci le fonti demo per popolare il workbench offline.",
+    "actions": {
+      "open": "Apri import manuale",
+      "close": "Nascondi import manuale"
+    },
     "drop": {
-      "questionnaire": {
-        "title": "Questionario cliente (.xlsx)",
-        "hint": "Il foglio deve usare gli stessi ID delle domande"
-      },
       "products": {
         "title": "Universo prodotti (.xlsx)",
         "hint": "Conteggiamo strumenti e categorie per la proposta"
@@ -68,8 +62,6 @@
     },
     "messages": {
       "schemaMissing": "Schema non disponibile",
-      "questionnaireSuccess": "Questionario importato correttamente",
-      "questionnaireError": "Impossibile importare il questionario",
       "productsSuccess": "Universo prodotti importato",
       "productsError": "Impossibile importare il file strumenti",
       "pdfSchemaMissing": "Schema questionario non disponibile",
@@ -77,14 +69,21 @@
       "pdfSuccess": "PDF importato e questionario precompilato",
       "pdfError": "Impossibile importare il PDF del questionario"
     },
-    "list": {
-      "title": "Ultimi import",
-      "questionnaire": "Questionario: {{file}} ({{count}} risposte)",
-      "questionnaireEmpty": "Nessun questionario importato",
-      "pdf": "PDF: {{file}}",
-      "pdfEmpty": "Nessun questionario PDF importato",
-      "products": "Prodotti: {{file}} ({{count}} strumenti)",
-      "productsEmpty": "Nessun universo prodotti importato"
+    "status": {
+      "idle": "Nessun import eseguito",
+      "schemaMissing": "Schema non disponibile",
+      "productsSuccess": "Universo prodotti importato correttamente",
+      "productsError": "Errore durante l'import dello universe prodotti",
+      "pdfSuccess": "Questionario PDF importato",
+      "pdfError": "Errore durante l'import del questionario PDF"
+    },
+    "labels": {
+      "products": "Universo prodotti",
+      "pdf": "Questionario PDF"
+    },
+    "empty": {
+      "products": "Nessun file caricato",
+      "pdf": "Nessun PDF importato"
     }
   },
   "certificate": {
@@ -195,46 +194,6 @@
     "title": "Universo prodotti",
     "stat": "Strumenti importati",
     "empty": "Carica il file .xlsx per visualizzare categorie e conteggi."
-  },
-  "diagnostics": {
-    "health": {
-      "version": "Versione",
-      "status": "Stato",
-      "uptime": "Uptime"
-    },
-    "imports": {
-      "title": "Ultimi import",
-      "labels": {
-        "questionnaire": "Questionario",
-        "products": "Universo prodotti",
-        "pdf": "Questionario PDF",
-        "report": "Report PDF",
-        "hash": "Hash report",
-        "hashFile": "File SHA-256",
-        "manifest": "Manifest",
-        "certificate": "Certificato"
-      },
-      "values": {
-        "questionnaire": "{{file}} ({{count}} risposte)",
-        "products": "{{file}} ({{count}} strumenti)",
-        "pdf": "{{file}} ({{pages}} pagine)",
-        "report": "{{file}} ({{date}})"
-      },
-      "empty": {
-        "questionnaire": "Nessun file caricato",
-        "products": "Nessun file caricato",
-        "pdf": "Nessun PDF importato",
-        "report": "Nessun export effettuato",
-        "hash": "N/D",
-        "hashFile": "N/D",
-        "manifest": "N/D",
-        "certificate": "Nessun certificato caricato"
-      },
-      "certificate": {
-        "verified": "{{file}} ({{subject}})",
-        "pending": "{{file}} (in attesa verifica)"
-      }
-    }
   },
   "report": {
     "messages": {

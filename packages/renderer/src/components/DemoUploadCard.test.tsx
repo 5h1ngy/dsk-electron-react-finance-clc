@@ -16,10 +16,6 @@ describe('DemoUploadCard', () => {
         title: 'demoUpload.title',
         description: 'demoUpload.description',
         drop: {
-          questionnaire: {
-            title: 'q-title',
-            hint: 'q-hint'
-          },
           products: {
             title: 'p-title',
             hint: 'p-hint'
@@ -29,18 +25,20 @@ describe('DemoUploadCard', () => {
             hint: 'pdf-hint'
           }
         },
-        listTitle: 'demoUpload.list.title'
+        status: { idle: 'status-idle' },
+        labels: { products: 'prod-label', pdf: 'pdf-label' },
+        empty: { products: 'prod-empty', pdf: 'pdf-empty' }
       },
-      listItems: ['item-1', 'item-2'],
-      handleQuestionnaireUpload: jest.fn(),
       handleFinanceUpload: jest.fn(),
-      handlePdfUpload: jest.fn()
+      handlePdfUpload: jest.fn(),
+      status: null,
+      financeImport: undefined,
+      pdfImport: undefined
     })
 
     render(<DemoUploadCard />)
 
     expect(screen.getByText('demoUpload.title')).toBeInTheDocument()
-    expect(screen.getByText('item-1')).toBeInTheDocument()
     expect(screen.getByText('pdf-title')).toBeInTheDocument()
   })
 })
