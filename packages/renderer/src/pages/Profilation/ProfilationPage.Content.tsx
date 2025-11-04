@@ -15,16 +15,20 @@ import SuggestedProductsCard from '@renderer/components/SuggestedProductsCard'
 const ProfilationPageContent = () => {
   const { t } = useTranslation()
   const [searchParams, setSearchParams] = useSearchParams()
-  const [importVisible, setImportVisible] = useState(false)
+  const [importModalOpen, setImportModalOpen] = useState(false)
+  const [importCardVisible, setImportCardVisible] = useState(false)
   const { token } = theme.useToken()
   const screens = Grid.useBreakpoint()
+  const isMobile = !screens.sm
   const marginXS = token.marginXS
   const questionnaireModel = useQuestionnaireStepper()
   const importAsModal = !screens.lg
 
   useEffect(() => {
     if (importAsModal) {
-      setImportVisible(false)
+      setImportCardVisible(false)
+    } else {
+      setImportModalOpen(false)
     }
   }, [importAsModal])
 
@@ -41,11 +45,13 @@ const ProfilationPageContent = () => {
 
   const handleImportToggle = useCallback(() => {
     if (importAsModal) {
-      setImportVisible(true)
-      return
+      setImportModalOpen(true)
+    } else {
+      setImportCardVisible((prev) => !prev)
     }
-    setImportVisible((prev) => !prev)
   }, [importAsModal])
+
+  const importActive = importAsModal ? importModalOpen : importCardVisible
 
   const tabs = useMemo(() => [
     {
@@ -58,25 +64,23 @@ const ProfilationPageContent = () => {
               <Button
                 icon={<InboxOutlined />}
                 onClick={handleImportToggle}
-                type={importVisible && !importAsModal ? 'default' : 'primary'}
+                type={importActive ? 'default' : 'primary'}
                 style={{ width: '100%', maxWidth: 220 }}
               >
-                {importVisible && !importAsModal
+                {importActive && !importAsModal
                   ? t('demoUpload.actions.close')
                   : t('demoUpload.actions.open')}
               </Button>
             </Col>
             <Col xs={24} lg={18} style={{ minWidth: 0 }}>
-              <div style={{ overflowX: 'auto', paddingBottom: token.paddingXXS }}>
-                <QuestionnaireStepperSwitcher model={questionnaireModel} />
-              </div>
+              <QuestionnaireStepperSwitcher model={questionnaireModel} />
             </Col>
           </Row>
           <Row gutter={[16, 16]} align="stretch">
-            <Col xs={24} xl={!importAsModal && importVisible ? 14 : 24}>
+            <Col xs={24} xl={!importAsModal && importCardVisible ? 14 : 24}>
               <QuestionnaireStepper model={questionnaireModel} />
             </Col>
-            {!importAsModal && importVisible ? (
+            {!importAsModal && importCardVisible ? (
               <Col xs={24} xl={10}>
                 <DemoUploadCard />
               </Col>
@@ -86,21 +90,27 @@ const ProfilationPageContent = () => {
       )
     },
     {
-      key: 'suggestions',
-      label: t('profilation.tabs.suggestions'),
-      children: <SuggestedProductsCard />
-    },
-    {
-      key: 'risk',
-      label: t('profilation.tabs.risk'),
-      children: <ScoreCard />
+      key: 'results',
+      label: `${t('profilation.tabs.suggestions')} · ${t('profilation.tabs.risk')}`,
+      children: (
+        <Space direction="vertical" size={token.marginLG} style={{ width: '100%', marginTop: marginXS }}>
+          <Row gutter={[16, 16]} align="stretch">
+            <Col xs={24} xl={9}>
+              <ScoreCard />
+            </Col>
+            <Col xs={24} xl={15}>
+              <SuggestedProductsCard />
+            </Col>
+          </Row>
+        </Space>
+      )
     },
     {
       key: 'settings',
       label: t('profilation.tabs.settings'),
       children: <CertificateCard />
     }
-  ], [handleImportToggle, importAsModal, importVisible, marginXS, questionnaireModel, t])
+  ], [handleImportToggle, importAsModal, importActive, marginXS, questionnaireModel, t, token.marginLG])
 
   return (
     <>
@@ -114,15 +124,14 @@ const ProfilationPageContent = () => {
         onChange={handleTabChange}
       />
       <Modal
-        open={importAsModal && importVisible}
+        open={importAsModal && importModalOpen}
         footer={null}
-        onCancel={() => setImportVisible(false)}
+        onCancel={() => setImportModalOpen(false)}
         title={t('demoUpload.title')}
         centered
-        width="100%"
-        style={{ top: 12 }}
-        bodyStyle={{ padding: token.paddingLG }}
-        destroyOnClose
+        width={isMobile ? '100%' : 640}
+        style={{ top: isMobile ? 12 : 80 }}
+        bodyStyle={{ padding: isMobile ? token.paddingLG : token.paddingMD }}
       >
         <DemoUploadCard />
       </Modal>

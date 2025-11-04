@@ -1,7 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
-import { Button, Dropdown, Modal, Space, Steps, Tooltip, Grid, theme } from 'antd'
-import type { MenuProps } from 'antd'
+import { Button, Modal, Space, Steps, Tooltip, Grid, theme } from 'antd'
 import { CheckCircleFilled, EllipsisOutlined } from '@ant-design/icons'
 
 import type { QuestionnaireStepperModel } from '@renderer/components/QuestionnaireStepper'
@@ -14,35 +13,18 @@ const QuestionnaireStepperSwitcher = ({ model }: QuestionnaireStepperSwitcherPro
   const { token } = theme.useToken()
   const screens = Grid.useBreakpoint()
   const { sectionsProgress, currentStep, handleStepChange, steps } = model
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
 
   const hasSections = sectionsProgress.length > 0
   const isMobile = !screens.sm
-  const isCompact = !isMobile && !screens.lg
+  const useModalSwitcher = !screens.lg
   const currentSection = hasSections ? sectionsProgress[currentStep] : undefined
 
-  const menuItems = useMemo<MenuProps['items']>(
-    () =>
-      sectionsProgress.map((section, index) => ({
-        key: section.id,
-        label: section.title,
-        disabled: steps[index]?.disabled,
-        icon:
-          section.percent === 100 ? (
-            <CheckCircleFilled style={{ color: token.colorSuccess }} />
-          ) : undefined
-      })),
-    [sectionsProgress, steps, token.colorSuccess]
-  )
-
-  const handleSelect = (key: string) => {
-    const index = sectionsProgress.findIndex((section) => section.id === key)
-    if (index !== -1 && !steps[index]?.disabled) {
-      handleStepChange(index)
-    }
+  if (!hasSections) {
+    return null
   }
 
-  const renderSteps = (withOverflow = false) => (
+  const renderSteps = () => (
     <Steps
       size="small"
       current={currentStep}
@@ -53,7 +35,6 @@ const QuestionnaireStepperSwitcher = ({ model }: QuestionnaireStepperSwitcherPro
       }}
       style={{
         width: '100%',
-        minWidth: withOverflow ? undefined : '100%',
         background: 'transparent',
         borderRadius: token.borderRadiusLG,
         padding: `${token.paddingXS}px ${token.paddingMD}px`
@@ -75,18 +56,19 @@ const QuestionnaireStepperSwitcher = ({ model }: QuestionnaireStepperSwitcherPro
     />
   )
 
-  if (!hasSections) {
-    return null
-  }
+  if (useModalSwitcher) {
+    const modalWidth = isMobile ? '100%' : 520
+    const modalTop = isMobile ? 16 : 80
+    const modalPadding = isMobile ? token.paddingLG : token.paddingMD
 
-  if (isMobile) {
     return (
       <>
         <Button
-          block
+          block={isMobile}
           size="large"
           type="default"
-          onClick={() => setMobileOpen(true)}
+          onClick={() => setModalOpen(true)}
+          icon={<EllipsisOutlined />}
           style={{
             justifyContent: 'space-between',
             display: 'flex',
@@ -95,19 +77,20 @@ const QuestionnaireStepperSwitcher = ({ model }: QuestionnaireStepperSwitcherPro
             padding: `${token.paddingXS}px ${token.paddingMD}px`
           }}
         >
-          <span style={{ flex: 1, textAlign: 'left' }}>{currentSection?.title}</span>
+          <span style={{ flex: 1, textAlign: 'left' }}>
+            {currentSection?.title ?? ''}
+          </span>
         </Button>
         <Modal
-          open={mobileOpen}
+          open={modalOpen}
           footer={null}
-          onCancel={() => setMobileOpen(false)}
+          onCancel={() => setModalOpen(false)}
           title={currentSection?.title}
           closable
           centered
-          width="100%"
-          style={{ top: 16 }}
-          bodyStyle={{ padding: token.paddingMD }}
-          destroyOnClose
+          width={modalWidth}
+          style={{ top: modalTop }}
+          bodyStyle={{ padding: modalPadding }}
         >
           <Space direction="vertical" style={{ width: '100%' }} size={token.marginSM}>
             {sectionsProgress.map((section, index) => {
@@ -125,8 +108,10 @@ const QuestionnaireStepperSwitcher = ({ model }: QuestionnaireStepperSwitcherPro
                     ) : undefined
                   }
                   onClick={() => {
-                    handleSelect(section.id)
-                    setMobileOpen(false)
+                    if (!steps[index]?.disabled) {
+                      handleStepChange(index)
+                      setModalOpen(false)
+                    }
                   }}
                   disabled={steps[index]?.disabled}
                 >
@@ -137,25 +122,6 @@ const QuestionnaireStepperSwitcher = ({ model }: QuestionnaireStepperSwitcherPro
           </Space>
         </Modal>
       </>
-    )
-  }
-
-  if (isCompact) {
-    return (
-      <Space size={token.marginSM} style={{ width: '100%' }}>
-        <div style={{ flex: 1, minWidth: 0, overflowX: 'auto' }}>
-          {renderSteps(true)}
-        </div>
-        <Dropdown
-          trigger={['click']}
-          menu={{
-            items: menuItems,
-            onClick: ({ key }) => handleSelect(key)
-          }}
-        >
-          <Button icon={<EllipsisOutlined />} shape="circle" />
-        </Dropdown>
-      </Space>
     )
   }
 
