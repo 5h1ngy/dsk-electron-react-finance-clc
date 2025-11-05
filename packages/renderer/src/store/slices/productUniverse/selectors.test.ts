@@ -2,6 +2,7 @@ import { selectProducts, selectProductCategories, selectRecommendations } from '
 import type { RootState } from '@renderer/store/types'
 
 const buildState = (): RootState => ({
+  anagrafica: { schemaStatus: 'idle', responses: {} },
   questionnaire: undefined as never,
   workspace: undefined as never,
   productUniverse: {

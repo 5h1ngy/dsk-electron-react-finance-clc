@@ -76,7 +76,8 @@ describe('QuestionnaireStepper', () => {
           title: 'Section 1',
           percent: 0
         }
-      ]
+      ],
+      fieldLayout: 'single'
     })
 
     render(<QuestionnaireStepper />)

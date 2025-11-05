@@ -35,6 +35,7 @@ const score: RiskScoreResult = {
 }
 
 const buildState = (): RootState => ({
+  anagrafica: { schemaStatus: 'idle', responses: {} },
   questionnaire: {
     schema,
     schemaStatus: 'ready',

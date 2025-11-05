@@ -8,6 +8,7 @@ import {
 import type { RootState } from '@renderer/store/types'
 
 const buildState = (): RootState => ({
+  anagrafica: { schemaStatus: 'idle', responses: {} },
   questionnaire: undefined as never,
   productUniverse: undefined as never,
   workspace: {
