@@ -1,6 +1,6 @@
 {
   "name": "dsk-electron-react-finance-clc",
-  "version": "0.11.3",
+  "version": "0.11.5",
   "description": "DSK Electron React Finance CLC is an offline workbench for risk profiling, questionnaire import and digital signing built with Electron and React.",
   "main": "./out/main/index.js",
   "author": "5h1ngy",
