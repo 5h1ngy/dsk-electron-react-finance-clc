@@ -48,40 +48,15 @@ jobs:
           git archive --format=zip --output dist/source.zip HEAD
         shell: bash
 
-      - name: Locate artifacts
-        id: artifacts
-        run: |
-          PORTABLE=$(ls dist/*-portable.exe)
-          echo "portable=$PORTABLE" >> $GITHUB_OUTPUT
-        shell: bash
-
-      - name: Create GitHub release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ env.VERSION }}
-          release_name: DSK Finance CLC v${{ env.VERSION }}
+          name: DSK Finance CLC v${{ env.VERSION }}
           draft: false
           prerelease: false
-
-      - name: Upload portable executable
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.artifacts.outputs.portable }}
-          asset_name: dsk-finance-clc-${{ env.VERSION }}-portable.exe
-          asset_content_type: application/octet-stream
-
-      - name: Upload source archive
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/source.zip
-          asset_name: dsk-finance-clc-${{ env.VERSION }}-sources.zip
-          asset_content_type: application/zip
+          files: |
+            dist/*-portable.exe
+            dist/source.zip
