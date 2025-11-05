@@ -1,0 +1,36 @@
+{
+    "extends":  "@electron-toolkit/tsconfig/tsconfig.web.json",
+    "include":  [
+        "packages/renderer/src/env.d.ts",
+        "packages/renderer/src/**/*",
+        "packages/renderer/src/**/*.tsx",
+        "packages/preload/src/**/*.d.ts",
+        "packages/engines/**/*.ts",
+        "packages/engines/**/*.tsx"
+    ],
+    "compilerOptions":  {
+        "composite":  true,
+        "jsx":  "react-jsx",
+        "baseUrl":  ".",
+        "paths":  {
+            "@renderer/*":  [
+                "packages/renderer/src/*"
+            ],
+            "@engines/*": [
+                "packages/engines/*"
+            ],
+            "@preload/*":  [
+                "packages/preload/src/*"
+            ],
+            "@main/*":  [
+                "packages/main/src/*"
+            ]
+        },
+        "strict":  true,
+        "types":  [
+            "jest",
+            "@testing-library/jest-dom"
+        ],
+        "resolveJsonModule": true
+    }
+}

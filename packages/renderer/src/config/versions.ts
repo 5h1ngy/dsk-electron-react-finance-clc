@@ -1,0 +1,2 @@
+export const SCORING_ENGINE_VERSION = '1.0.0'
+export const REPORT_TEMPLATE_VERSION = '1.1.0'

@@ -1,10 +1,34 @@
 {
-  "compilerOptions": {
-    "composite": true,
-    "skipLibCheck": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true
-  },
-  "include": ["vite.config.ts"]
+    "extends":  "@electron-toolkit/tsconfig/tsconfig.node.json",
+    "include":  [
+        "electron.vite.config.*",
+        "packages/main/src/**/*",
+        "packages/preload/src/**/*",
+        "packages/engines/**/*.ts",
+        "packages/engines/**/*.tsx",
+        "types/**/*.d.ts"
+    ],
+    "compilerOptions":  {
+        "composite":  true,
+        "types":  [
+            "electron-vite/node",
+            "jest"
+        ],
+        "strict":  true,
+        "baseUrl":  ".",
+        "paths":  {
+            "@main/*":  [
+                "packages/main/src/*"
+            ],
+            "@engines/*": [
+                "packages/engines/*"
+            ],
+            "@preload/*":  [
+                "packages/preload/src/*"
+            ],
+            "@renderer/*": [
+                "packages/renderer/src/*"
+            ]
+        }
+    }
 }
