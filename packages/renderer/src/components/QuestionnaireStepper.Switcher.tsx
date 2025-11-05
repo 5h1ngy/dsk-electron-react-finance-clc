@@ -36,8 +36,8 @@ const QuestionnaireStepperSwitcher = ({ model }: QuestionnaireStepperSwitcherPro
       style={{
         width: '100%',
         background: 'transparent',
-        borderRadius: token.borderRadiusLG,
-        padding: `${token.paddingXS}px ${token.paddingMD}px`
+        margin: 0,
+        padding: 0
       }}
       items={sectionsProgress.map((section, index) => ({
         title: (
@@ -90,7 +90,7 @@ const QuestionnaireStepperSwitcher = ({ model }: QuestionnaireStepperSwitcherPro
           centered
           width={modalWidth}
           style={{ top: modalTop }}
-          bodyStyle={{ padding: modalPadding }}
+          styles={{ body: { padding: modalPadding } }}
         >
           <Space direction="vertical" style={{ width: '100%' }} size={token.marginSM}>
             {sectionsProgress.map((section, index) => {

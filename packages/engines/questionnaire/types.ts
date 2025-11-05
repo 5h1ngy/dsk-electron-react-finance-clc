@@ -1,4 +1,4 @@
-export type QuestionType = 'number' | 'percentage' | 'single_choice'
+export type QuestionType = 'number' | 'percentage' | 'single_choice' | 'text'
 
 export interface QuestionDefinition {
   id: string

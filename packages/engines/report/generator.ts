@@ -6,9 +6,15 @@ import type { QuestionnaireResponses, QuestionnaireSchema } from '@engines/quest
 import type { RiskScoreResult } from '@engines/scoring'
 
 export interface ReportPayload {
-  schema: QuestionnaireSchema
-  responses: QuestionnaireResponses
-  score: RiskScoreResult
+  questionnaire: {
+    schema: QuestionnaireSchema
+    responses: QuestionnaireResponses
+    score: RiskScoreResult
+  }
+  anagrafica?: {
+    schema: QuestionnaireSchema
+    responses: QuestionnaireResponses
+  }
 }
 
 const formatDateTime = (date = new Date()): string =>
@@ -22,48 +28,65 @@ const formatResponse = (value: unknown): string => {
 }
 
 export const generateRiskReport = async ({
-  schema,
-  responses,
-  score
+  questionnaire,
+  anagrafica
 }: ReportPayload): Promise<Uint8Array> => {
+  const { schema: questionnaireSchema, responses: questionnaireResponses, score } = questionnaire
   const pdf = await PDFDocument.create()
-  const page = pdf.addPage()
-  const { width, height } = page.getSize()
+  let page = pdf.addPage()
   const margin = 40
-  const contentWidth = width - margin * 2
+  const getContentWidth = () => page.getWidth() - margin * 2
   const titleFont = await pdf.embedFont(StandardFonts.HelveticaBold)
   const bodyFont = await pdf.embedFont(StandardFonts.Helvetica)
 
-  let cursor = height - margin
+  let cursor = page.getHeight() - margin
+  const lineSpacing = 6
+
+  const startNewPage = () => {
+    page = pdf.addPage()
+    cursor = page.getHeight() - margin
+  }
+
+  const ensureSpace = (size: number) => {
+    if (cursor - (size + lineSpacing) <= margin) {
+      startNewPage()
+    }
+  }
 
   const drawText = (
     text: string,
-    options: { size: number; font?: typeof bodyFont; color?: RGB }
+    options: { size?: number; font?: typeof bodyFont; color?: RGB } = {}
   ) => {
-    const { size, font = bodyFont, color = rgb(0, 0, 0) } = options
-    cursor -= size + 6
+    const { size = 12, font = bodyFont, color = rgb(0, 0, 0) } = options
+    ensureSpace(size)
+    cursor -= size + lineSpacing
     page.drawText(text, {
       x: margin,
       y: cursor,
       size,
       font,
       color,
-      maxWidth: contentWidth
+      maxWidth: getContentWidth()
     })
+  }
+
+  const addSpacing = (value: number) => {
+    ensureSpace(value)
+    cursor -= value
   }
 
   const localizedRiskClass = i18n.t(`risk.class.${score.riskClass}`)
   const localizedVolatility = i18n.t(`risk.band.${score.volatilityBand}`)
 
   drawText(i18n.t('app.title'), { size: 18, font: titleFont })
-  drawText(i18n.t('report.pdf.title', { title: schema.title }), { size: 12 })
+  drawText(i18n.t('report.pdf.title', { title: questionnaireSchema.title }), { size: 12 })
   drawText(i18n.t('report.pdf.generated', { date: formatDateTime() }), {
     size: 10,
     color: rgb(0.3, 0.3, 0.3)
   })
   drawText(
     i18n.t('report.pdf.versions', {
-      schema: schema.schemaVersion,
+      schema: questionnaireSchema.schemaVersion,
       scoring: SCORING_ENGINE_VERSION
     }),
     { size: 10, color: rgb(0.3, 0.3, 0.3) }
@@ -83,13 +106,33 @@ export const generateRiskReport = async ({
 
   score.rationales.forEach((rationale) => drawText(`- ${i18n.t(rationale)}`, { size: 10 }))
 
-  schema.sections.forEach((section) => {
-    cursor -= 20
-    drawText(section.label, { size: 12, font: titleFont })
-    section.questions.forEach((question) => {
-      drawText(`${question.label}: ${formatResponse(responses[question.id])}`, { size: 10 })
+  const appendSections = (
+    schema: QuestionnaireSchema,
+    responses: QuestionnaireResponses,
+    heading: string
+  ) => {
+    drawText(heading, { size: 12, font: titleFont })
+    schema.sections.forEach((section) => {
+      addSpacing(14)
+      drawText(section.label, { size: 11, font: titleFont })
+      section.questions.forEach((question) => {
+        drawText(`${question.label}: ${formatResponse(responses[question.id])}`, { size: 10 })
+      })
     })
-  })
+  }
+
+  if (anagrafica) {
+    addSpacing(16)
+    appendSections(anagrafica.schema, anagrafica.responses, anagrafica.schema.title)
+    startNewPage()
+  }
+
+  addSpacing(16)
+  appendSections(
+    questionnaireSchema,
+    questionnaireResponses,
+    i18n.t('report.sections.questionnaire')
+  )
 
   cursor -= 30
   drawText(i18n.t('report.pdf.hashNotice'), {

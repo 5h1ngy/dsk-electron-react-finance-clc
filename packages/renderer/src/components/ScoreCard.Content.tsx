@@ -41,6 +41,7 @@ interface ScoreCardContentProps {
   exportLabel: string
   recomputeLabel: string
   notesTitle: string
+  mergeNotice: string
   modalCopy: ScoreCardModalCopy
   unsignedModalCopy: UnsignedModalCopy
   passwordModalOpen: boolean
@@ -70,6 +71,7 @@ const ScoreCardContent = ({
   exportLabel,
   recomputeLabel,
   notesTitle,
+  mergeNotice,
   modalCopy,
   unsignedModalCopy,
   passwordModalOpen,
@@ -150,7 +152,9 @@ const ScoreCardContent = ({
             size="small"
             type="inner"
             title={notesTitle}
-            bodyStyle={{ display: 'flex', flexDirection: 'column', gap: token.marginXS }}
+            styles={{
+              body: { display: 'flex', flexDirection: 'column', gap: token.marginXS }
+            }}
           >
             {notes.map((item) => (
               <Typography.Text key={item} type="secondary">
@@ -159,6 +163,10 @@ const ScoreCardContent = ({
             ))}
           </Card>
         )}
+
+        <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
+          {mergeNotice}
+        </Typography.Paragraph>
       </Space>
 
       <Modal

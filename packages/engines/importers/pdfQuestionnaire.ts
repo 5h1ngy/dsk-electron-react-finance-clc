@@ -11,7 +11,7 @@ GlobalWorkerOptions.workerSrc = workerSrc
 
 const coerceValue = (raw: string, question: QuestionDefinition): string | number => {
   const trimmed = raw.trim()
-  if (question.type === 'single_choice') {
+  if (question.type === 'single_choice' || question.type === 'text') {
     return trimmed
   }
   const numeric = Number(trimmed.replace(',', '.'))
@@ -27,15 +27,15 @@ const findValueInText = (text: string, questionId: string): string | undefined =
   return match?.[1]?.trim()
 }
 
-export interface PdfImportResult {
-  responses: QuestionnaireResponses
+export interface PdfImportSchemasResult {
+  responsesBySchema: QuestionnaireResponses[]
   pages: number
 }
 
-export const parseQuestionnairePdf = async (
+export const parsePdfSchemas = async (
   file: File,
-  schema: QuestionnaireSchema
-): Promise<PdfImportResult> => {
+  schemas: QuestionnaireSchema[]
+): Promise<PdfImportSchemasResult> => {
   const data = await file.arrayBuffer()
   const pdf = await getDocument({ data }).promise
   let text = ''
@@ -47,20 +47,35 @@ export const parseQuestionnairePdf = async (
     text += `\n${pageText}`
   }
 
+  const pages = pdf.numPages
   await pdf.destroy()
 
-  const responses: QuestionnaireResponses = {}
-  const pages = pdf.numPages
-
-  schema.sections.forEach((section) => {
-    section.questions.forEach((question) => {
-      const rawValue = findValueInText(text, question.id)
-      if (!rawValue) {
-        return
-      }
-      responses[question.id] = coerceValue(rawValue, question)
+  const responsesBySchema = schemas.map((schema) => {
+    const responses: QuestionnaireResponses = {}
+    schema.sections.forEach((section) => {
+      section.questions.forEach((question) => {
+        const rawValue = findValueInText(text, question.id)
+        if (!rawValue) {
+          return
+        }
+        responses[question.id] = coerceValue(rawValue, question)
+      })
     })
+    return responses
   })
 
-  return { responses, pages }
+  return { responsesBySchema, pages }
+}
+
+export interface PdfImportResult {
+  responses: QuestionnaireResponses
+  pages: number
+}
+
+export const parseQuestionnairePdf = async (
+  file: File,
+  schema: QuestionnaireSchema
+): Promise<PdfImportResult> => {
+  const { responsesBySchema, pages } = await parsePdfSchemas(file, [schema])
+  return { responses: responsesBySchema[0] ?? {}, pages }
 }

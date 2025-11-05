@@ -7,16 +7,15 @@ import type { TFunction } from 'i18next'
 
 import { useAppDispatch, useAppSelector } from '@renderer/store/hooks'
 import {
-  applyBulkResponses,
-  computeQuestionnaireScore,
-  initializeQuestionnaire,
-  resetQuestionnaire,
-  selectAnsweredProgress,
-  selectQuestionnaireSchema,
-  selectQuestionnaireStatus,
-  selectResponses
-} from '@renderer/store/slices/questionnaire'
-
+  applyAnagraficaResponses,
+  initializeAnagrafica,
+  resetAnagrafica,
+  selectAnagraficaProgress,
+  selectAnagraficaResponses,
+  selectAnagraficaSchema,
+  selectAnagraficaStatus
+} from '@renderer/store/slices/anagrafica'
+import type { QuestionnaireStepperModel } from '@renderer/components/QuestionnaireStepper'
 import type { QuestionnaireResponses, QuestionDefinition } from '@engines/questionnaire'
 
 const isValuePresent = (value: unknown): boolean =>
@@ -27,44 +26,44 @@ const buildQuestionSchema = (question: QuestionDefinition, t: TFunction) => {
   if (question.type === 'single_choice') {
     const allowed = question.options ?? []
     schema = z
-      .string({ required_error: t('questionnaire.validation.required') })
+      .string({ required_error: t('anagrafica.validation.required') })
       .refine((value) => allowed.includes(value), {
-        message: t('questionnaire.validation.invalidChoice')
+        message: t('anagrafica.validation.invalidChoice')
       })
   } else if (question.type === 'text') {
-    const base = z.string({ required_error: t('questionnaire.validation.required') }).trim()
+    const base = z.string({ required_error: t('anagrafica.validation.required') }).trim()
     schema = question.required
-      ? base.min(1, t('questionnaire.validation.required'))
+      ? base.min(1, t('anagrafica.validation.required'))
       : base
   } else {
     schema = z
       .number({
-        required_error: t('questionnaire.validation.required'),
-        invalid_type_error: t('questionnaire.validation.invalidNumber')
+        required_error: t('anagrafica.validation.required'),
+        invalid_type_error: t('anagrafica.validation.invalidNumber')
       })
       .refine(
         (value) =>
           (question.min === undefined || value >= question.min) &&
           (question.max === undefined || value <= question.max),
-        { message: t('questionnaire.validation.outOfRange') }
+        { message: t('anagrafica.validation.outOfRange') }
       )
   }
   return question.required ? schema : schema.optional()
 }
 
-export const useQuestionnaireStepper = () => {
+export const useAnagraficaStepper = (): QuestionnaireStepperModel => {
   const dispatch = useAppDispatch()
-  const schema = useAppSelector(selectQuestionnaireSchema)
-  const status = useAppSelector(selectQuestionnaireStatus)
-  const responses = useAppSelector(selectResponses)
-  const progress = useAppSelector(selectAnsweredProgress)
+  const schema = useAppSelector(selectAnagraficaSchema)
+  const status = useAppSelector(selectAnagraficaStatus)
+  const responses = useAppSelector(selectAnagraficaResponses)
+  const progress = useAppSelector(selectAnagraficaProgress)
   const { t } = useTranslation()
   const [currentStep, setCurrentStep] = useState(0)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
 
   useEffect(() => {
     if (status === 'idle') {
-      void dispatch(initializeQuestionnaire())
+      void dispatch(initializeAnagrafica())
     }
   }, [dispatch, status])
 
@@ -156,15 +155,13 @@ export const useQuestionnaireStepper = () => {
 
   const onSubmit = useCallback(
     (values: QuestionnaireResponses) => {
-      dispatch(applyBulkResponses(values))
+      dispatch(applyAnagraficaResponses(values))
       setValidationErrors([])
       if (!schema) {
         return
       }
       if (currentStep < schema.sections.length - 1) {
         setCurrentStep((prev) => prev + 1)
-      } else {
-        dispatch(computeQuestionnaireScore())
       }
     },
     [currentStep, dispatch, schema]
@@ -194,7 +191,7 @@ export const useQuestionnaireStepper = () => {
   )
 
   const handleReset = useCallback(() => {
-    dispatch(resetQuestionnaire())
+    dispatch(resetAnagrafica())
     reset({})
     setValidationErrors([])
     setCurrentStep(0)
@@ -212,15 +209,15 @@ export const useQuestionnaireStepper = () => {
   }, [canNavigateTo, schema])
 
   const copy = {
-    title: t('questionnaire.title'),
-    completion: t('questionnaire.completion'),
-    reset: t('questionnaire.reset'),
-    alert: t('questionnaire.alert'),
-    info: t('questionnaire.info'),
+    title: t('anagrafica.title'),
+    completion: t('anagrafica.completion'),
+    reset: t('anagrafica.reset'),
+    alert: t('anagrafica.alert'),
+    info: t('anagrafica.info'),
     nav: {
-      back: t('questionnaire.nav.back'),
-      next: t('questionnaire.nav.next'),
-      finish: t('questionnaire.nav.finish')
+      back: t('anagrafica.nav.back'),
+      next: t('anagrafica.nav.next'),
+      finish: t('anagrafica.nav.finish')
     }
   }
 
@@ -244,6 +241,6 @@ export const useQuestionnaireStepper = () => {
     schema,
     isLastStep,
     sectionsProgress,
-    fieldLayout: 'single' as const
+    fieldLayout: 'double' as const
   }
 }

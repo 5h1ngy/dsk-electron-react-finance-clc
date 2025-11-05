@@ -19,6 +19,7 @@ describe('setupStore', () => {
     expect(configureStore).toHaveBeenCalledWith(
       expect.objectContaining({
         reducer: expect.objectContaining({
+          anagrafica: expect.any(Function),
           questionnaire: expect.any(Function),
           workspace: expect.any(Function),
           productUniverse: expect.any(Function)

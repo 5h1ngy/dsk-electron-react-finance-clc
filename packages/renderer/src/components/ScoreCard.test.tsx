@@ -31,6 +31,7 @@ const baseHookValue = {
   exportLabel: 'score.export',
   recomputeLabel: 'score.recompute',
   notesTitle: 'score.notesTitle',
+  mergeNotice: 'score.mergeNoticeReady',
   modalCopy: {
     title: 'score.modal.title',
     description: () => 'desc',
@@ -69,6 +70,7 @@ describe('ScoreCard', () => {
     expect(baseHookValue.handleRecompute).toHaveBeenCalled()
     expect(baseHookValue.handleExportClick).toHaveBeenCalled()
     expect(screen.getByText('note-1')).toBeInTheDocument()
+    expect(screen.getByText('score.mergeNoticeReady')).toBeInTheDocument()
   })
 
   it('renders empty state when score is missing', () => {
