@@ -41,6 +41,7 @@ interface ScoreCardContentProps {
   exportLabel: string
   recomputeLabel: string
   notesTitle: string
+  mergeNotice: string
   modalCopy: ScoreCardModalCopy
   unsignedModalCopy: UnsignedModalCopy
   passwordModalOpen: boolean
@@ -70,6 +71,7 @@ const ScoreCardContent = ({
   exportLabel,
   recomputeLabel,
   notesTitle,
+  mergeNotice,
   modalCopy,
   unsignedModalCopy,
   passwordModalOpen,
@@ -161,6 +163,10 @@ const ScoreCardContent = ({
             ))}
           </Card>
         )}
+
+        <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
+          {mergeNotice}
+        </Typography.Paragraph>
       </Space>
 
       <Modal

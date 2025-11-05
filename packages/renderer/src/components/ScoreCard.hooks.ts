@@ -11,6 +11,10 @@ import {
 import { selectCertificate, selectReportExport } from '@renderer/store/slices/workspace'
 import { selectProducts, setRecommendations } from '@renderer/store/slices/productUniverse'
 import { buildRecommendations } from '@renderer/store/slices/productUniverse/slice'
+import {
+  selectAnagraficaResponses,
+  selectAnagraficaSchema
+} from '@renderer/store/slices/anagrafica'
 
 export const useScoreCard = () => {
   const dispatch = useAppDispatch()
@@ -19,6 +23,8 @@ export const useScoreCard = () => {
   const lastExport = useAppSelector(selectReportExport)
   const certificate = useAppSelector(selectCertificate)
   const products = useAppSelector(selectProducts)
+  const anagraficaResponses = useAppSelector(selectAnagraficaResponses)
+  const anagraficaSchema = useAppSelector(selectAnagraficaSchema)
   const { exportReport, exportUnsignedReport, exporting } = useReportExporter()
   const { t } = useTranslation()
   const [passwordModalOpen, setPasswordModalOpen] = useState(false)
@@ -143,6 +149,12 @@ export const useScoreCard = () => {
     [score]
   )
 
+  const mergeNotice = useMemo(() => {
+    const hasAnagrafica =
+      Boolean(anagraficaSchema) && Object.keys(anagraficaResponses ?? {}).length > 0
+    return hasAnagrafica ? t('score.mergeNoticeReady') : t('score.mergeNoticeMissing')
+  }, [anagraficaResponses, anagraficaSchema, t])
+
   return {
     title: t('score.title'),
     emptyDescription: t('score.empty'),
@@ -156,6 +168,7 @@ export const useScoreCard = () => {
     exportLabel: t('score.export'),
     recomputeLabel: t('score.recompute'),
     notesTitle: t('score.notesTitle'),
+    mergeNotice,
     modalCopy: {
       title: t('score.modal.title'),
       description: (fileName: string | undefined) =>

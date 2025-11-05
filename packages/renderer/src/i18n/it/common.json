@@ -200,6 +200,8 @@
     "export": "Esporta PDF firmato",
     "exportTooltipIncomplete": "Completa tutte le risposte obbligatorie prima di esportare il PDF",
     "exportTooltipUnsigned": "Esporta senza firma digitale",
+    "mergeNoticeReady": "Il PDF includerà sia l'anagrafica sia il questionario compilato.",
+    "mergeNoticeMissing": "Compila anche l'anagrafica per includerla nell'esportazione PDF.",
     "messages": {
       "certificateMissing": "Carica il certificato P12 nella scheda dedicata.",
       "missingAnswers": "Mancano alcune risposte obbligatorie"
@@ -251,6 +253,9 @@
       "summary": "Punteggio: {{score}} | Classe: {{riskClass}} | Volatilità: {{volatility}}",
       "hashNotice": "La firma digitale e il relativo hash SHA-256 vengono applicati al momento dell'esportazione.",
       "manifestNotice": "File ausiliari (.sha256.txt e .manifest.json) vengono salvati accanto al PDF per la verifica offline."
+    },
+    "sections": {
+      "questionnaire": "Questionario di profilazione"
     }
   },
   "errors": {

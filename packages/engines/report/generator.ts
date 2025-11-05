@@ -33,29 +33,46 @@ export const generateRiskReport = async ({
 }: ReportPayload): Promise<Uint8Array> => {
   const { schema: questionnaireSchema, responses: questionnaireResponses, score } = questionnaire
   const pdf = await PDFDocument.create()
-  const page = pdf.addPage()
-  const { width, height } = page.getSize()
+  let page = pdf.addPage()
   const margin = 40
-  const contentWidth = width - margin * 2
+  const getContentWidth = () => page.getWidth() - margin * 2
   const titleFont = await pdf.embedFont(StandardFonts.HelveticaBold)
   const bodyFont = await pdf.embedFont(StandardFonts.Helvetica)
 
-  let cursor = height - margin
+  let cursor = page.getHeight() - margin
+  const lineSpacing = 6
+
+  const startNewPage = () => {
+    page = pdf.addPage()
+    cursor = page.getHeight() - margin
+  }
+
+  const ensureSpace = (size: number) => {
+    if (cursor - (size + lineSpacing) <= margin) {
+      startNewPage()
+    }
+  }
 
   const drawText = (
     text: string,
-    options: { size: number; font?: typeof bodyFont; color?: RGB }
+    options: { size?: number; font?: typeof bodyFont; color?: RGB } = {}
   ) => {
-    const { size, font = bodyFont, color = rgb(0, 0, 0) } = options
-    cursor -= size + 6
+    const { size = 12, font = bodyFont, color = rgb(0, 0, 0) } = options
+    ensureSpace(size)
+    cursor -= size + lineSpacing
     page.drawText(text, {
       x: margin,
       y: cursor,
       size,
       font,
       color,
-      maxWidth: contentWidth
+      maxWidth: getContentWidth()
     })
+  }
+
+  const addSpacing = (value: number) => {
+    ensureSpace(value)
+    cursor -= value
   }
 
   const localizedRiskClass = i18n.t(`risk.class.${score.riskClass}`)
@@ -89,29 +106,33 @@ export const generateRiskReport = async ({
 
   score.rationales.forEach((rationale) => drawText(`- ${i18n.t(rationale)}`, { size: 10 }))
 
-  if (anagrafica) {
-    cursor -= 20
-    drawText(anagrafica.schema.title, { size: 12, font: titleFont })
-    anagrafica.schema.sections.forEach((section) => {
-      cursor -= 16
+  const appendSections = (
+    schema: QuestionnaireSchema,
+    responses: QuestionnaireResponses,
+    heading: string
+  ) => {
+    drawText(heading, { size: 12, font: titleFont })
+    schema.sections.forEach((section) => {
+      addSpacing(14)
       drawText(section.label, { size: 11, font: titleFont })
       section.questions.forEach((question) => {
-        drawText(`${question.label}: ${formatResponse(anagrafica.responses[question.id])}`, {
-          size: 10
-        })
+        drawText(`${question.label}: ${formatResponse(responses[question.id])}`, { size: 10 })
       })
     })
   }
 
-  questionnaireSchema.sections.forEach((section) => {
-    cursor -= 20
-    drawText(section.label, { size: 12, font: titleFont })
-    section.questions.forEach((question) => {
-      drawText(`${question.label}: ${formatResponse(questionnaireResponses[question.id])}`, {
-        size: 10
-      })
-    })
-  })
+  if (anagrafica) {
+    addSpacing(16)
+    appendSections(anagrafica.schema, anagrafica.responses, anagrafica.schema.title)
+    startNewPage()
+  }
+
+  addSpacing(16)
+  appendSections(
+    questionnaireSchema,
+    questionnaireResponses,
+    i18n.t('report.sections.questionnaire')
+  )
 
   cursor -= 30
   drawText(i18n.t('report.pdf.hashNotice'), {

@@ -21,6 +21,7 @@ const ScoreCard = () => {
       exportLabel={data.exportLabel}
       recomputeLabel={data.recomputeLabel}
       notesTitle={data.notesTitle}
+      mergeNotice={data.mergeNotice}
       modalCopy={data.modalCopy}
       unsignedModalCopy={data.unsignedModalCopy}
       passwordModalOpen={data.passwordModalOpen}
