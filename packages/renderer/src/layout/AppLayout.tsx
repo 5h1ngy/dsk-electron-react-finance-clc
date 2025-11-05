@@ -1,4 +1,4 @@
-import { AppstoreOutlined, BankOutlined, SettingOutlined } from '@ant-design/icons'
+﻿import { AppstoreOutlined, BankOutlined, SettingOutlined } from '@ant-design/icons'
 import { Layout, Menu, Typography, theme } from 'antd'
 import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import AppLayoutHeader from '@renderer/layout/AppLayout.Header'
+import type { EnvironmentApi } from '@preload/types'
 
 const { Sider, Content } = Layout
 
@@ -44,6 +45,14 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   }, [location.pathname])
 
   const tabKey = new URLSearchParams(location.search).get('tab') ?? 'questionnaire'
+  const rendererWindow = window as typeof window & {
+    environment?: EnvironmentApi
+    api?: { environment?: EnvironmentApi }
+  }
+  const environmentInfo = rendererWindow.environment ?? rendererWindow.api?.environment ?? undefined
+
+  const showVersionBadge = Boolean(environmentInfo?.enableDevtools)
+  const versionText = environmentInfo?.appVersion ? `v${environmentInfo.appVersion}` : undefined
 
   const breadcrumbItems = useMemo(() => {
     const segments = location.pathname.split('/').filter(Boolean)
@@ -149,13 +158,55 @@ const AppLayout = ({ children }: AppLayoutProps) => {
                   {collapsed ? 'DSK' : t('app.title')}
                 </Typography.Title>
               </div>
-              <Menu
-                mode="inline"
-                selectedKeys={selectedKeys}
-                items={menuItems}
-                onClick={({ key }) => navigate(key)}
-                style={{ border: 'none', flex: 1, overflowY: 'auto', marginTop: token.marginMD }}
-              />
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flex: 1,
+                  minHeight: 0,
+                  overflow: 'hidden'
+                }}
+              >
+                <Menu
+                  mode="inline"
+                  selectedKeys={selectedKeys}
+                  items={menuItems}
+                  onClick={({ key }) => navigate(key)}
+                  style={{
+                    border: 'none',
+                    flex: 1,
+                    overflowY: 'auto',
+                    marginTop: token.marginMD
+                  }}
+                />
+                {showVersionBadge && versionText && (
+                  <div
+                    style={{
+                      marginTop: 'auto',
+                      background: token.colorFillQuaternary,
+                      borderRadius: token.borderRadiusLG,
+                      padding: token.paddingSM,
+                      textAlign: 'center',
+                      minHeight: 48,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: `1px solid ${token.colorBorderSecondary}`
+                    }}
+                  >
+                    <Typography.Text
+                      style={{
+                        color: token.colorText,
+                        fontSize: token.fontSizeSM,
+                        fontWeight: 600,
+                        letterSpacing: 0.5
+                      }}
+                    >
+                      {versionText}
+                    </Typography.Text>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </Sider>

@@ -1,11 +1,11 @@
 {
-  "name": "dsk-finance-clc",
+  "name": "dsk-electron-react-finance-clc",
   "version": "0.1.0",
-  "description": "DSK Finance CLC è un workbench offline per profilazione rischio, import questionari e firma digitale basato su Electron + React.",
+  "description": "DSK Electron React Finance CLC is an offline workbench for risk profiling, questionnaire import and digital signing built with Electron and React.",
   "main": "./out/main/index.js",
-  "author": "DSK Digital Lab",
-  "homepage": "https://github.com/dsk-lab/dsk-finance-clc",
-  "license": "UNLICENSED",
+  "author": "5h1ngy",
+  "homepage": "https://github.com/5h1ngy/dsk-electron-react-finance-clc",
+  "license": "MIT",
   "topics": [
     "electron",
     "react",
@@ -20,10 +20,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dsk-lab/dsk-finance-clc.git"
+    "url": "https://github.com/5h1ngy/dsk-electron-react-finance-clc.git"
   },
   "bugs": {
-    "url": "https://github.com/dsk-lab/dsk-finance-clc/issues"
+    "url": "https://github.com/5h1ngy/dsk-electron-react-finance-clc/issues"
   },
   "scripts": {
     "format": "prettier --write .",
@@ -38,9 +38,9 @@
     "build": "npm run typecheck && electron-vite build",
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "npm run build && electron-builder --dir",
-    "build:win": "npm run build && electron-builder --win",
-    "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux"
+    "build:win": "npm run build && electron-builder --win portable",
+    "prepare": "husky install",
+    "version:set": "node scripts/update-version.mjs"
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
@@ -75,6 +75,8 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-react": "^5.0.4",
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
     "electron": "^38.3.0",
     "electron-builder": "^26.0.12",
     "electron-vite": "^4.0.1",
@@ -84,6 +86,7 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "husky": "^9.1.7",
     "prettier": "^3.6.2",
     "ts-jest": "^29.4.5",
     "typescript": "^5.7.3",

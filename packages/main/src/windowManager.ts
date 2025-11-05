@@ -2,6 +2,7 @@ import { BrowserWindow } from 'electron'
 import { join } from 'node:path'
 
 import { logger, shouldSuppressDevtoolsMessage } from '@main/config/logger'
+import { env } from '@main/config/env'
 
 export const MAIN_WINDOW_OPTIONS: Electron.BrowserWindowConstructorOptions = {
   width: 1280,
@@ -60,6 +61,7 @@ export class MainWindowManager {
   private registerReadyHandler(window: BrowserWindow): void {
     window.on('ready-to-show', () => {
       this.logger.debug('Main window ready to show', 'Window')
+      window.maximize()
       window.show()
     })
 
@@ -69,7 +71,7 @@ export class MainWindowManager {
   }
 
   private registerDevtoolsHooks(window: BrowserWindow): void {
-    if (!this.isDev()) {
+    if (!this.isDev() || !env.enableDevtools) {
       return
     }
 

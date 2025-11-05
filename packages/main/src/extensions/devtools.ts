@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { access } from 'node:fs/promises'
 
 import { logger } from '@main/config/logger'
+import { env } from '@main/config/env'
 
 const REDUX_DEVTOOLS_DIR = join(app.getAppPath(), 'extensions', 'redux-devtools')
 
@@ -15,6 +16,11 @@ const isExtensionLoaded = (extensionId: string): boolean => {
 }
 
 export const loadReduxDevtoolsExtension = async (): Promise<void> => {
+  if (!env.enableDevtools) {
+    logger.debug('Skipping devtools extension loading (ENABLE_DEVTOOLS disabled)', 'Devtools')
+    return
+  }
+
   if (app.isPackaged) {
     return
   }

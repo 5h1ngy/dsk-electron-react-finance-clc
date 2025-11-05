@@ -15,17 +15,21 @@ export class EnvConfig {
     this.config = config
   }
 
-  static readonly DEFAULT_ENV_PATH = join(process.cwd(), '.env')
-
   /**
    * Loads environment variables from disk (if present) and returns a typed view.
    */
-  static load(envPath: string = EnvConfig.DEFAULT_ENV_PATH): EnvConfig {
-    if (existsSync(envPath)) {
-      dotenv.config({ path: envPath })
+  static load(envPath?: string): EnvConfig {
+    const resolvedPath = EnvConfig.resolveEnvPath(envPath)
+    if (resolvedPath) {
+      dotenv.config({ path: resolvedPath })
     }
     return new EnvConfig({
-      logLevel: EnvConfig.parseLogLevel(process.env.LOG_LEVEL)
+      logLevel: EnvConfig.parseLogLevel(process.env.LOG_LEVEL),
+      enableDevtools: EnvConfig.parseBoolean(
+        process.env.ENABLE_DEVTOOLS,
+        process.env.NODE_ENV !== 'production'
+      ),
+      appVersion: EnvConfig.parseAppVersion(process.env.APP_VERSION)
     })
   }
 
@@ -38,6 +42,14 @@ export class EnvConfig {
 
   get logLevel(): LogLevelSetting {
     return this.config.logLevel
+  }
+
+  get enableDevtools(): boolean {
+    return this.config.enableDevtools
+  }
+
+  get appVersion(): string {
+    return this.config.appVersion
   }
 
   /**
@@ -56,6 +68,59 @@ export class EnvConfig {
       default:
         return 'info'
     }
+  }
+
+  private static parseBoolean(value: string | undefined, fallback: boolean): boolean {
+    if (value === undefined) {
+      return fallback
+    }
+
+    const normalized = value.trim().toLowerCase()
+
+    if (['true', '1', 'yes', 'y', 'on'].includes(normalized)) {
+      return true
+    }
+
+    if (['false', '0', 'no', 'n', 'off'].includes(normalized)) {
+      return false
+    }
+
+    return fallback
+  }
+
+  private static parseAppVersion(value?: string): string {
+    const normalized = value?.trim()
+    if (normalized) {
+      return normalized
+    }
+    return process.env.npm_package_version ?? '0.0.0-dev'
+  }
+
+  private static resolveEnvPath(explicit?: string): string | undefined {
+    if (explicit && existsSync(explicit)) {
+      return explicit
+    }
+
+    const cwd = process.cwd()
+    const envDir = join(cwd, 'env')
+    const normalizedEnv = process.env.NODE_ENV?.toLowerCase()
+
+    const candidates: string[] = []
+    if (normalizedEnv === 'production') {
+      candidates.push(join(envDir, '.env.production'))
+    } else if (normalizedEnv === 'development') {
+      candidates.push(join(envDir, '.env.development'))
+    } else if (normalizedEnv) {
+      candidates.push(join(envDir, `.env.${normalizedEnv}`))
+      candidates.push(join(envDir, '.env.development'))
+    } else {
+      candidates.push(join(envDir, '.env.development'))
+    }
+
+    candidates.push(join(envDir, '.env'))
+    candidates.push(join(cwd, '.env'))
+
+    return candidates.find((candidate) => existsSync(candidate))
   }
 }
 

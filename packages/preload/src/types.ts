@@ -9,7 +9,13 @@ export interface ReportApi {
   exportPdf: (payload: ReportExportPayload) => Promise<ReportExportResponse>
 }
 
+export interface EnvironmentApi {
+  appVersion: string
+  enableDevtools: boolean
+}
+
 export interface PreloadApi {
   health: HealthApi
   report: ReportApi
+  environment: EnvironmentApi
 }

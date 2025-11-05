@@ -1,189 +1,192 @@
-# DSK Finance CLC ⚡️🏦  
-[![Node.js](https://img.shields.io/badge/node-%3E%3D18-339933?logo=nodedotjs&logoColor=white)](#prerequisiti) [![Electron](https://img.shields.io/badge/electron-38.3.0-47848f?logo=electron&logoColor=white)](#stack-tecnico) [![React](https://img.shields.io/badge/react-19-61dafb?logo=react&logoColor=20232a)](#stack-tecnico) [![License](https://img.shields.io/badge/license-proprietary-red)](#licenza)  
+﻿# DSK Electron React Finance CLC
 
-> Workbench offline per team finance/consulenti: importa questionari Excel/PDF, calcola il profilo di rischio, genera proposte strumenti e firma digitalmente i PDF direttamente sul dispositivo.
+[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](#release-automation) [![Node.js](https://img.shields.io/badge/node-%E2%89%A518-339933?logo=nodedotjs&logoColor=white)](#prerequisites) [![Electron](https://img.shields.io/badge/electron-38.3.0-47848f?logo=electron&logoColor=white)](#tech-stack) [![React](https://img.shields.io/badge/react-19-61dafb?logo=react&logoColor=20232a)](#tech-stack) [![License](https://img.shields.io/badge/license-MIT-ffcc00)](#license)
+
+> Offline Electron workbench for financial advisors: import Excel/PDF questionnaires, compute the risk profile, surface compliant product suggestions and sign PDFs locally with your certificate.
 
 ![Workbench preview](assets/screen-1.png)
 
 ---
 
-## 📚 Indice
-
-1. [Panoramica](#panoramica)
-2. [Caratteristiche principali](#caratteristiche-principali)
-3. [Stack tecnico](#stack-tecnico)
-4. [Architettura e directory](#architettura-e-directory)
-5. [Prerequisiti](#prerequisiti)
-6. [Setup & Comandi](#setup--comandi)
-7. [Packaging & Distribuzione](#packaging--distribuzione)
-8. [Testing & Qualità](#testing--qualità)
-9. [Configurazioni chiave](#configurazioni-chiave)
-10. [Sicurezza & Hardening](#sicurezza--hardening)
-11. [Troubleshooting](#troubleshooting)
-12. [Roadmap & Wave future](#roadmap--wave-future)
-13. [Team & Credits](#team--credits)
-14. [Licenza](#licenza)
+## Table of contents
+1. [Overview](#overview)
+2. [Key features](#key-features)
+3. [Tech stack](#tech-stack)
+4. [Architecture](#architecture)
+5. [Prerequisites](#prerequisites)
+6. [Getting started](#getting-started)
+7. [Environment configuration](#environment-configuration)
+8. [Quality & testing](#quality--testing)
+9. [Packaging](#packaging)
+10. [Release automation](#release-automation)
+11. [Roadmap](#roadmap)
+12. [Contributing](#contributing)
+13. [License](#license)
 
 ---
 
-## 🧭 Panoramica
+## Overview
+**DSK Electron React Finance CLC (Client Lifecycle Companion)** is a self-contained Electron bundle designed to operate entirely offline inside the branch network. Every engine (questionnaire, scoring, mapping, digital signature) is shipped inside the portable executable so advisors can finish the onboarding process without connectivity.
 
-**DSK Finance CLC** (Client Lifecycle Companion) è un’app Electron pensata per funzionare *interamente offline* su workstation di filiale. Permette di:
-
-- Precompilare questionari da Excel o PDF.
-- Eseguire il calcolo del profilo rischio con motore deterministico.
-- Suggerire strumenti coerenti con il profilo.
-- Generare e firmare digitalmente report PDF con certificati P12/PFX caricati runtime.
-- Ottenere diagnostica locale (stato health, import recenti, hash firma, metadati certificato).
-
----
-
-## ✨ Caratteristiche principali
-
-- **Questionnaire Engine dinamico** – schema JSON validato via Zod, React Hook Form + Zod Resolver, calcolo progress e blocking sugli step incompleti.
-- **Import multipli** – Excel (Richieste + Universo prodotti) e PDF (pattern `id: valore`). Parser dedicati negli *engines* con suite di test.
-- **Firma digitale integrata** – `node-signpdf`, generazione hash SHA-256 e manifest JSON; prompt password certificato e salvataggio file ausiliari vicino al PDF.
-- **Consistenza UX** – Ant Design 5, layout responsive, card informative (schema summary, sezione completamento, certificate card, score card, suggested products).
-- **Redux Toolkit** – slices per questionnaire, workspace e productUniverse, selectors ottimizzati, type-safe hooks.
-- **Electron Hardening** – CSP dinamica, blocco richieste in packaging, contextual logging, preload bridge tipizzato e suppression delle noisy DevTools Autofill logs.
-- **Testing completo** – Jest + Testing Library su engines, servizi main, IPC, hooks, componenti e slices. Oltre 100 test per garantire affidabilità offline.
+### What it solves
+- Import MiFID questionnaires supplied as Excel spreadsheets or structured PDFs.
+- Calculate the customer risk profile with a deterministic, auditable engine.
+- Highlight suitability gaps and recommend compliant products from the onboard product universe.
+- Generate PDF reports and sign them locally using P12/PFX digital certificates.
+- Provide on-device diagnostics (health status, certificate metadata, hash of the signed document).
 
 ---
 
-## 🧱 Stack tecnico
-
-| Layer        | Tecnologie principali |
-|--------------|-----------------------|
-| Main process | Electron 38, TypeScript strict, custom logger, IPC health/report, `node-signpdf` |
-| Preload      | ContextBridge isolato, API tipizzate (`window.api.health/report`) |
-| Renderer     | React 19, Ant Design 5, Redux Toolkit, React Hook Form + Zod, React Router 6 |
-| Engines      | Moduli standalone per questionnaire, scoring, importers, mapping, signature, report |
-| Tooling      | electron-vite, ESLint 9, Prettier 3, Jest 29 (node + jsdom), TS 5.7 |
+## Key features
+- **Dynamic questionnaire engine** – JSON schema validated with Zod + React Hook Form, per-step progress tracking and guard rails on inconsistent answers.
+- **Multiple import paths** – Dedicated engines for workbook ingestion (requests + product universe) and structured PDFs, all with extensive unit tests.
+- **Scoring & suggestion rules** – Modular mapping between target risk profiles and product categories, easy to tune per release.
+- **Integrated digital signature** – `node-signpdf`, SHA-256 hashing and safe in-memory handling of certificate secrets.
+- **Consistent UX** – Ant Design 5 components, responsive layout, informative cards (Questionnaire, Score, Suggested Products, Certificate insights).
+- **Electron hardening** – `contextIsolation`, hardened preload bridge, centralised logger that filters noisy DevTools messages, outbound request guard.
+- **Extensive tests** – >100 Jest specs across engines, main-process services, IPC boundaries, hooks and renderer components.
 
 ---
 
-## 🗂 Architettura e directory
+## Tech stack
+| Layer        | Technologies |
+|--------------|--------------|
+| Main process | Electron 38 · TypeScript strict · custom logger · IPC channels (`health`, `report`) |
+| Preload      | ContextBridge-exposed API (`window.api.health/report/environment`) |
+| Renderer     | React 19 · Ant Design 5 · Redux Toolkit · React Hook Form · React Router 6 |
+| Engines      | Standalone modules for questionnaire, mapping, scoring, report and signature pipelines |
+| Tooling      | electron-vite · Jest 29 · ESLint 9 · Prettier 3 · Husky + Commitlint |
 
-```
-├── assets/                  # Screenshot & risorse marketing
-├── build/                   # Icon/entitlements per electron-builder
-├── engines/
-│   ├── importers/           # Excel/PDF parser dedicati
-│   ├── mapping/             # Matching prodotti ↔ classi rischio
-│   ├── questionnaire/       # Schema + normalizzazione
-│   ├── report/              # Generazione PDF + metadata
-│   └── signature/           # Helpers certificati/byte utils
-├── packages/
-│   ├── main/                # Bootstrap Electron, logger, security, IPC
-│   ├── preload/             # Bridge tipizzato
-│   └── renderer/            # App React/Ant Design, store, pagine
-└── resources/               # Risorse extra per packaging
+---
+
+## Architecture
+```text
+packages/
+  main/       -> Electron bootstrap, logger, security hooks, IPC routes, window manager
+  preload/    -> secure bridge exposing typed APIs to the renderer
+  renderer/   -> React shell (pages: Profilation · Products · Settings) + Redux store
+engines/      -> Reusable business logic (imports, mapping, questionnaire normalisation, reporting, signature)
+resources/    -> Packaging resources (icons, entitlements)
+assets/       -> Marketing assets and screenshots
+env/          -> Environment profiles (.env.development / .env.production)
 ```
 
+Main flow:
+1. **Main** initialises Electron, applies hardening and (optionally) loads Redux DevTools.
+2. **Preload** exposes a minimal API surface to the renderer, plus environment information.
+3. **Renderer** orchestrates the workflow: questionnaire, scoring, suggestions, PDF export.
+4. **Engines** encapsulate pure business logic shared across renderer and main.
+
 ---
 
-## 🔧 Prerequisiti
-
+## Prerequisites
 - Node.js ≥ 18
 - npm ≥ 10
-- Windows 10/11 (per build/test finale); dev funzionante anche su macOS/Linux.
-- Certificato P12/PFX per provare la firma (facoltativo ma consigliato).
+- Windows 10/11 for the official portable build (development works cross-platform)
+- Optional: `.p12/.pfx` certificate for testing the digital signature flow
 
 ---
 
-## 🚀 Setup & Comandi
-
+## Getting started
 ```bash
-npm install                # installa dipendenze
-npm run dev                # avvia electron-vite (main + preload + renderer)
-npm run lint               # ESLint 9
-npm run format             # Prettier 3
-npm run typecheck          # TS node + web
-npm test                   # Jest (node + jsdom)
+npm install           # install dependencies once
+npm run dev           # start electron-vite in development mode
+npm run start         # preview mode (bundled renderer)
+npm run build         # compile main / preload / renderer assets
+npm run build:win     # build Windows portable executable via electron-builder
+npm run lint          # ESLint 9
+npm run test          # Jest (node + jsdom)
 ```
 
-Scripts utili:
-
-| Script             | Descrizione                                                |
-|--------------------|------------------------------------------------------------|
-| `npm run start`    | Preview electron-vite (renderer bundlato)                  |
-| `npm run build`    | Compila main/preload/renderer senza creare installer       |
-| `npm run build:win`| Build completa + `electron-builder` target Windows portable|
-| `npm run build:unpack` | Genera cartella portabile (`--dir`)                    |
-| `npm run test:watch`  | Jest watch mode                                          |
+Useful scripts:
+| Script | Description |
+|--------|-------------|
+| `npm run format` | Run Prettier 3 across the repo |
+| `npm run typecheck` | TypeScript checks for main and renderer targets |
+| `npm run test:watch` | Run Jest in watch mode |
+| `npm run version:set -- <x.y.z>` | Bump version in `package.json`, env files and README badge |
 
 ---
 
-## 📦 Packaging & Distribuzione
+## Environment configuration
+Environment profiles live inside the `env/` folder. They are picked automatically depending on `NODE_ENV`.
 
-- **Portable EXE** (default): `npm run build:win` produce `dist/dsk-finance-clc-<version>-portable.exe`, unico file pronto all’uso senza installazione.
-- Config builder (`electron-builder.yml`):
-  - `productName`: **DSK Finance CLC**
-  - `appId`: `com.dsk.finance.clc`
-  - Feed `publish`: `https://updates.dsk-finance-clc.local` (placeholder per update offline).
-  - Target extra (AppImage/Snap/Deb/DMG) già predisposti per rollout futuri.
+- `env/.env.development`
+  ```env
+  LOG_LEVEL=debug
+  ENABLE_DEVTOOLS=true
+  APP_VERSION=0.1.0
+  ```
+- `env/.env.production`
+  ```env
+  LOG_LEVEL=info
+  ENABLE_DEVTOOLS=false
+  APP_VERSION=0.1.0
+  ```
 
----
-
-## ✅ Testing & Qualità
-
-- **Jest + Testing Library** per componenti React, hooks, slices Redux, engines e servizi node.
-- **100+ test** (rendering, import, mapping, security hooks, IPC).
-- **ESLint 9** (React + Hooks + Refresh rules) e **Prettier 3** integrati nello script `build`.
-- **TypeScript strict** su tutti i package (node/web), inclusi path alias condivisi.
-
----
-
-## ⚙️ Configurazioni chiave
-
-- `packages/renderer/src/config/questionnaire.json` – schema questionario ingestito e normalizzato.
-- `packages/renderer/src/config/versions.ts` – versione motore scoring/report esposta nei PDF.
-- `packages/main/src/config/logger.ts` – logger centralizzato con formattazione colori, suppress warning DevTools.
-- `electron-builder.yml` – personalizzazione packaging (icona, target, update feed, portable).
+| Variable | Purpose |
+|----------|---------|
+| `LOG_LEVEL` | Controls the verbosity of the main-process logger |
+| `ENABLE_DEVTOOLS` | Enables Redux DevTools loading and the version badge in the sidebar |
+| `APP_VERSION` | Displayed at bootstrap and in the development sidebar badge |
 
 ---
 
-## 🛡 Sicurezza & Hardening
-
-- CSP dinamica per dev/prod (`buildContentSecurityPolicy`).
-- Network blocker su `webRequest` (consenti solo `file://` e dev server in sviluppo).
-- `contextIsolation` + Preload ridotto all’essenziale, API tipizzate con `health` e `report`.
-- Sanitizzazione certificati e password in memoria (mai salvate su disco).
-- Modalità offline completa: nessuna dipendenza runtime da servizi esterni.
-
----
-
-## 🆘 Troubleshooting
-
-| Problema | Possibile soluzione |
-|----------|---------------------|
-| `Autofill.enable failed` in console DevTools | Già soppresso dal logger; nessun impatto. |
-| Build Windows fallisce per file mancanti | Assicurati che `dist/` sia pulita; `npm run build:win` rigenera tutto. |
-| PDF non firmato | Verifica password certificato e che il file `.p12` sia caricato (Card certificato). |
-| Import Excel fallisce | Gli header devono contenere gli ID domanda (questionario) o chiavi categoria/prodotto coerenti. |
+## Quality & testing
+- **Jest 29** with dual environments (node & jsdom)
+- **Testing Library** for React component and hook coverage
+- **ESLint 9** (Electron Toolkit + React/Hooks presets)
+- **Prettier 3** for formatting
+- **TypeScript strict mode** across all packages
+- **Husky + Commitlint** enforcing Conventional Commits locally and in CI
 
 ---
 
-## 🗺 Roadmap & Wave future
-
-1. **Wave 4** – Motore adeguatezza/idoneità avanzato + explainability.
-2. **Wave 5** – Hardening enterprise: code signing ufficiale, auto-update in DMZ, accessibility AA.
-3. **Wave 6** – Supporto multi-utenza locale, audit trail e cifratura storage temporaneo.
-
----
-
-## 👥 Team & Credits
-
-- **DSK Digital Lab** – Product ownership & UX.
-- **Engineering** – Contributors multipli su main/preload/renderer/engines.
-- Tooling open-source: Electron, React, Ant Design, Redux Toolkit, Zod, Jest.
+## Packaging
+- Official target: **Windows portable** (`dsk-electron-react-finance-clc-<version>-portable.exe`)
+- Powered by `electron-builder.yml` with portable output only (no macOS/Linux artifacts)
+- CI workflow takes care of producing the executable and an accompanying source archive
 
 ---
 
-## 📄 Licenza
+## Release automation
+- Workflow: `.github/workflows/windows-portable.yml`
+- Trigger: push to `develop`
+- Steps:
+  1. Install dependencies
+  2. Build portable Windows executable
+  3. Create a tag `v<version>` (release body intentionally empty)
+  4. Upload assets: portable `.exe` and zipped sources only
 
-Progetto proprietario – tutti i diritti riservati a DSK Digital Lab. Contattare il team per accordi di utilizzo o distribuzione.
+To bump the version consistently run:
+```bash
+npm run version:set -- 0.1.1
+```
 
 ---
 
-Buon lavoro con **DSK Finance CLC**! 💼📈 Per richieste evolutive o supporto, apri una issue o contatta direttamente il team. 
+## Roadmap
+| Wave | Focus |
+|------|-------|
+| 4 | Advanced suitability/appropriateness engine with explainability |
+| 5 | Code signing, DMZ auto-update channel, accessibility AA |
+| 6 | Local multi-user support, audit trail, encrypted temporary storage |
+
+---
+
+## Contributing
+1. Fork and clone the repository.
+2. Create a feature branch (`git checkout -b feat/<feature-name>`).
+3. Follow Conventional Commit format (`type(scope): short description`).
+4. Submit a pull request targeting `develop`.
+
+When reporting issues, include debug logs (`LOG_LEVEL=debug`) and anonymised sample files when possible.
+
+---
+
+## License
+Released under the [MIT](LICENSE.md) license.
+
+---
+
+Crafted with ❤️ by **5h1ngy**.
