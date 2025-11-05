@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 import { Button, Space, Typography } from 'antd'
 
 interface QuestionnaireStepperHeaderProps {
@@ -5,15 +7,17 @@ interface QuestionnaireStepperHeaderProps {
   completionValue: number
   resetLabel: string
   onReset: () => void
+  secondaryAction?: ReactNode
 }
 
 const QuestionnaireStepperHeader = ({
   completionLabel,
   completionValue,
   resetLabel,
-  onReset
+  onReset,
+  secondaryAction
 }: QuestionnaireStepperHeaderProps) => (
-  <Space size="large">
+  <Space size="large" align="center" wrap>
     <Typography.Paragraph
       type="secondary"
       style={{ minWidth: 160, textAlign: 'right', marginBottom: 0 }}
@@ -23,6 +27,7 @@ const QuestionnaireStepperHeader = ({
     <Button onClick={onReset} type="link">
       {resetLabel}
     </Button>
+    {secondaryAction}
   </Space>
 )
 

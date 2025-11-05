@@ -53,32 +53,52 @@ const ProfilationPageContent = () => {
 
   const importActive = importAsModal ? importModalOpen : importCardVisible
 
-  const tabs = useMemo(() => [
+  const tabs = useMemo(() => {
+    const manualImportAction = (
+      <Button
+        icon={<InboxOutlined />}
+        onClick={handleImportToggle}
+        type={importActive ? 'default' : 'primary'}
+        size="middle"
+      >
+        {importActive && !importAsModal
+          ? t('demoUpload.actions.close')
+          : t('demoUpload.actions.open')}
+      </Button>
+    )
+
+    return [
     {
       key: 'questionnaire',
       label: t('profilation.tabs.questionnaire'),
       children: (
         <Space direction="vertical" size="middle" style={{ width: '100%', marginTop: marginXS }}>
           <Row gutter={[16, 16]} align="middle" wrap style={{ width: '100%' }}>
-            <Col xs={24} lg={6} style={{ display: 'flex', justifyContent: 'flex-start' }}>
-              <Button
-                icon={<InboxOutlined />}
-                onClick={handleImportToggle}
-                type={importActive ? 'default' : 'primary'}
-                style={{ width: '100%', maxWidth: 220 }}
-              >
-                {importActive && !importAsModal
-                  ? t('demoUpload.actions.close')
-                  : t('demoUpload.actions.open')}
-              </Button>
-            </Col>
-            <Col xs={24} lg={18} style={{ minWidth: 0 }}>
+            <Col xs={24} style={{ minWidth: 0 }}>
               <QuestionnaireStepperSwitcher model={questionnaireModel} />
             </Col>
+            {importAsModal ? (
+              <Col xs={24}>
+                <Button
+                  block
+                  icon={<InboxOutlined />}
+                  onClick={handleImportToggle}
+                  type={importActive ? 'default' : 'primary'}
+                  size="large"
+                >
+                  {importActive
+                    ? t('demoUpload.actions.close')
+                    : t('demoUpload.actions.open')}
+                </Button>
+              </Col>
+            ) : null}
           </Row>
           <Row gutter={[16, 16]} align="stretch">
             <Col xs={24} xl={!importAsModal && importCardVisible ? 14 : 24}>
-              <QuestionnaireStepper model={questionnaireModel} />
+              <QuestionnaireStepper
+                model={questionnaireModel}
+                secondaryAction={!importAsModal ? manualImportAction : undefined}
+              />
             </Col>
             {!importAsModal && importCardVisible ? (
               <Col xs={24} xl={10}>
@@ -110,7 +130,17 @@ const ProfilationPageContent = () => {
       label: t('profilation.tabs.settings'),
       children: <CertificateCard />
     }
-  ], [handleImportToggle, importAsModal, importActive, marginXS, questionnaireModel, t, token.marginLG])
+    ]
+  }, [
+    handleImportToggle,
+    importActive,
+    importAsModal,
+    importCardVisible,
+    marginXS,
+    questionnaireModel,
+    t,
+    token.marginLG
+  ])
 
   return (
     <>
