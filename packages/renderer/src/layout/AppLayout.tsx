@@ -77,19 +77,27 @@ const AppLayout = ({ children }: AppLayoutProps) => {
     ]
 
     if (currentPage.href === '/') {
-      const tabMap: Record<string, string> = {
-        questionnaire: t('profilation.tabs.questionnaire'),
-        suggestions: t('profilation.tabs.suggestions'),
-        risk: t('profilation.tabs.risk'),
-        settings: t('profilation.tabs.settings')
+      const tabMap: Record<
+        string,
+        { label: string; href: string }
+      > = {
+        questionnaire: { label: t('profilation.tabs.questionnaire'), href: '/' },
+        results: { label: t('profilation.tabs.risk'), href: '/?tab=results' },
+        suggestions: { label: t('profilation.tabs.suggestions'), href: '/?tab=suggestions' },
+        risk: { label: t('profilation.tabs.risk'), href: '/?tab=risk' },
+        settings: { label: t('profilation.tabs.settings'), href: '/?tab=settings' }
       }
 
-      if (tabKey !== 'questionnaire' && tabMap[tabKey]) {
-        items.push({
-          title: <Typography.Text>{tabMap[tabKey]}</Typography.Text>,
-          onClick: () => navigate(tabKey === 'questionnaire' ? '/' : `/?tab=${tabKey}`)
-        })
-      }
+      const currentTab = tabMap[tabKey] ?? tabMap.questionnaire
+      const currentLocation = `${location.pathname}${location.search}`
+
+      items.push({
+        title: <Typography.Text>{currentTab.label}</Typography.Text>,
+        onClick:
+          currentTab.href !== currentLocation
+            ? () => navigate(currentTab.href)
+            : undefined
+      })
     }
 
     return items

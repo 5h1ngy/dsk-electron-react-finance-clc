@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { useQuestionnaireStepper } from '@renderer/components/QuestionnaireStepper.hooks'
 import QuestionnaireStepperContent from '@renderer/components/QuestionnaireStepper.Content'
 import QuestionnaireStepperHeader from '@renderer/components/QuestionnaireStepper.Header'
-import { Card } from 'antd'
+import { Card, theme } from 'antd'
 
 export type QuestionnaireStepperModel = ReturnType<typeof useQuestionnaireStepper>
 
@@ -13,6 +13,8 @@ interface QuestionnaireStepperProps {
 }
 
 const QuestionnaireStepper = ({ model, secondaryAction }: QuestionnaireStepperProps = {}) => {
+  const { token } = theme.useToken()
+
   const {
     copy,
     progress,
@@ -29,13 +31,38 @@ const QuestionnaireStepper = ({ model, secondaryAction }: QuestionnaireStepperPr
   } = model ?? useQuestionnaireStepper()
 
   if (!isReady || !section) {
-    return <Card loading title={copy.title} />
+    return (
+      <Card
+        loading
+        bordered={false}
+        style={{ boxShadow: token.boxShadowSecondary }}
+        bodyStyle={{
+          padding: `${token.paddingLG}px ${token.paddingLG}px ${token.paddingXL}px`
+        }}
+      />
+    )
   }
 
   return (
     <Card
-      title={copy.title}
-      extra={
+      bordered={false}
+      style={{ boxShadow: token.boxShadowSecondary }}
+      bodyStyle={{
+        padding: `${token.paddingLG}px ${token.paddingLG}px ${token.paddingXL}px`,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: token.marginLG
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%',
+          marginBottom: token.marginSM
+        }}
+      >
         <QuestionnaireStepperHeader
           completionLabel={copy.completion}
           completionValue={progress.completed}
@@ -43,8 +70,7 @@ const QuestionnaireStepper = ({ model, secondaryAction }: QuestionnaireStepperPr
           onReset={handleReset}
           secondaryAction={secondaryAction}
         />
-      }
-    >
+      </div>
       <QuestionnaireStepperContent
         copy={copy}
         control={control}

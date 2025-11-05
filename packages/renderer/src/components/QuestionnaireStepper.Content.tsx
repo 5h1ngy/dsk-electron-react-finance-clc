@@ -58,73 +58,75 @@ const QuestionnaireStepperContent = ({
       <Space
         direction="vertical"
         size={token.marginMD}
-        style={{ width: '100%' }}
+        style={{ width: '100%', alignItems: 'flex-start' }}
       >
         {section.questions.map((question) => (
-          <div
+          <Card
             key={question.id}
-            style={{ display: 'flex', justifyContent: 'center', width: '100%' }}
+            size="small"
+            bordered={false}
+            style={{
+              width: '100%',
+              maxWidth: 520,
+              alignSelf: 'flex-start',
+              boxShadow: token.boxShadowSecondary
+            }}
+            bodyStyle={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: token.marginXS,
+              padding: `${token.paddingSM}px ${token.paddingMD}px`
+            }}
           >
-            <Card
-              size="small"
-              style={{ width: '100%', maxWidth: 520 }}
-              bodyStyle={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: token.marginXS,
-                padding: `${token.paddingSM}px ${token.paddingMD}px`
-              }}
-            >
-              <Space align="baseline" style={{ justifyContent: 'space-between' }}>
-                <Typography.Text strong>{question.label}</Typography.Text>
-                {question.required ? <Typography.Text type="danger">*</Typography.Text> : null}
-              </Space>
-              <Controller
-                name={question.id}
-                control={control}
-                render={({ field }) =>
-                  question.type === 'single_choice' ? (
-                    <Radio.Group
-                      {...field}
-                      optionType="button"
-                      buttonStyle="solid"
-                      style={{ width: '100%', display: 'flex', gap: token.marginXS }}
-                    >
-                      {(question.options ?? []).map((option) => (
-                        <Radio.Button
-                          key={option}
-                          value={option}
-                          style={{
-                            flex: 1,
-                            textAlign: 'center',
-                            borderRadius: token.borderRadiusLG
-                          }}
-                        >
-                          {option}
-                        </Radio.Button>
-                      ))}
-                    </Radio.Group>
-                  ) : (
-                    <InputNumber
-                      {...field}
-                      value={field.value ?? undefined}
-                      onChange={(value) => field.onChange(value === null ? undefined : value)}
-                      style={{ width: '100%' }}
-                      min={question.min}
-                      max={question.max}
-                      addonAfter={question.unit}
-                      step={question.type === 'percentage' ? 1 : 0.5}
-                    />
-                  )
-                }
-              />
-              {errors[question.id]?.message ? (
-                <Typography.Text type="danger" style={{ fontSize: 12 }}>
-                  {String(errors[question.id]?.message)}
-                </Typography.Text>
-              ) : null}
-            </Card>
-          </div>
+            <Space align="baseline" style={{ justifyContent: 'space-between' }}>
+              <Typography.Text strong>{question.label}</Typography.Text>
+              {question.required ? <Typography.Text type="danger">*</Typography.Text> : null}
+            </Space>
+            <Controller
+              name={question.id}
+              control={control}
+              render={({ field }) =>
+                question.type === 'single_choice' ? (
+                  <Radio.Group
+                    {...field}
+                    optionType="button"
+                    buttonStyle="solid"
+                    style={{ width: '100%', display: 'flex', gap: token.marginXS }}
+                  >
+                    {(question.options ?? []).map((option) => (
+                      <Radio.Button
+                        key={option}
+                        value={option}
+                        style={{
+                          flex: 1,
+                          textAlign: 'center',
+                          borderRadius: token.borderRadiusLG
+                        }}
+                      >
+                        {option}
+                      </Radio.Button>
+                    ))}
+                  </Radio.Group>
+                ) : (
+                  <InputNumber
+                    {...field}
+                    value={field.value ?? undefined}
+                    onChange={(value) => field.onChange(value === null ? undefined : value)}
+                    style={{ width: '100%' }}
+                    min={question.min}
+                    max={question.max}
+                    addonAfter={question.unit}
+                    step={question.type === 'percentage' ? 1 : 0.5}
+                  />
+                )
+              }
+            />
+            {errors[question.id]?.message ? (
+              <Typography.Text type="danger" style={{ fontSize: 12 }}>
+                {String(errors[question.id]?.message)}
+              </Typography.Text>
+            ) : null}
+          </Card>
         ))}
       </Space>
       <Alert
