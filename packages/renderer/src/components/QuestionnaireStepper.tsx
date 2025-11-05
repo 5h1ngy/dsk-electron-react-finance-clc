@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react'
 
-import { useQuestionnaireStepper } from '@renderer/components/QuestionnaireStepper.hooks'
+import { useQuestionnaireStepper, type QuestionnaireStepperResult } from '@renderer/components/QuestionnaireStepper.hooks'
 import QuestionnaireStepperContent from '@renderer/components/QuestionnaireStepper.Content'
 import QuestionnaireStepperHeader from '@renderer/components/QuestionnaireStepper.Header'
 import { Button, Card, Space, theme } from 'antd'
 
-export type QuestionnaireStepperModel = ReturnType<typeof useQuestionnaireStepper>
+export type QuestionnaireStepperModel = QuestionnaireStepperResult
 
 interface QuestionnaireStepperProps {
   model?: QuestionnaireStepperModel

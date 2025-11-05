@@ -16,7 +16,9 @@ import {
   selectAnagraficaStatus
 } from '@renderer/store/slices/anagrafica'
 import type { QuestionnaireStepperModel } from '@renderer/components/QuestionnaireStepper'
+import type { StepperFieldLayout } from '@renderer/components/QuestionnaireStepper.hooks'
 import type { QuestionnaireResponses, QuestionDefinition } from '@engines/questionnaire'
+
 
 const isValuePresent = (value: unknown): boolean =>
   value !== undefined && value !== null && value !== ''
@@ -223,6 +225,8 @@ export const useAnagraficaStepper = (): QuestionnaireStepperModel => {
 
   const isReady = !(status === 'loading' || !schema || !section)
   const isLastStep = schema ? currentStep === schema.sections.length - 1 : false
+  const fieldLayout: StepperFieldLayout = 'double'
+
 
   return {
     copy,
@@ -241,6 +245,6 @@ export const useAnagraficaStepper = (): QuestionnaireStepperModel => {
     schema,
     isLastStep,
     sectionsProgress,
-    fieldLayout: 'double' as const
+    fieldLayout
   }
 }

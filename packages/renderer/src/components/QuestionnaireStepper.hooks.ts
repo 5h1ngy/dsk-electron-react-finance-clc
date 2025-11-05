@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, type Control, type FieldErrors } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
@@ -17,10 +17,44 @@ import {
   selectResponses
 } from '@renderer/store/slices/questionnaire'
 
-import type { QuestionnaireResponses, QuestionDefinition } from '@engines/questionnaire'
+import type {
+  QuestionnaireResponses,
+  QuestionDefinition,
+  QuestionnaireSchema
+} from '@engines/questionnaire'
+
 
 const isValuePresent = (value: unknown): boolean =>
   value !== undefined && value !== null && value !== ''
+
+export type StepperFieldLayout = 'single' | 'double'
+
+export interface QuestionnaireStepperResult {
+  copy: {
+    title: string
+    completion: string
+    reset: string
+    alert: string
+    info: string
+    nav: { back: string; next: string; finish: string }
+  }
+  progress: { completed: number; required: number }
+  control: Control<QuestionnaireResponses>
+  errors: FieldErrors<QuestionnaireResponses>
+  validationErrors: string[]
+  handleNext: () => void
+  handleBack: () => void
+  handleStepChange: (nextStep: number) => void
+  handleReset: () => void
+  currentStep: number
+  steps: Array<{ key: string; title: string; disabled: boolean }>
+  section?: QuestionnaireSchema['sections'][number]
+  isReady: boolean
+  schema?: QuestionnaireSchema
+  isLastStep: boolean
+  sectionsProgress: Array<{ id: string; title: string; percent: number }>
+  fieldLayout: StepperFieldLayout
+}
 
 const buildQuestionSchema = (question: QuestionDefinition, t: TFunction) => {
   let schema: z.ZodTypeAny
@@ -52,7 +86,7 @@ const buildQuestionSchema = (question: QuestionDefinition, t: TFunction) => {
   return question.required ? schema : schema.optional()
 }
 
-export const useQuestionnaireStepper = () => {
+export const useQuestionnaireStepper = (): QuestionnaireStepperResult => {
   const dispatch = useAppDispatch()
   const schema = useAppSelector(selectQuestionnaireSchema)
   const status = useAppSelector(selectQuestionnaireStatus)
@@ -227,6 +261,8 @@ export const useQuestionnaireStepper = () => {
   const isReady = !(status === 'loading' || !schema || !section)
   const isLastStep = schema ? currentStep === schema.sections.length - 1 : false
 
+  const fieldLayout: StepperFieldLayout = 'single'
+
   return {
     copy,
     progress,
@@ -244,6 +280,6 @@ export const useQuestionnaireStepper = () => {
     schema,
     isLastStep,
     sectionsProgress,
-    fieldLayout: 'single' as const
+    fieldLayout
   }
 }
