@@ -1,6 +1,6 @@
 ﻿# DSK Electron React Finance CLC
 
-[![Version](https://img.shields.io/badge/version-0.11.5-blue.svg)](#release-automation) [![Node.js](https://img.shields.io/badge/node-%E2%89%A518-339933?logo=nodedotjs&logoColor=white)](#prerequisites) [![Electron](https://img.shields.io/badge/electron-38.3.0-47848f?logo=electron&logoColor=white)](#tech-stack) [![React](https://img.shields.io/badge/react-19-61dafb?logo=react&logoColor=20232a)](#tech-stack) [![License](https://img.shields.io/badge/license-MIT-ffcc00)](#license)
+[![Version](https://img.shields.io/badge/version-0.12.6-blue.svg)](#release-automation) [![Node.js](https://img.shields.io/badge/node-%E2%89%A518-339933?logo=nodedotjs&logoColor=white)](#prerequisites) [![Electron](https://img.shields.io/badge/electron-38.3.0-47848f?logo=electron&logoColor=white)](#tech-stack) [![React](https://img.shields.io/badge/react-19-61dafb?logo=react&logoColor=20232a)](#tech-stack) [![License](https://img.shields.io/badge/license-MIT-ffcc00)](#license)
 
 > Offline Electron workbench for financial advisors: import Excel/PDF questionnaires, compute the risk profile, surface compliant product suggestions and sign PDFs locally with your certificate.
 
@@ -115,13 +115,13 @@ Environment profiles live inside the `env/` folder. They are picked automaticall
   ```env
   LOG_LEVEL=debug
   ENABLE_DEVTOOLS=true
-  APP_VERSION=0.11.5
+  APP_VERSION=0.12.6
   ```
 - `env/.env.production`
   ```env
   LOG_LEVEL=info
   ENABLE_DEVTOOLS=false
-  APP_VERSION=0.11.5
+  APP_VERSION=0.12.6
   ```
 
 | Variable | Purpose |
