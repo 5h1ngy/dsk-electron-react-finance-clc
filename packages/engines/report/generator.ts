@@ -6,9 +6,15 @@ import type { QuestionnaireResponses, QuestionnaireSchema } from '@engines/quest
 import type { RiskScoreResult } from '@engines/scoring'
 
 export interface ReportPayload {
-  schema: QuestionnaireSchema
-  responses: QuestionnaireResponses
-  score: RiskScoreResult
+  questionnaire: {
+    schema: QuestionnaireSchema
+    responses: QuestionnaireResponses
+    score: RiskScoreResult
+  }
+  anagrafica?: {
+    schema: QuestionnaireSchema
+    responses: QuestionnaireResponses
+  }
 }
 
 const formatDateTime = (date = new Date()): string =>
@@ -22,10 +28,10 @@ const formatResponse = (value: unknown): string => {
 }
 
 export const generateRiskReport = async ({
-  schema,
-  responses,
-  score
+  questionnaire,
+  anagrafica
 }: ReportPayload): Promise<Uint8Array> => {
+  const { schema: questionnaireSchema, responses: questionnaireResponses, score } = questionnaire
   const pdf = await PDFDocument.create()
   const page = pdf.addPage()
   const { width, height } = page.getSize()
@@ -56,14 +62,14 @@ export const generateRiskReport = async ({
   const localizedVolatility = i18n.t(`risk.band.${score.volatilityBand}`)
 
   drawText(i18n.t('app.title'), { size: 18, font: titleFont })
-  drawText(i18n.t('report.pdf.title', { title: schema.title }), { size: 12 })
+  drawText(i18n.t('report.pdf.title', { title: questionnaireSchema.title }), { size: 12 })
   drawText(i18n.t('report.pdf.generated', { date: formatDateTime() }), {
     size: 10,
     color: rgb(0.3, 0.3, 0.3)
   })
   drawText(
     i18n.t('report.pdf.versions', {
-      schema: schema.schemaVersion,
+      schema: questionnaireSchema.schemaVersion,
       scoring: SCORING_ENGINE_VERSION
     }),
     { size: 10, color: rgb(0.3, 0.3, 0.3) }
@@ -83,11 +89,27 @@ export const generateRiskReport = async ({
 
   score.rationales.forEach((rationale) => drawText(`- ${i18n.t(rationale)}`, { size: 10 }))
 
-  schema.sections.forEach((section) => {
+  if (anagrafica) {
+    cursor -= 20
+    drawText(anagrafica.schema.title, { size: 12, font: titleFont })
+    anagrafica.schema.sections.forEach((section) => {
+      cursor -= 16
+      drawText(section.label, { size: 11, font: titleFont })
+      section.questions.forEach((question) => {
+        drawText(`${question.label}: ${formatResponse(anagrafica.responses[question.id])}`, {
+          size: 10
+        })
+      })
+    })
+  }
+
+  questionnaireSchema.sections.forEach((section) => {
     cursor -= 20
     drawText(section.label, { size: 12, font: titleFont })
     section.questions.forEach((question) => {
-      drawText(`${question.label}: ${formatResponse(responses[question.id])}`, { size: 10 })
+      drawText(`${question.label}: ${formatResponse(questionnaireResponses[question.id])}`, {
+        size: 10
+      })
     })
   })
 

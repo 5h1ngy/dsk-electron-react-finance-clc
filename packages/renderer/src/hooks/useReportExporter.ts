@@ -11,6 +11,10 @@ import {
   selectQuestionnaireScore,
   selectResponses
 } from '@renderer/store/slices/questionnaire'
+import {
+  selectAnagraficaResponses,
+  selectAnagraficaSchema
+} from '@renderer/store/slices/anagrafica'
 import { selectCertificate, setReportExport } from '@renderer/store/slices/workspace'
 
 const toBase64 = (bytes: Uint8Array): string => {
@@ -26,6 +30,8 @@ export const useReportExporter = () => {
   const dispatch = useAppDispatch()
   const schema = useAppSelector(selectQuestionnaireSchema)
   const responses = useAppSelector(selectResponses)
+  const anagraficaSchema = useAppSelector(selectAnagraficaSchema)
+  const anagraficaResponses = useAppSelector(selectAnagraficaResponses)
   const score = useAppSelector(selectQuestionnaireScore)
   const certificate = useAppSelector(selectCertificate)
   const [exporting, setExporting] = useState(false)
@@ -60,7 +66,12 @@ export const useReportExporter = () => {
       }
       setExporting(true)
       try {
-        const bytes = await generateRiskReport({ schema, responses, score })
+        const bytes = await generateRiskReport({
+          questionnaire: { schema, responses, score },
+          anagrafica: anagraficaSchema
+            ? { schema: anagraficaSchema, responses: anagraficaResponses }
+            : undefined
+        })
         const base64 = toBase64(bytes)
         const metadata = buildMetadata()
         const certificateSummary = extractCertificateSummary(certificate.base64, password)
@@ -103,7 +114,17 @@ export const useReportExporter = () => {
         setExporting(false)
       }
     },
-    [buildMetadata, certificate, dispatch, responses, schema, score, t]
+    [
+      anagraficaResponses,
+      anagraficaSchema,
+      buildMetadata,
+      certificate,
+      dispatch,
+      responses,
+      schema,
+      score,
+      t
+    ]
   )
 
   const exportUnsignedReport = useCallback(async (): Promise<boolean> => {
@@ -113,7 +134,12 @@ export const useReportExporter = () => {
     }
     setExporting(true)
     try {
-      const bytes = await generateRiskReport({ schema, responses, score })
+      const bytes = await generateRiskReport({
+        questionnaire: { schema, responses, score },
+        anagrafica: anagraficaSchema
+          ? { schema: anagraficaSchema, responses: anagraficaResponses }
+          : undefined
+      })
       const base64 = toBase64(bytes)
       const suggestedName = `risk-report-${new Date().toISOString().split('T')[0]}-unsigned.pdf`
       const response = await window.api.report.exportPdf({
@@ -143,7 +169,16 @@ export const useReportExporter = () => {
     } finally {
       setExporting(false)
     }
-  }, [buildMetadata, dispatch, responses, schema, score, t])
+  }, [
+    anagraficaResponses,
+    anagraficaSchema,
+    buildMetadata,
+    dispatch,
+    responses,
+    schema,
+    score,
+    t
+  ])
 
   return { exportReport, exportUnsignedReport, exporting }
 }

@@ -61,6 +61,11 @@ describe('useReportExporter', () => {
       title: 'Questionario',
       sections: []
     }
+    const anagraficaSchema = {
+      schemaVersion: '1',
+      title: 'Anagrafica',
+      sections: []
+    }
     const score = {
       score: 80,
       riskClass: 'Prudente',
@@ -72,6 +77,8 @@ describe('useReportExporter', () => {
       .mocked(useAppSelector)
       .mockReturnValueOnce(schema)
       .mockReturnValueOnce({ q1: 1 })
+      .mockReturnValueOnce(anagraficaSchema)
+      .mockReturnValueOnce({ identity_first_name: 'Mario' })
       .mockReturnValueOnce(score)
       .mockReturnValueOnce({ fileName: 'cert.p12', base64: 'BASE64' })
 
@@ -101,6 +108,10 @@ describe('useReportExporter', () => {
     })
 
     expect(resolved).toBe(true)
+    expect(generateRiskReport).toHaveBeenCalledWith({
+      questionnaire: { schema, responses: { q1: 1 }, score },
+      anagrafica: { schema: anagraficaSchema, responses: { identity_first_name: 'Mario' } }
+    })
     expect(window.api.report.exportPdf).toHaveBeenCalled()
     expect(mockDispatch).toHaveBeenCalledWith(
       setReportExport(

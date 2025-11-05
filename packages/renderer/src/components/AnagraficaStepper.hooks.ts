@@ -30,6 +30,13 @@ const buildQuestionSchema = (question: QuestionDefinition, t: TFunction) => {
       .refine((value) => allowed.includes(value), {
         message: t('anagrafica.validation.invalidChoice')
       })
+  } else if (question.type === 'text') {
+    const base = z
+      .string({ required_error: t('anagrafica.validation.required') })
+      .transform((value) => value.trim())
+    schema = question.required
+      ? base.min(1, t('anagrafica.validation.required'))
+      : base.optional()
   } else {
     schema = z
       .number({

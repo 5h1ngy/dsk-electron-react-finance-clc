@@ -1,5 +1,5 @@
 import { Controller, type Control, type FieldErrors } from 'react-hook-form'
-import { Alert, InputNumber, Radio, Space, Typography, theme } from 'antd'
+import { Alert, Input, InputNumber, Radio, Space, Typography, theme } from 'antd'
 
 import type { QuestionnaireResponses } from '@engines/questionnaire'
 
@@ -7,7 +7,7 @@ interface Question {
   id: string
   label: string
   required: boolean
-  type: 'single_choice' | 'number' | 'percentage'
+  type: 'single_choice' | 'number' | 'percentage' | 'text'
   options?: string[]
   min?: number
   max?: number
@@ -94,6 +94,13 @@ const QuestionnaireStepperContent = ({
                       </Radio.Button>
                     ))}
                   </Radio.Group>
+                ) : question.type === 'text' ? (
+                  <Input
+                    {...field}
+                    value={field.value ?? ''}
+                    onChange={(event) => field.onChange(event.target.value)}
+                    style={{ width: '100%' }}
+                  />
                 ) : (
                   <InputNumber
                     {...field}

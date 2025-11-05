@@ -6,7 +6,9 @@ import { useSearchParams } from 'react-router-dom'
 
 import CertificateCard from '@renderer/components/CertificateCard'
 import DemoUploadCard from '@renderer/components/DemoUploadCard'
-import QuestionnaireStepper from '@renderer/components/QuestionnaireStepper'
+import QuestionnaireStepper, {
+  type QuestionnaireStepperModel
+} from '@renderer/components/QuestionnaireStepper'
 import QuestionnaireStepperSwitcher from '@renderer/components/QuestionnaireStepper.Switcher'
 import { useQuestionnaireStepper } from '@renderer/components/QuestionnaireStepper.hooks'
 import { useAnagraficaStepper } from '@renderer/components/AnagraficaStepper.hooks'
@@ -56,12 +58,13 @@ const ProfilationPageContent = () => {
   const importActive = importAsModal ? importModalOpen : importCardVisible
 
   const tabs = useMemo(() => {
-    const manualImportAction = (
+    const renderManualImportButton = (options?: { block?: boolean; size?: 'middle' | 'large' }) => (
       <Button
+        block={options?.block}
         icon={<InboxOutlined />}
         onClick={handleImportToggle}
         type={importActive ? 'default' : 'primary'}
-        size="middle"
+        size={options?.size ?? 'middle'}
       >
         {importActive && !importAsModal
           ? t('demoUpload.actions.close')
@@ -69,104 +72,78 @@ const ProfilationPageContent = () => {
       </Button>
     )
 
+    const renderStepperTab = (
+      key: string,
+      label: string,
+      model: QuestionnaireStepperModel,
+      options?: { switcherMaxWidth?: number; stepperMaxWidth?: number }
+    ) => {
+      const switcherMaxWidth = options?.switcherMaxWidth ?? 1080
+      const stepperMaxWidth = options?.stepperMaxWidth ?? 640
+      const stepperColXL = !importAsModal && importCardVisible ? 13 : 12
+      const stepperColXXL = !importAsModal && importCardVisible ? 11 : 10
+
+      return {
+        key,
+        label,
+        children: (
+          <Space
+            direction="vertical"
+            size={token.marginXL}
+            style={{ width: '100%', marginTop: marginXS }}
+          >
+            <Row
+              gutter={[16, 16]}
+              align="middle"
+              justify="center"
+              wrap
+              style={{ width: '100%' }}
+            >
+              <Col
+                xs={24}
+                style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+              >
+                <div style={{ width: '100%', maxWidth: switcherMaxWidth }}>
+                  <QuestionnaireStepperSwitcher model={model} />
+                </div>
+              </Col>
+              {importAsModal ? (
+                <Col xs={24}>
+                  {renderManualImportButton({ block: true, size: 'large' })}
+                </Col>
+              ) : null}
+            </Row>
+            <Row gutter={[16, 16]} align="stretch" justify="center">
+              <Col
+                xs={24}
+                xl={stepperColXL}
+                xxl={stepperColXXL}
+                style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+              >
+                <div style={{ width: '100%', maxWidth: stepperMaxWidth, margin: '0 auto' }}>
+                  <QuestionnaireStepper
+                    model={model}
+                    secondaryAction={!importAsModal ? renderManualImportButton() : undefined}
+                  />
+                </div>
+              </Col>
+              {!importAsModal && importCardVisible ? (
+                <Col xs={24} xl={11} xxl={10}>
+                  <DemoUploadCard />
+                </Col>
+              ) : null}
+            </Row>
+          </Space>
+        )
+      }
+    }
+
     return [
-    {
-      key: 'anagrafica',
-      label: t('profilation.tabs.anagrafica'),
-      children: (
-        <Space
-          direction="vertical"
-          size={token.marginXL}
-          style={{ width: '100%', marginTop: marginXS }}
-        >
-          <Row
-            gutter={[16, 16]}
-            align="middle"
-            justify="center"
-            wrap
-            style={{ width: '100%' }}
-          >
-            <Col
-              xs={24}
-              style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
-            >
-              <div style={{ width: '100%', maxWidth: 960 }}>
-                <QuestionnaireStepperSwitcher model={anagraficaModel} />
-              </div>
-            </Col>
-          </Row>
-          <Row gutter={[16, 16]} align="stretch" justify="center">
-            <Col
-              xs={24}
-              style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
-            >
-              <div style={{ width: '100%', maxWidth: 600, margin: '0 auto' }}>
-                <QuestionnaireStepper model={anagraficaModel} />
-              </div>
-            </Col>
-          </Row>
-        </Space>
-      )
-    },
-    {
-      key: 'questionnaire',
-      label: t('profilation.tabs.questionnaire'),
-      children: (
-        <Space direction="vertical" size={token.marginXL} style={{ width: '100%', marginTop: marginXS }}>
-          <Row
-            gutter={[16, 16]}
-            align="middle"
-            justify="center"
-            wrap
-            style={{ width: '100%' }}
-          >
-            <Col
-              xs={24}
-              style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
-            >
-              <div style={{ width: '100%', maxWidth: 1080 }}>
-                <QuestionnaireStepperSwitcher model={questionnaireModel} />
-              </div>
-            </Col>
-            {importAsModal ? (
-              <Col xs={24}>
-                <Button
-                  block
-                  icon={<InboxOutlined />}
-                  onClick={handleImportToggle}
-                  type={importActive ? 'default' : 'primary'}
-                  size="large"
-                >
-                  {importActive
-                    ? t('demoUpload.actions.close')
-                    : t('demoUpload.actions.open')}
-                </Button>
-              </Col>
-            ) : null}
-          </Row>
-          <Row gutter={[16, 16]} align="stretch" justify="center">
-            <Col
-              xs={24}
-              xl={!importAsModal && importCardVisible ? 13 : 12}
-              xxl={!importAsModal && importCardVisible ? 11 : 10}
-              style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
-            >
-              <div style={{ width: '100%', maxWidth: 640, margin: '0 auto' }}>
-                <QuestionnaireStepper
-                  model={questionnaireModel}
-                  secondaryAction={!importAsModal ? manualImportAction : undefined}
-                />
-              </div>
-            </Col>
-            {!importAsModal && importCardVisible ? (
-              <Col xs={24} xl={11} xxl={10}>
-                <DemoUploadCard />
-              </Col>
-            ) : null}
-          </Row>
-        </Space>
-      )
-    },
+    renderStepperTab('anagrafica', t('profilation.tabs.anagrafica'), anagraficaModel, {
+      switcherMaxWidth: 960,
+      stepperMaxWidth: 600
+    }),
+    renderStepperTab('questionnaire', t('profilation.tabs.questionnaire'), questionnaireModel),
     {
       key: 'results',
       label: t('profilation.tabs.risk'),

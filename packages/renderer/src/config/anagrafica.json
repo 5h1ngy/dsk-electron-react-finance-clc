@@ -3,35 +3,114 @@
   "title": "Dati anagrafici cliente",
   "sections": [
     {
-      "id": "personal_profile",
-      "label": "Profilo personale",
+      "id": "identity_contacts",
+      "label": "Identità e contatti",
       "questions": [
         {
-          "id": "personal_age",
-          "label": "Età del cliente",
-          "type": "number",
-          "unit": "anni",
+          "id": "identity_first_name",
+          "label": "Nome",
+          "type": "text",
           "required": true,
-          "min": 18,
-          "max": 120,
           "weight": 1.0
         },
         {
-          "id": "personal_citizenship",
+          "id": "identity_last_name",
+          "label": "Cognome",
+          "type": "text",
+          "required": true,
+          "weight": 1.0
+        },
+        {
+          "id": "identity_birth_date",
+          "label": "Data di nascita",
+          "type": "text",
+          "required": true,
+          "weight": 1.0
+        },
+        {
+          "id": "identity_birth_place",
+          "label": "Luogo di nascita",
+          "type": "text",
+          "required": true,
+          "weight": 1.0
+        },
+        {
+          "id": "identity_fiscal_code",
+          "label": "Codice fiscale",
+          "type": "text",
+          "required": true,
+          "weight": 1.0
+        },
+        {
+          "id": "identity_citizenship",
           "label": "Cittadinanza",
           "type": "single_choice",
           "options": ["Italia", "Unione Europea", "Extra UE"],
           "required": true,
-          "weight": 1.0
+          "weight": 0.8
         },
         {
-          "id": "personal_household",
-          "label": "Numero componenti nucleo familiare",
-          "type": "number",
+          "id": "contact_email",
+          "label": "Email principale",
+          "type": "text",
           "required": true,
-          "min": 1,
-          "max": 12,
-          "weight": 0.8
+          "weight": 0.7
+        },
+        {
+          "id": "contact_phone",
+          "label": "Telefono",
+          "type": "text",
+          "required": true,
+          "weight": 0.7
+        }
+      ]
+    },
+    {
+      "id": "residence",
+      "label": "Residenza e domicilio",
+      "questions": [
+        {
+          "id": "residence_address",
+          "label": "Indirizzo di residenza",
+          "type": "text",
+          "required": true,
+          "weight": 0.9
+        },
+        {
+          "id": "residence_city",
+          "label": "Città",
+          "type": "text",
+          "required": true,
+          "weight": 0.6
+        },
+        {
+          "id": "residence_postal_code",
+          "label": "CAP",
+          "type": "text",
+          "required": true,
+          "weight": 0.6
+        },
+        {
+          "id": "residence_country",
+          "label": "Paese",
+          "type": "text",
+          "required": true,
+          "weight": 0.6
+        },
+        {
+          "id": "domicile_is_residence",
+          "label": "Il domicilio coincide con la residenza?",
+          "type": "single_choice",
+          "options": ["Si", "No"],
+          "required": true,
+          "weight": 0.5
+        },
+        {
+          "id": "domicile_address",
+          "label": "Indirizzo di domicilio (se diverso)",
+          "type": "text",
+          "required": false,
+          "weight": 0.4
         }
       ]
     },
@@ -48,10 +127,16 @@
           "weight": 1.0
         },
         {
+          "id": "work_employer",
+          "label": "Datore di lavoro / Ragione sociale",
+          "type": "text",
+          "required": false,
+          "weight": 0.5
+        },
+        {
           "id": "work_seniority",
-          "label": "Anzianità presso datore attuale",
+          "label": "Anzianità presso datore attuale (anni)",
           "type": "number",
-          "unit": "anni",
           "required": false,
           "min": 0,
           "max": 60,
@@ -72,6 +157,48 @@
           "options": ["No", "Si"],
           "required": true,
           "weight": 1.0
+        }
+      ]
+    },
+    {
+      "id": "documents",
+      "label": "Documenti di identità",
+      "questions": [
+        {
+          "id": "document_type",
+          "label": "Tipo di documento",
+          "type": "single_choice",
+          "options": ["Carta di identità", "Passaporto", "Patente", "Permesso di soggiorno"],
+          "required": true,
+          "weight": 1.0
+        },
+        {
+          "id": "document_number",
+          "label": "Numero documento",
+          "type": "text",
+          "required": true,
+          "weight": 1.0
+        },
+        {
+          "id": "document_issued_by",
+          "label": "Autorità rilascio",
+          "type": "text",
+          "required": true,
+          "weight": 0.6
+        },
+        {
+          "id": "document_issue_date",
+          "label": "Data rilascio",
+          "type": "text",
+          "required": true,
+          "weight": 0.6
+        },
+        {
+          "id": "document_expiry_date",
+          "label": "Data scadenza",
+          "type": "text",
+          "required": true,
+          "weight": 0.6
         }
       ]
     }

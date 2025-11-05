@@ -12,7 +12,7 @@ jest.mock('@engines/importers/financeWorkbook', () => ({
   parseFinanceWorkbook: jest.fn()
 }))
 jest.mock('@engines/importers/pdfQuestionnaire', () => ({
-  parseQuestionnairePdf: jest.fn()
+  parsePdfSchemas: jest.fn()
 }))
 
 describe('useDemoUploadCard', () => {
@@ -25,6 +25,7 @@ describe('useDemoUploadCard', () => {
     jest
       .mocked(useAppSelector)
       .mockReturnValueOnce({ sections: [], schemaVersion: '1', title: 'Schema' })
+      .mockReturnValueOnce({ sections: [], schemaVersion: '1', title: 'Anagrafica' })
       .mockReturnValueOnce({ fileName: 'prodotti.xlsx', instruments: 4 })
       .mockReturnValueOnce({ fileName: 'questionario.pdf', pages: 2 })
 

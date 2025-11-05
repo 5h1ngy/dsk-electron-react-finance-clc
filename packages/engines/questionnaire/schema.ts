@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import type { QuestionnaireSchema } from '@engines/questionnaire/types'
 
-const questionTypeSchema = z.enum(['number', 'percentage', 'single_choice'])
+const questionTypeSchema = z.enum(['number', 'percentage', 'single_choice', 'text'])
 
 const questionSchema = z.object({
   id: z.string().min(1),

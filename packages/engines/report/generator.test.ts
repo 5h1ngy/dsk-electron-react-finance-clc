@@ -14,7 +14,9 @@ describe('generateRiskReport', () => {
       return acc
     }, {})
     const score = calculateRiskScore(schema, responses)
-    const pdfBytes = await generateRiskReport({ schema, responses, score })
+    const pdfBytes = await generateRiskReport({
+      questionnaire: { schema, responses, score }
+    })
     expect(pdfBytes.length).toBeGreaterThan(100)
   })
 })
