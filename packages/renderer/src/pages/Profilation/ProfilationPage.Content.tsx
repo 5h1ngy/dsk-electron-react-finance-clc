@@ -73,8 +73,14 @@ const ProfilationPageContent = () => {
       label: t('profilation.tabs.questionnaire'),
       children: (
         <Space direction="vertical" size="middle" style={{ width: '100%', marginTop: marginXS }}>
-          <Row gutter={[16, 16]} align="middle" wrap style={{ width: '100%' }}>
-            <Col xs={24} style={{ minWidth: 0 }}>
+          <Row
+            gutter={[16, 16]}
+            align="middle"
+            justify="center"
+            wrap
+            style={{ width: '100%' }}
+          >
+            <Col xs={24} style={{ minWidth: 0, maxWidth: 960 }}>
               <QuestionnaireStepperSwitcher model={questionnaireModel} />
             </Col>
             {importAsModal ? (
@@ -93,15 +99,22 @@ const ProfilationPageContent = () => {
               </Col>
             ) : null}
           </Row>
-          <Row gutter={[16, 16]} align="stretch">
-            <Col xs={24} xl={!importAsModal && importCardVisible ? 14 : 24}>
-              <QuestionnaireStepper
-                model={questionnaireModel}
-                secondaryAction={!importAsModal ? manualImportAction : undefined}
-              />
+          <Row gutter={[16, 16]} align="stretch" justify="center">
+            <Col
+              xs={24}
+              xl={!importAsModal && importCardVisible ? 13 : 12}
+              xxl={!importAsModal && importCardVisible ? 11 : 10}
+              style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+            >
+              <div style={{ width: '100%', maxWidth: 720 }}>
+                <QuestionnaireStepper
+                  model={questionnaireModel}
+                  secondaryAction={!importAsModal ? manualImportAction : undefined}
+                />
+              </div>
             </Col>
             {!importAsModal && importCardVisible ? (
-              <Col xs={24} xl={10}>
+              <Col xs={24} xl={11} xxl={10}>
                 <DemoUploadCard />
               </Col>
             ) : null}
@@ -170,3 +183,4 @@ const ProfilationPageContent = () => {
 }
 
 export default ProfilationPageContent
+
