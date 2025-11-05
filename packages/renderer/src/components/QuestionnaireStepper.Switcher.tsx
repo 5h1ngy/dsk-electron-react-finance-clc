@@ -36,8 +36,8 @@ const QuestionnaireStepperSwitcher = ({ model }: QuestionnaireStepperSwitcherPro
       style={{
         width: '100%',
         background: 'transparent',
-        borderRadius: token.borderRadiusLG,
-        padding: `${token.paddingXS}px ${token.paddingMD}px`
+        margin: 0,
+        padding: 0
       }}
       items={sectionsProgress.map((section, index) => ({
         title: (

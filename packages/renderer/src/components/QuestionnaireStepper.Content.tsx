@@ -1,5 +1,5 @@
 import { Controller, type Control, type FieldErrors } from 'react-hook-form'
-import { Alert, Button, Card, InputNumber, Radio, Row, Col, Space, Typography, theme } from 'antd'
+import { Alert, Button, Card, InputNumber, Radio, Space, Typography, theme } from 'antd'
 
 import type { QuestionnaireResponses } from '@engines/questionnaire'
 
@@ -55,11 +55,19 @@ const QuestionnaireStepperContent = ({
       {validationErrors.length > 0 ? (
         <Alert type="warning" message={copy.alert} showIcon />
       ) : null}
-      <Row gutter={[token.marginMD, token.marginMD]}>
+      <Space
+        direction="vertical"
+        size={token.marginMD}
+        style={{ width: '100%' }}
+      >
         {section.questions.map((question) => (
-          <Col key={question.id} xs={24} lg={12}>
+          <div
+            key={question.id}
+            style={{ display: 'flex', justifyContent: 'center', width: '100%' }}
+          >
             <Card
               size="small"
+              style={{ width: '100%', maxWidth: 520 }}
               bodyStyle={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -86,7 +94,11 @@ const QuestionnaireStepperContent = ({
                         <Radio.Button
                           key={option}
                           value={option}
-                          style={{ flex: 1, textAlign: 'center', borderRadius: token.borderRadiusLG }}
+                          style={{
+                            flex: 1,
+                            textAlign: 'center',
+                            borderRadius: token.borderRadiusLG
+                          }}
                         >
                           {option}
                         </Radio.Button>
@@ -112,9 +124,9 @@ const QuestionnaireStepperContent = ({
                 </Typography.Text>
               ) : null}
             </Card>
-          </Col>
+          </div>
         ))}
-      </Row>
+      </Space>
       <Alert
         type="info"
         message={copy.info}

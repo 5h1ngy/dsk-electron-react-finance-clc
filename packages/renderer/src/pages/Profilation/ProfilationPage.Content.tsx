@@ -80,8 +80,13 @@ const ProfilationPageContent = () => {
             wrap
             style={{ width: '100%' }}
           >
-            <Col xs={24} style={{ minWidth: 0, maxWidth: 960 }}>
-              <QuestionnaireStepperSwitcher model={questionnaireModel} />
+            <Col
+              xs={24}
+              style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+            >
+              <div style={{ width: '100%', maxWidth: 1080 }}>
+                <QuestionnaireStepperSwitcher model={questionnaireModel} />
+              </div>
             </Col>
             {importAsModal ? (
               <Col xs={24}>
@@ -106,7 +111,7 @@ const ProfilationPageContent = () => {
               xxl={!importAsModal && importCardVisible ? 11 : 10}
               style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
             >
-              <div style={{ width: '100%', maxWidth: 720 }}>
+              <div style={{ width: '100%', maxWidth: 640, margin: '0 auto' }}>
                 <QuestionnaireStepper
                   model={questionnaireModel}
                   secondaryAction={!importAsModal ? manualImportAction : undefined}
@@ -124,7 +129,7 @@ const ProfilationPageContent = () => {
     },
     {
       key: 'results',
-      label: `${t('profilation.tabs.suggestions')} · ${t('profilation.tabs.risk')}`,
+      label: t('profilation.tabs.risk'),
       children: (
         <Space direction="vertical" size={token.marginLG} style={{ width: '100%', marginTop: marginXS }}>
           <Row gutter={[16, 16]} align="stretch">
@@ -183,4 +188,3 @@ const ProfilationPageContent = () => {
 }
 
 export default ProfilationPageContent
-
