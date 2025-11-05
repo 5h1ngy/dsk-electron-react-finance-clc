@@ -243,6 +243,7 @@ export const useQuestionnaireStepper = () => {
     isReady,
     schema,
     isLastStep,
-    sectionsProgress
+    sectionsProgress,
+    fieldLayout: 'single' as const
   }
 }

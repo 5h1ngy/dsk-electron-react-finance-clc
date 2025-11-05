@@ -240,6 +240,7 @@ export const useAnagraficaStepper = (): QuestionnaireStepperModel => {
     isReady,
     schema,
     isLastStep,
-    sectionsProgress
+    sectionsProgress,
+    fieldLayout: 'double' as const
   }
 }

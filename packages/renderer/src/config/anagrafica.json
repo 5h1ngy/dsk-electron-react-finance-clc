@@ -4,43 +4,13 @@
   "sections": [
     {
       "id": "identity_contacts",
-      "label": "Identità e contatti",
+      "label": "Identita e contatti",
       "questions": [
-        {
-          "id": "identity_first_name",
-          "label": "Nome",
-          "type": "text",
-          "required": true,
-          "weight": 1.0
-        },
-        {
-          "id": "identity_last_name",
-          "label": "Cognome",
-          "type": "text",
-          "required": true,
-          "weight": 1.0
-        },
-        {
-          "id": "identity_birth_date",
-          "label": "Data di nascita",
-          "type": "text",
-          "required": true,
-          "weight": 1.0
-        },
-        {
-          "id": "identity_birth_place",
-          "label": "Luogo di nascita",
-          "type": "text",
-          "required": true,
-          "weight": 1.0
-        },
-        {
-          "id": "identity_fiscal_code",
-          "label": "Codice fiscale",
-          "type": "text",
-          "required": true,
-          "weight": 1.0
-        },
+        { "id": "identity_first_name", "label": "Nome", "type": "text", "required": true, "weight": 1.0 },
+        { "id": "identity_last_name", "label": "Cognome", "type": "text", "required": true, "weight": 1.0 },
+        { "id": "identity_birth_date", "label": "Data di nascita", "type": "text", "required": true, "weight": 1.0 },
+        { "id": "identity_birth_place", "label": "Luogo di nascita", "type": "text", "required": true, "weight": 1.0 },
+        { "id": "identity_fiscal_code", "label": "Codice fiscale", "type": "text", "required": true, "weight": 1.0 },
         {
           "id": "identity_citizenship",
           "label": "Cittadinanza",
@@ -49,54 +19,18 @@
           "required": true,
           "weight": 0.8
         },
-        {
-          "id": "contact_email",
-          "label": "Email principale",
-          "type": "text",
-          "required": true,
-          "weight": 0.7
-        },
-        {
-          "id": "contact_phone",
-          "label": "Telefono",
-          "type": "text",
-          "required": true,
-          "weight": 0.7
-        }
+        { "id": "contact_email", "label": "Email principale", "type": "text", "required": true, "weight": 0.7 },
+        { "id": "contact_phone", "label": "Telefono", "type": "text", "required": true, "weight": 0.7 }
       ]
     },
     {
       "id": "residence",
       "label": "Residenza e domicilio",
       "questions": [
-        {
-          "id": "residence_address",
-          "label": "Indirizzo di residenza",
-          "type": "text",
-          "required": true,
-          "weight": 0.9
-        },
-        {
-          "id": "residence_city",
-          "label": "Città",
-          "type": "text",
-          "required": true,
-          "weight": 0.6
-        },
-        {
-          "id": "residence_postal_code",
-          "label": "CAP",
-          "type": "text",
-          "required": true,
-          "weight": 0.6
-        },
-        {
-          "id": "residence_country",
-          "label": "Paese",
-          "type": "text",
-          "required": true,
-          "weight": 0.6
-        },
+        { "id": "residence_address", "label": "Indirizzo di residenza", "type": "text", "required": true, "weight": 0.9 },
+        { "id": "residence_city", "label": "Citta", "type": "text", "required": true, "weight": 0.6 },
+        { "id": "residence_postal_code", "label": "CAP", "type": "text", "required": true, "weight": 0.6 },
+        { "id": "residence_country", "label": "Paese", "type": "text", "required": true, "weight": 0.6 },
         {
           "id": "domicile_is_residence",
           "label": "Il domicilio coincide con la residenza?",
@@ -105,13 +39,7 @@
           "required": true,
           "weight": 0.5
         },
-        {
-          "id": "domicile_address",
-          "label": "Indirizzo di domicilio (se diverso)",
-          "type": "text",
-          "required": false,
-          "weight": 0.4
-        }
+        { "id": "domicile_address", "label": "Indirizzo di domicilio (se diverso)", "type": "text", "required": false, "weight": 0.4 }
       ]
     },
     {
@@ -126,27 +54,13 @@
           "required": true,
           "weight": 1.0
         },
-        {
-          "id": "work_employer",
-          "label": "Datore di lavoro / Ragione sociale",
-          "type": "text",
-          "required": false,
-          "weight": 0.5
-        },
-        {
-          "id": "work_seniority",
-          "label": "Anzianità presso datore attuale (anni)",
-          "type": "number",
-          "required": false,
-          "min": 0,
-          "max": 60,
-          "weight": 0.5
-        },
+        { "id": "work_employer", "label": "Datore di lavoro / Ragione sociale", "type": "text", "required": false, "weight": 0.5 },
+        { "id": "work_seniority", "label": "Anzianita presso datore attuale (anni)", "type": "number", "required": false, "min": 0, "max": 60, "weight": 0.5 },
         {
           "id": "income_bracket",
           "label": "Fascia di reddito annuo lordo",
           "type": "single_choice",
-          "options": ["< 25.000 €", "25.000 - 50.000 €", "50.000 - 100.000 €", "> 100.000 €"],
+          "options": ["< 25000 EUR", "25000 - 50000 EUR", "50000 - 100000 EUR", "> 100000 EUR"],
           "required": true,
           "weight": 0.9
         },
@@ -157,48 +71,6 @@
           "options": ["No", "Si"],
           "required": true,
           "weight": 1.0
-        }
-      ]
-    },
-    {
-      "id": "documents",
-      "label": "Documenti di identità",
-      "questions": [
-        {
-          "id": "document_type",
-          "label": "Tipo di documento",
-          "type": "single_choice",
-          "options": ["Carta di identità", "Passaporto", "Patente", "Permesso di soggiorno"],
-          "required": true,
-          "weight": 1.0
-        },
-        {
-          "id": "document_number",
-          "label": "Numero documento",
-          "type": "text",
-          "required": true,
-          "weight": 1.0
-        },
-        {
-          "id": "document_issued_by",
-          "label": "Autorità rilascio",
-          "type": "text",
-          "required": true,
-          "weight": 0.6
-        },
-        {
-          "id": "document_issue_date",
-          "label": "Data rilascio",
-          "type": "text",
-          "required": true,
-          "weight": 0.6
-        },
-        {
-          "id": "document_expiry_date",
-          "label": "Data scadenza",
-          "type": "text",
-          "required": true,
-          "weight": 0.6
         }
       ]
     }

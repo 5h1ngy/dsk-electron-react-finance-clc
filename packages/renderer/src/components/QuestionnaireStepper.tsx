@@ -27,7 +27,8 @@ const QuestionnaireStepper = ({ model, secondaryAction }: QuestionnaireStepperPr
     currentStep,
     section,
     isReady,
-    isLastStep
+    isLastStep,
+    fieldLayout
   } = model ?? useQuestionnaireStepper()
 
   if (!isReady || !section) {
@@ -72,6 +73,7 @@ const QuestionnaireStepper = ({ model, secondaryAction }: QuestionnaireStepperPr
           errors={errors}
           validationErrors={validationErrors}
           section={section}
+          fieldLayout={fieldLayout}
         />
       </Card>
       <div
