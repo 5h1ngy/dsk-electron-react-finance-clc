@@ -49,12 +49,10 @@ const AppLayout = ({ children }: AppLayoutProps) => {
     environment?: EnvironmentApi
     api?: { environment?: EnvironmentApi }
   }
-  const environmentInfo =
-    rendererWindow.environment ?? rendererWindow.api?.environment ?? undefined
+  const environmentInfo = rendererWindow.environment ?? rendererWindow.api?.environment ?? undefined
 
   const showVersionBadge = Boolean(environmentInfo?.enableDevtools)
   const versionText = environmentInfo?.appVersion ? `v${environmentInfo.appVersion}` : undefined
-  debugger
 
   const breadcrumbItems = useMemo(() => {
     const segments = location.pathname.split('/').filter(Boolean)
@@ -247,4 +245,3 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 }
 
 export default AppLayout
-
