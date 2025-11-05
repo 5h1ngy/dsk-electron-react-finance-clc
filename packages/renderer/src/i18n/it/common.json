@@ -17,6 +17,7 @@
   },
   "profilation": {
     "tabs": {
+      "anagrafica": "Anagrafica",
       "questionnaire": "Questionario",
       "suggestions": "Strumenti proposti",
       "risk": "Profilo rischio",
@@ -155,6 +156,24 @@
       "back": "Indietro",
       "next": "Avanti",
       "finish": "Calcola profilo"
+    },
+    "validation": {
+      "required": "Campo obbligatorio",
+      "invalidChoice": "Valore non valido",
+      "invalidNumber": "Inserisci un numero valido",
+      "outOfRange": "Valore fuori range"
+    }
+  },
+  "anagrafica": {
+    "title": "Dati anagrafici",
+    "completion": "Completamento anagrafica",
+    "reset": "Azzera dati anagrafici",
+    "alert": "Compila tutti i campi obbligatori nella sezione corrente",
+    "info": "Verifica e aggiorna le informazioni anagrafiche del cliente.",
+    "nav": {
+      "back": "Indietro",
+      "next": "Avanti",
+      "finish": "Salva anagrafica"
     },
     "validation": {
       "required": "Campo obbligatorio",

@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "v1",
+  "title": "Dati anagrafici cliente",
+  "sections": [
+    {
+      "id": "personal_profile",
+      "label": "Profilo personale",
+      "questions": [
+        {
+          "id": "personal_age",
+          "label": "Età del cliente",
+          "type": "number",
+          "unit": "anni",
+          "required": true,
+          "min": 18,
+          "max": 120,
+          "weight": 1.0
+        },
+        {
+          "id": "personal_citizenship",
+          "label": "Cittadinanza",
+          "type": "single_choice",
+          "options": ["Italia", "Unione Europea", "Extra UE"],
+          "required": true,
+          "weight": 1.0
+        },
+        {
+          "id": "personal_household",
+          "label": "Numero componenti nucleo familiare",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 12,
+          "weight": 0.8
+        }
+      ]
+    },
+    {
+      "id": "occupation_income",
+      "label": "Lavoro e reddito",
+      "questions": [
+        {
+          "id": "work_status",
+          "label": "Situazione lavorativa",
+          "type": "single_choice",
+          "options": ["Dipendente", "Autonomo", "Imprenditore", "Pensionato", "Studente", "Non occupato"],
+          "required": true,
+          "weight": 1.0
+        },
+        {
+          "id": "work_seniority",
+          "label": "Anzianità presso datore attuale",
+          "type": "number",
+          "unit": "anni",
+          "required": false,
+          "min": 0,
+          "max": 60,
+          "weight": 0.5
+        },
+        {
+          "id": "income_bracket",
+          "label": "Fascia di reddito annuo lordo",
+          "type": "single_choice",
+          "options": ["< 25.000 €", "25.000 - 50.000 €", "50.000 - 100.000 €", "> 100.000 €"],
+          "required": true,
+          "weight": 0.9
+        },
+        {
+          "id": "pep_status",
+          "label": "Cliente o familiari sono PEP?",
+          "type": "single_choice",
+          "options": ["No", "Si"],
+          "required": true,
+          "weight": 1.0
+        }
+      ]
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import DemoUploadCard from '@renderer/components/DemoUploadCard'
 import QuestionnaireStepper from '@renderer/components/QuestionnaireStepper'
 import QuestionnaireStepperSwitcher from '@renderer/components/QuestionnaireStepper.Switcher'
 import { useQuestionnaireStepper } from '@renderer/components/QuestionnaireStepper.hooks'
+import { useAnagraficaStepper } from '@renderer/components/AnagraficaStepper.hooks'
 import ScoreCard from '@renderer/components/ScoreCard'
 import SuggestedProductsCard from '@renderer/components/SuggestedProductsCard'
 
@@ -21,6 +22,7 @@ const ProfilationPageContent = () => {
   const screens = Grid.useBreakpoint()
   const isMobile = !screens.sm
   const marginXS = token.marginXS
+  const anagraficaModel = useAnagraficaStepper()
   const questionnaireModel = useQuestionnaireStepper()
   const importAsModal = !screens.lg
 
@@ -68,6 +70,44 @@ const ProfilationPageContent = () => {
     )
 
     return [
+    {
+      key: 'anagrafica',
+      label: t('profilation.tabs.anagrafica'),
+      children: (
+        <Space
+          direction="vertical"
+          size={token.marginXL}
+          style={{ width: '100%', marginTop: marginXS }}
+        >
+          <Row
+            gutter={[16, 16]}
+            align="middle"
+            justify="center"
+            wrap
+            style={{ width: '100%' }}
+          >
+            <Col
+              xs={24}
+              style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+            >
+              <div style={{ width: '100%', maxWidth: 960 }}>
+                <QuestionnaireStepperSwitcher model={anagraficaModel} />
+              </div>
+            </Col>
+          </Row>
+          <Row gutter={[16, 16]} align="stretch" justify="center">
+            <Col
+              xs={24}
+              style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+            >
+              <div style={{ width: '100%', maxWidth: 600, margin: '0 auto' }}>
+                <QuestionnaireStepper model={anagraficaModel} />
+              </div>
+            </Col>
+          </Row>
+        </Space>
+      )
+    },
     {
       key: 'questionnaire',
       label: t('profilation.tabs.questionnaire'),
@@ -150,6 +190,7 @@ const ProfilationPageContent = () => {
     }
     ]
   }, [
+    anagraficaModel,
     handleImportToggle,
     importActive,
     importAsModal,
@@ -157,7 +198,8 @@ const ProfilationPageContent = () => {
     marginXS,
     questionnaireModel,
     t,
-    token.marginLG
+    token.marginLG,
+    token.marginXL
   ])
 
   return (

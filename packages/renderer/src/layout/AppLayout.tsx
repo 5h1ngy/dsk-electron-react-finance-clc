@@ -82,6 +82,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
         { label: string; href: string }
       > = {
         questionnaire: { label: t('profilation.tabs.questionnaire'), href: '/' },
+        anagrafica: { label: t('profilation.tabs.anagrafica'), href: '/?tab=anagrafica' },
         results: { label: t('profilation.tabs.risk'), href: '/?tab=results' },
         suggestions: { label: t('profilation.tabs.suggestions'), href: '/?tab=suggestions' },
         risk: { label: t('profilation.tabs.risk'), href: '/?tab=risk' },
