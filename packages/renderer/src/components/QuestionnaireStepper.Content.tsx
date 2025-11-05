@@ -97,7 +97,7 @@ const QuestionnaireStepperContent = ({
                 ) : question.type === 'text' ? (
                   <Input
                     {...field}
-                    value={field.value ?? ''}
+                    value={field.value == null ? '' : String(field.value)}
                     onChange={(event) => field.onChange(event.target.value)}
                     style={{ width: '100%' }}
                   />

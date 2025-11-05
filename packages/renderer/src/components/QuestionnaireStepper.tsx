@@ -34,10 +34,12 @@ const QuestionnaireStepper = ({ model, secondaryAction }: QuestionnaireStepperPr
     return (
       <Card
         loading
-        bordered={false}
+        variant="borderless"
         style={{ boxShadow: token.boxShadowSecondary }}
-        bodyStyle={{
-          padding: `${token.paddingLG}px ${token.paddingLG}px ${token.paddingXL}px`
+        styles={{
+          body: {
+            padding: `${token.paddingLG}px ${token.paddingLG}px ${token.paddingXL}px`
+          }
         }}
       />
     )
@@ -46,13 +48,15 @@ const QuestionnaireStepper = ({ model, secondaryAction }: QuestionnaireStepperPr
   return (
     <Space direction="vertical" size={token.marginXL} style={{ width: '100%' }}>
       <Card
-        bordered={false}
+        variant="borderless"
         style={{ boxShadow: token.boxShadowSecondary }}
-        bodyStyle={{
-          padding: `${token.paddingLG}px ${token.paddingLG}px ${token.paddingXL}px`,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: token.marginLG
+        styles={{
+          body: {
+            padding: `${token.paddingLG}px ${token.paddingLG}px ${token.paddingXL}px`,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: token.marginLG
+          }
         }}
       >
         <QuestionnaireStepperHeader

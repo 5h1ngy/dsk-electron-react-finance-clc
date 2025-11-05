@@ -186,7 +186,6 @@ const ProfilationPageContent = () => {
         tabBarGutter={24}
         tabBarStyle={{ marginBottom: token.marginSM }}
         style={{ width: '100%' }}
-        destroyInactiveTabPane={false}
         activeKey={activeKey}
         onChange={handleTabChange}
       />
@@ -198,7 +197,7 @@ const ProfilationPageContent = () => {
         centered
         width={isMobile ? '100%' : 640}
         style={{ top: isMobile ? 12 : 80 }}
-        bodyStyle={{ padding: isMobile ? token.paddingLG : token.paddingMD }}
+        styles={{ body: { padding: isMobile ? token.paddingLG : token.paddingMD } }}
       >
         <DemoUploadCard />
       </Modal>

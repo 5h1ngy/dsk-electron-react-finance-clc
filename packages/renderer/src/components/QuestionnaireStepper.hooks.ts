@@ -32,12 +32,10 @@ const buildQuestionSchema = (question: QuestionDefinition, t: TFunction) => {
         message: t('questionnaire.validation.invalidChoice')
       })
   } else if (question.type === 'text') {
-    const base = z
-      .string({ required_error: t('questionnaire.validation.required') })
-      .transform((value) => value.trim())
+    const base = z.string({ required_error: t('questionnaire.validation.required') }).trim()
     schema = question.required
       ? base.min(1, t('questionnaire.validation.required'))
-      : base.optional()
+      : base
   } else {
     schema = z
       .number({

@@ -150,7 +150,9 @@ const ScoreCardContent = ({
             size="small"
             type="inner"
             title={notesTitle}
-            bodyStyle={{ display: 'flex', flexDirection: 'column', gap: token.marginXS }}
+            styles={{
+              body: { display: 'flex', flexDirection: 'column', gap: token.marginXS }
+            }}
           >
             {notes.map((item) => (
               <Typography.Text key={item} type="secondary">
