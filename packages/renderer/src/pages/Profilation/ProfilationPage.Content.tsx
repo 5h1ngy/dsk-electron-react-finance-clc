@@ -72,7 +72,7 @@ const ProfilationPageContent = () => {
       key: 'questionnaire',
       label: t('profilation.tabs.questionnaire'),
       children: (
-        <Space direction="vertical" size="middle" style={{ width: '100%', marginTop: marginXS }}>
+        <Space direction="vertical" size={token.marginXL} style={{ width: '100%', marginTop: marginXS }}>
           <Row
             gutter={[16, 16]}
             align="middle"

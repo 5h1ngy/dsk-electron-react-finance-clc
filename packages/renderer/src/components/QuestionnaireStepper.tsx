@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { useQuestionnaireStepper } from '@renderer/components/QuestionnaireStepper.hooks'
 import QuestionnaireStepperContent from '@renderer/components/QuestionnaireStepper.Content'
 import QuestionnaireStepperHeader from '@renderer/components/QuestionnaireStepper.Header'
-import { Card, theme } from 'antd'
+import { Button, Card, Space, theme } from 'antd'
 
 export type QuestionnaireStepperModel = ReturnType<typeof useQuestionnaireStepper>
 
@@ -44,23 +44,15 @@ const QuestionnaireStepper = ({ model, secondaryAction }: QuestionnaireStepperPr
   }
 
   return (
-    <Card
-      bordered={false}
-      style={{ boxShadow: token.boxShadowSecondary }}
-      bodyStyle={{
-        padding: `${token.paddingLG}px ${token.paddingLG}px ${token.paddingXL}px`,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: token.marginLG
-      }}
-    >
-      <div
-        style={{
+    <Space direction="vertical" size={token.marginXL} style={{ width: '100%' }}>
+      <Card
+        bordered={false}
+        style={{ boxShadow: token.boxShadowSecondary }}
+        bodyStyle={{
+          padding: `${token.paddingLG}px ${token.paddingLG}px ${token.paddingXL}px`,
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: '100%',
-          marginBottom: token.marginSM
+          flexDirection: 'column',
+          gap: token.marginLG
         }}
       >
         <QuestionnaireStepperHeader
@@ -70,19 +62,29 @@ const QuestionnaireStepper = ({ model, secondaryAction }: QuestionnaireStepperPr
           onReset={handleReset}
           secondaryAction={secondaryAction}
         />
+        <QuestionnaireStepperContent
+          copy={copy}
+          control={control}
+          errors={errors}
+          validationErrors={validationErrors}
+          section={section}
+        />
+      </Card>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          gap: token.marginSM
+        }}
+      >
+        <Button onClick={handleBack} disabled={currentStep === 0}>
+          {copy.nav.back}
+        </Button>
+        <Button type="primary" onClick={handleNext}>
+          {isLastStep ? copy.nav.finish : copy.nav.next}
+        </Button>
       </div>
-      <QuestionnaireStepperContent
-        copy={copy}
-        control={control}
-        errors={errors}
-        validationErrors={validationErrors}
-        handleNext={handleNext}
-        handleBack={handleBack}
-        currentStep={currentStep}
-        section={section}
-        isLastStep={isLastStep}
-      />
-    </Card>
+    </Space>
   )
 }
 

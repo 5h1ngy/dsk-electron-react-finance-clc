@@ -1,5 +1,5 @@
 import { Controller, type Control, type FieldErrors } from 'react-hook-form'
-import { Alert, Button, Card, InputNumber, Radio, Space, Typography, theme } from 'antd'
+import { Alert, InputNumber, Radio, Space, Typography, theme } from 'antd'
 
 import type { QuestionnaireResponses } from '@engines/questionnaire'
 
@@ -30,11 +30,7 @@ interface QuestionnaireStepperContentProps {
   control: Control<QuestionnaireResponses>
   errors: FieldErrors<QuestionnaireResponses>
   validationErrors: string[]
-  handleNext: () => void
-  handleBack: () => void
-  currentStep: number
   section: Section
-  isLastStep: boolean
 }
 
 const QuestionnaireStepperContent = ({
@@ -42,11 +38,7 @@ const QuestionnaireStepperContent = ({
   control,
   errors,
   validationErrors,
-  handleNext,
-  handleBack,
-  currentStep,
-  section,
-  isLastStep
+  section
 }: QuestionnaireStepperContentProps) => {
   const { token } = theme.useToken()
 
@@ -61,21 +53,16 @@ const QuestionnaireStepperContent = ({
         style={{ width: '100%', alignItems: 'flex-start' }}
       >
         {section.questions.map((question) => (
-          <Card
+          <div
             key={question.id}
-            size="small"
-            bordered={false}
             style={{
               width: '100%',
               maxWidth: 520,
               alignSelf: 'flex-start',
-              boxShadow: token.boxShadowSecondary
-            }}
-            bodyStyle={{
               display: 'flex',
               flexDirection: 'column',
               gap: token.marginXS,
-              padding: `${token.paddingSM}px ${token.paddingMD}px`
+              padding: `${token.paddingSM}px 0`
             }}
           >
             <Space align="baseline" style={{ justifyContent: 'space-between' }}>
@@ -126,7 +113,7 @@ const QuestionnaireStepperContent = ({
                 {String(errors[question.id]?.message)}
               </Typography.Text>
             ) : null}
-          </Card>
+          </div>
         ))}
       </Space>
       <Alert
@@ -135,14 +122,6 @@ const QuestionnaireStepperContent = ({
         showIcon
         style={{ borderRadius: token.borderRadiusLG }}
       />
-      <Space>
-        <Button onClick={handleBack} disabled={currentStep === 0}>
-          {copy.nav.back}
-        </Button>
-        <Button type="primary" onClick={handleNext}>
-          {isLastStep ? copy.nav.finish : copy.nav.next}
-        </Button>
-      </Space>
     </Space>
   )
 }
